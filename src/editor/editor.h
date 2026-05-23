@@ -19,6 +19,7 @@
 #include "inspector.h"
 
 #include "core/logging/debug_system.h"
+#include "style.h"
 
 #include <iostream>
 #include <vector>

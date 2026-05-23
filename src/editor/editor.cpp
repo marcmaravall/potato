@@ -40,8 +40,8 @@ void EditorApplication::OnStart() {
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	m_platform->SetConsoleVisibility(false);
+	Style::SetCapMotchaTheme();
 
-	// Add some example panels:
 	AddPanel<Viewport>(std::make_unique<EditorContext>(m_context));
 	AddPanel<Console>(std::make_unique<EditorContext>(m_context));
 	AddPanel<Inspector>(std::make_unique<EditorContext>(m_context));
