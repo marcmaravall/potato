@@ -12,6 +12,9 @@
 #include "application.h"
 #include "platform/api.h"
 
+#include "panel.h"
+#include "viewport.h"
+
 #include <iostream>
 #include <vector>
 
@@ -24,19 +27,21 @@
 
 using namespace PotatoEngine::Platform;
 
-namespace PotatoEngine {
+namespace PotatoEngine::Editor {
 
-	class Editor : public Core::Application {
+	class EditorApplication : public Core::Application {
 	private:
 		GLFWwindow  *m_glfwWindow = nullptr;
 		PlatformAPI *m_platform = nullptr;
+
+		std::vector<EditorPanel*> panels;
 
 	private:
 		void menuBar() const;
 
 	public:
-		 Editor();
-		~Editor();
+		 EditorApplication();
+		~EditorApplication();
 
 	public:
 		void OnStart()   override;
@@ -46,6 +51,8 @@ namespace PotatoEngine {
 	public:
 		bool ShouldClose() const;
 		void SetPlatform(PlatformAPI* p) { m_platform = p; }
+		
+		void AddPanel(EditorPanel* panel) { panels.push_back(panel); }
 	};
 };
 

@@ -1,17 +1,17 @@
 #include "editor.h"
 
-using namespace PotatoEngine;
+using namespace PotatoEngine::Editor;
 
-Editor::Editor() {
+EditorApplication::EditorApplication() {
 	// Only supports Windows
 	SetPlatform(new Platform::Win32_API());
 }
 
-Editor::~Editor() {
+EditorApplication::~EditorApplication() {
 
 }
 
-void Editor::OnStart() {
+void EditorApplication::OnStart() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -40,9 +40,12 @@ void Editor::OnStart() {
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	m_platform->SetConsoleVisibility(false);
+
+	// Add some example panels:
+	AddPanel(new Viewport());
 }
 
-void Editor::OnUpdate() {
+void EditorApplication::OnUpdate() {
 	m_running = !glfwWindowShouldClose(m_glfwWindow);
 	
 	glfwPollEvents();
@@ -64,21 +67,8 @@ void Editor::OnUpdate() {
 	ImGui::Text("ajskdjalskdjkls");
 	ImGui::End();
 
-	ImGui::Begin("Viewport");
-	ImDrawList* draw_list = ImGui::GetWindowDrawList();
-
-	ImVec2 av = ImGui::GetContentRegionAvail();
-	ImVec2 size(av.x, av.y);
-
-	ImVec2 pos = ImGui::GetCursorScreenPos();
-	ImVec2 max_pos = ImVec2(pos.x + size.x, pos.y + size.y);
-
-	draw_list->AddRectFilled(pos, max_pos, IM_COL32(255, 255, 255, 255));
-
-	draw_list->AddRect(pos, max_pos, 0xFFFFFFFF);
-
-	ImGui::Dummy(size);
-	ImGui::End();
+	for (auto& panel : panels)
+		panel->Render();
 
 	ImGui::Render();
 
@@ -89,16 +79,16 @@ void Editor::OnUpdate() {
 	glfwSwapBuffers(m_glfwWindow);
 }
 
-void Editor::OnDestroy() {
+void EditorApplication::OnDestroy() {
 	glfwDestroyWindow(m_glfwWindow);
 	glfwTerminate();
 }
 
-bool Editor::ShouldClose() const {
+bool EditorApplication::ShouldClose() const {
 	return m_running;
 }
 
-void Editor::menuBar() const {
+void EditorApplication::menuBar() const {
 	if (ImGui::BeginMainMenuBar()) {
 		ImGui::Text("Potato Engine");
 
