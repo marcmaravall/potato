@@ -2,6 +2,7 @@
 #define POTATO_VIEWPORT_H
 
 #include "panel.h"
+#include "context.h"
 
 #include <imgui.h>
 
@@ -9,7 +10,7 @@ namespace PotatoEngine::Editor {
 
 	class Viewport : public EditorPanel {
 	public:
-		Viewport() : EditorPanel("Viewport") {}
+		Viewport(std::unique_ptr<EditorContext> ctx) : EditorPanel("Viewport", std::move(ctx)) {}
 
 	protected:
 		void OnBegin() override;

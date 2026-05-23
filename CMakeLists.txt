@@ -24,6 +24,7 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/imgui_tables.cpp
     thirdparty/imgui/imgui_widgets.cpp
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
+    thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
 )
 
@@ -33,7 +34,7 @@ target_include_directories(imgui_lib PUBLIC
 )
 target_link_libraries(imgui_lib PUBLIC glfw)
 
-file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" "src/platform/windows/*.cpp")
+file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" "src/core/logging/*.cpp" "src/platform/windows/*.cpp")
 
 include_directories(potato PUBLIC "src/core" "src/")
 

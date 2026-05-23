@@ -13,10 +13,16 @@
 #include "platform/api.h"
 
 #include "panel.h"
+#include "context.h"
 #include "viewport.h"
+#include "console.h"
+#include "inspector.h"
+
+#include "core/logging/debug_system.h"
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #ifdef _WIN32
 #include "platform/windows/win32.h"
@@ -25,16 +31,17 @@
 // ImGui is the default editor library
 #define POTATO_EDITOR_USE_IMGUI true
 
-using namespace PotatoEngine::Platform;
-
 namespace PotatoEngine::Editor {
 
 	class EditorApplication : public Core::Application {
 	private:
 		GLFWwindow  *m_glfwWindow = nullptr;
-		PlatformAPI *m_platform = nullptr;
+		Platform::PlatformAPI *m_platform = nullptr;
 
-		std::vector<EditorPanel*> panels;
+		std::vector<std::unique_ptr<EditorPanel>> m_panels;
+
+	public:
+		EditorContext m_context;
 
 	private:
 		void menuBar() const;
@@ -50,9 +57,18 @@ namespace PotatoEngine::Editor {
 
 	public:
 		bool ShouldClose() const;
-		void SetPlatform(PlatformAPI* p) { m_platform = p; }
-		
-		void AddPanel(EditorPanel* panel) { panels.push_back(panel); }
+		void SetPlatform(Platform::PlatformAPI* p) { m_platform = p; }
+
+		template<typename T, typename... Args>
+        T* AddPanel(Args&&... args) {
+            static_assert(std::is_base_of_v<EditorPanel, T>,
+                "T must derive from EditorPanel");
+
+            auto panel = std::make_unique<T>(std::forward<Args>(args)...);
+            T* ptr = panel.get();
+            m_panels.push_back(std::move(panel));
+            return ptr;
+        }
 	};
 };
 

@@ -42,7 +42,9 @@ void EditorApplication::OnStart() {
 	m_platform->SetConsoleVisibility(false);
 
 	// Add some example panels:
-	AddPanel(new Viewport());
+	AddPanel<Viewport>(std::make_unique<EditorContext>(m_context));
+	AddPanel<Console>(std::make_unique<EditorContext>(m_context));
+	AddPanel<Inspector>(std::make_unique<EditorContext>(m_context));
 }
 
 void EditorApplication::OnUpdate() {
@@ -57,17 +59,8 @@ void EditorApplication::OnUpdate() {
 	menuBar();
 
 	ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-	
-	ImGui::Begin("Inspector");
-	ImGui::Text("tu puta madre no hay inspector");
-	ImGui::End();
 
-	ImGui::Begin("Tile Editor");
-	ImGui::Separator();
-	ImGui::Text("ajskdjalskdjkls");
-	ImGui::End();
-
-	for (auto& panel : panels)
+	for (auto& panel : m_panels)
 		panel->Render();
 
 	ImGui::Render();
