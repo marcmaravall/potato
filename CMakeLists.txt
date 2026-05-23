@@ -26,17 +26,20 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
 )
+
 target_include_directories(imgui_lib PUBLIC
     thirdparty/imgui
     thirdparty/imgui/backends
 )
 target_link_libraries(imgui_lib PUBLIC glfw)
 
-file(GLOB EDITOR_SOURCES CONFIGURE_DEPENDS "src/editor/*.cpp")
+file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" "src/platform/windows/*.cpp")
+
+include_directories(potato PUBLIC "src/core" "src/")
 
 add_executable(potato
     "src/main.cpp"
-    ${EDITOR_SOURCES}
+    ${ENGINE_SOURCES}
 )
  
 target_link_libraries(potato PRIVATE
