@@ -4,7 +4,9 @@
 namespace PotatoEngine::Core::Rendering {
 
 	class VertexArray {
-
+	public:
+		VertexArray();
+		~VertexArray();
 	};
 };
 

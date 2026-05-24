@@ -8,3 +8,7 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+
+#define MEB_IMPLEMENTATION
+#define MEB_LOG_TO_FILE
+#include <meb.h>
