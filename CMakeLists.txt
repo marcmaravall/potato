@@ -10,7 +10,7 @@ set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(thirdparty/glfw)
 
-add_library(glad STATIC thirdparty/glad/src/glad.c)
+add_library(glad STATIC thirdparty/glad/src/glad.c "src/core/rendering/opengl/opengl_vertex_array.cpp")
 target_include_directories(glad PUBLIC thirdparty/glad/include)
 
 add_subdirectory(thirdparty/glm)
@@ -26,7 +26,7 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
-)
+ "src/core/rendering/opengl/opengl_vertex_array.cpp")
 
 target_include_directories(imgui_lib PUBLIC
     thirdparty/imgui
@@ -44,7 +44,7 @@ include_directories(potato PUBLIC "src/core" "src/"
 add_executable(potato
     "src/main.cpp"
     ${ENGINE_SOURCES}
-)
+ )
  
 target_link_libraries(potato PRIVATE
     glfw

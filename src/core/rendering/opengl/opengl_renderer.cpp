@@ -22,7 +22,7 @@ void OpenGL_Renderer::Clear() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void OpenGL_Renderer::DrawIndexed(const VertexArray& va, const uint32_t count = 0) {
+void OpenGL_Renderer::DrawIndexed(const Ref<VertexArray>& va, const uint32_t count = 0) {
 	// TODO: implement:
 
 }
