@@ -10,7 +10,7 @@ set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(thirdparty/glfw)
 
-add_library(glad STATIC thirdparty/glad/src/glad.c)
+add_library(glad STATIC thirdparty/glad/src/glad.c )
 target_include_directories(glad PUBLIC "thirdparty/glad/include")
 
 add_subdirectory(thirdparty/glm)
@@ -25,12 +25,13 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/imgui_widgets.cpp
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
-    thirdparty/imgui/backends/imgui_impl_opengl3.cpp)
+    thirdparty/imgui/backends/imgui_impl_opengl3.cpp )
 
 target_include_directories(imgui_lib PUBLIC
     thirdparty/imgui
     thirdparty/imgui/backends
 )
+
 target_link_libraries(imgui_lib PUBLIC glfw)
 
 file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" 
