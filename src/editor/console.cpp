@@ -1,7 +1,7 @@
 #include "console.h"
 
 using namespace PotatoEngine::Editor;
-using namespace PotatoEngine::Logging;
+using namespace PotatoEngine::Core::Logging;
 
 void Console::OnBegin() {
 
@@ -32,6 +32,18 @@ void Console::OnRender() {
     if (ImGui::Button("Add")) {
         m_editorContext->m_debugSystem.Log(DebugSystem::Message(s, t));
         s = "";
+    }
+    
+    ImGui::SameLine();
+
+    if (ImGui::Button("Clear")) {
+        m_editorContext->m_debugSystem.Clear();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Show Console")) {
+
     }
 
     ImGui::Separator();

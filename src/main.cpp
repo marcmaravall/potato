@@ -1,4 +1,4 @@
-#include "editor/editor.h"
+#include "editor/editor_application.h"
 
 using namespace PotatoEngine::Core;
 

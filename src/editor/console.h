@@ -1,5 +1,5 @@
-#ifndef POTATO_ENGINE_CONSOLE_H
-#define POTATO_ENGINE_CONSOLE_H
+#ifndef POTATO_EDITOR_CONSOLE_H
+#define POTATO_EDITOR_CONSOLE_H
 
 #include <memory>
 
@@ -23,4 +23,4 @@ namespace PotatoEngine::Editor {
 	};
 }
 
-#endif // POTATO_ENGINE_CONSOLE_H
+#endif // POTATO_EDITOR_CONSOLE_H

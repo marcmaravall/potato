@@ -4,9 +4,11 @@
 #include <imgui.h>
 
 namespace PotatoEngine::Editor {
-	class Style {
+	class Theme {
 	public:
 		static void SetCapMotchaTheme();
+		static void SetDarkTheme();
+		static void SetLightTheme();
 	};
 };
 

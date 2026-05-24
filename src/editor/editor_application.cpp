@@ -1,4 +1,4 @@
-#include "editor.h"
+#include "editor_application.h"
 
 using namespace PotatoEngine::Editor;
 
@@ -40,7 +40,7 @@ void EditorApplication::OnStart() {
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	m_platform->SetConsoleVisibility(false);
-	Style::SetCapMotchaTheme();
+	Theme::SetCapMotchaTheme();
 
 	AddPanel<Viewport>(std::make_unique<EditorContext>(m_context));
 	AddPanel<Console>(std::make_unique<EditorContext>(m_context));

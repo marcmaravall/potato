@@ -14,7 +14,7 @@ namespace PotatoEngine::Editor {
 		~EditorContext();
 
 	public:
-		Logging::DebugSystem m_debugSystem;
+		Core::Logging::DebugSystem m_debugSystem;
 	};
 }
 

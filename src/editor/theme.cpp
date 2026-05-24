@@ -1,11 +1,11 @@
-#include "style.h"
+#include "theme.h"
 
 using namespace PotatoEngine::Editor;
 
 // Thanks for the style!
 // https://github.com/ocornut/imgui/issues/707#issuecomment-3592676777
 
-void Style::SetCapMotchaTheme() {
+void Theme::SetCapMotchaTheme() {
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
 
@@ -110,4 +110,12 @@ void Style::SetCapMotchaTheme() {
     style.PopupBorderSize = 1.0f;
     style.FrameBorderSize = 0.0f;
     style.TabBorderSize = 0.0f;
+}
+
+void Theme::SetDarkTheme() {
+    ImGui::StyleColorsDark();
+}
+
+void Theme::SetLightTheme() {
+    ImGui::StyleColorsLight();
 }

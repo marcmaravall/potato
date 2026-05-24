@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-namespace PotatoEngine::Logging {
+namespace PotatoEngine::Core::Logging {
 
 	class DebugSystem {
 	public:
@@ -33,6 +33,9 @@ namespace PotatoEngine::Logging {
 
 	public:
 		void Log(const Message& message);
+		void PopLast();
+		void Clear();
+
 		std::vector<Message>& GetMessages() { return m_messages; }
 	};
 }
