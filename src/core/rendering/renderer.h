@@ -3,12 +3,16 @@
 #ifndef POTATO_RENDERER_H
 #define POTATO_RENDERER_H
 
+#include "renderer_api.h"
+
 namespace PotatoEngine::Core::Rendering {
 
 	class Renderer {
+	private:
+		RendererAPI m_api;
 	public:
 
-
+		
 	};
 };
 

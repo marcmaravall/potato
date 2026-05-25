@@ -1,6 +1,8 @@
 #ifndef POTATO_DEBUG_INFO_H
 #define POTATO_DEBUG_INFO_H
 
+#include <ref_scope.h>
+
 #include <string>
 #include <vector>
 
@@ -37,6 +39,10 @@ namespace PotatoEngine::Core::Logging {
 		void Clear();
 
 		std::vector<Message>& GetMessages() { return m_messages; }
+
+	public:
+		// Singleton:
+		static DebugSystem *s_Instance;
 	};
 }
 

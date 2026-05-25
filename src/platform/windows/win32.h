@@ -14,7 +14,7 @@
 namespace PotatoEngine::Platform {
 	class Win32_API : public PlatformAPI {
 	public:
-		Win32_API() {}
+		Win32_API() { }
 		~Win32_API() {}
 
 	public:

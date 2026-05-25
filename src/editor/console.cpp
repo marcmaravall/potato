@@ -30,25 +30,33 @@ void Console::OnRender() {
     ImGui::SameLine();
 
     if (ImGui::Button("Add")) {
-        m_editorContext->m_debugSystem.Log(DebugSystem::Message(s, t));
+        DebugSystem::s_Instance->Log(DebugSystem::Message(s, t));
         s = "";
     }
     
     ImGui::SameLine();
 
     if (ImGui::Button("Clear")) {
-        m_editorContext->m_debugSystem.Clear();
+        DebugSystem::s_Instance->Clear();
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Show Console")) {
+        if (Platform::PlatformAPI::s_Instance)
+            Platform::PlatformAPI::s_Instance->SetConsoleVisibility(true);
+    }
 
+    ImGui::SameLine();
+
+    if (ImGui::Button("Hide Console")) {
+        if (Platform::PlatformAPI::s_Instance)
+            Platform::PlatformAPI::s_Instance->SetConsoleVisibility(false);
     }
 
     ImGui::Separator();
 
-    for (auto& message : m_editorContext->m_debugSystem.GetMessages()) {
+    for (auto& message : DebugSystem::s_Instance->GetMessages()) {
         ImColor color;
 
         switch (message._Type) {

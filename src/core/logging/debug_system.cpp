@@ -1,9 +1,12 @@
 #include "debug_system.h"
 
 using namespace PotatoEngine::Core::Logging;
+DebugSystem* DebugSystem::s_Instance = nullptr;
 
 DebugSystem::DebugSystem() {
-
+	if (s_Instance == nullptr) {
+		s_Instance = this;
+	}
 }
 
 DebugSystem::~DebugSystem() {

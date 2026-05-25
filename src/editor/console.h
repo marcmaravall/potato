@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "core/logging/debug_system.h"
+#include <platform/api.h>
 
 #include "panel.h"
 #include "context.h"
