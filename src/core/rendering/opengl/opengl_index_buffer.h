@@ -4,13 +4,16 @@
 #include <glad/glad.h>
 #include <rendering/index_buffer.h>
 
+#include <vector>
+
 // TODO: implement
 
 namespace PotatoEngine::Core::Rendering {
-
+	
 	class OpenGL_IndexBuffer : public IndexBuffer {
 	private:
 		GLuint m_id;
+		std::vector<size_t> m_data;
 
 	public:
 		OpenGL_IndexBuffer() { glGenBuffers(1, &m_id); }
@@ -19,7 +22,7 @@ namespace PotatoEngine::Core::Rendering {
 	public:
 		void Bind() const override { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id); }
 		void Unbind() const override { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
-		uint32_t GetCount() const override {}
+		uint32_t GetCount() const override { return m_data.size(); }
 	};
 }
 

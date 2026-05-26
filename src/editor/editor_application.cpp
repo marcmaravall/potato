@@ -1,6 +1,7 @@
 #include "editor_application.h"
 
 using namespace PotatoEngine::Editor;
+using namespace PotatoEngine::Core::Rendering;
 
 EditorApplication::EditorApplication() {
 	// Only supports Windows
@@ -69,6 +70,7 @@ void EditorApplication::OnUpdate() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	
 	glfwSwapBuffers(m_glfwWindow);
 }
 

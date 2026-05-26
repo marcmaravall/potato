@@ -9,6 +9,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <core/rendering/vertex_array.h>
+#include <ref_scope.h>
+
 #include "application.h"
 #include "platform/api.h"
 
