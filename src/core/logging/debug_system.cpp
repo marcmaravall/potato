@@ -13,7 +13,6 @@ DebugSystem::~DebugSystem() {
 
 }
 
-
 void DebugSystem::Log(const DebugSystem::Message& message) {
 	m_messages.push_back(message);
 }

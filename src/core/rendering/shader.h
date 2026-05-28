@@ -14,14 +14,14 @@ namespace PotatoEngine::Core::Rendering {
 		ShaderType m_type;
 
 	public:
-		Shader(ShaderType type) : m_type(type);
+		Shader(ShaderType type) : m_type(type) {}
 		virtual ~Shader();
 
-		void Source(const std::string& source);
-		void Compile();
+		virtual void Source(const std::string& source) = 0;
+		virtual void Compile() = 0;
 
 	public:
-		ShaderType GetType{ return m_type; }
+		ShaderType GetType() const { return m_type; }
 	};
 }
 

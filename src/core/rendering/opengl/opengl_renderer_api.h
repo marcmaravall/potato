@@ -13,10 +13,10 @@
 #include <meb.h>
 
 namespace PotatoEngine::Core::Rendering {
-	class OpenGL_Renderer : public RendererAPI {
+	class OpenGL_RendererAPI : public RendererAPI {
 	public:
-		OpenGL_Renderer() {}
-		~OpenGL_Renderer() {}
+		OpenGL_RendererAPI() {}
+		~OpenGL_RendererAPI() {}
 	
 		void Init() override;
 		void Shutdown() override;

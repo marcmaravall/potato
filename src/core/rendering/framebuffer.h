@@ -1,9 +1,12 @@
 #ifndef POTATO_FRAMEBUFFER_H
 #define POTATO_FRAMEBUFFER_H
 
+#include "renderer_api.h"
+
+#include <ref_scope.h>
+
 #include <vector>
 #include <iostream>
-#include <ref_scope.h>
 
 namespace PotatoEngine::Core::Rendering {
 
@@ -51,7 +54,7 @@ namespace PotatoEngine::Core::Rendering {
 
         virtual const FramebufferSpec& GetSpec() const = 0;
 
-        static Ref<Framebuffer> Create(const FramebufferSpec& spec);
+        static Scope<Framebuffer> Create(const FramebufferSpec& spec);
 	};
 }
 

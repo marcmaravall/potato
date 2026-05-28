@@ -11,12 +11,12 @@ namespace PotatoEngine::Core {
     using Scope = std::unique_ptr<T>;
 
     template<typename T, typename... Args>
-    Ref<T> createRef(Args&&... args) {
+    Ref<T> CreateRef(Args&&... args) {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
     template<typename T, typename... Args>
-    Scope<T> createScope(Args&&... args) {
+    Scope<T> CreateScope(Args&&... args) {
         return std::make_unique<T>(std::forward<Args>(args)...);
     }
 }

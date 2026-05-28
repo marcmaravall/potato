@@ -1,5 +1,10 @@
-#ifndef POTATO_VIEWPORT_H
-#define POTATO_VIEWPORT_H
+#ifndef POTATO_EDITOR_VIEWPORT_H
+#define POTATO_EDITOR_VIEWPORT_H
+
+#include <memory>
+
+#include <core/rendering/renderer_api.h>
+#include <core/rendering/framebuffer.h>
 
 #include "panel.h"
 #include "context.h"
@@ -9,8 +14,13 @@
 namespace PotatoEngine::Editor {
 
 	class Viewport : public EditorPanel {
+	private:
+		std::unique_ptr<Core::Rendering::RendererAPI> m_api;
+		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
+		float m_width = 0, m_height = 0;
+
 	public:
-		Viewport(std::unique_ptr<EditorContext> ctx) : EditorPanel("Viewport", std::move(ctx)) {}
+		Viewport(std::unique_ptr<EditorContext> ctx);
 
 	protected:
 		void OnBegin() override;
@@ -19,4 +29,4 @@ namespace PotatoEngine::Editor {
 	};
 }
 
-#endif // POTATO_GAME_VIEWPORT_H
+#endif // POTATO_EDITOR_VIEWPORT_H

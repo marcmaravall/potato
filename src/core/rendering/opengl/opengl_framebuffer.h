@@ -11,7 +11,7 @@ namespace PotatoEngine::Core::Rendering {
 	class OpenGL_Framebuffer : public Framebuffer {
 	private:
 		FramebufferSpec m_spec;
-		GLuint m_fbo;
+		GLuint m_fbo = 0;
 
 		std::vector<FramebufferTextureSpec> m_colorAttachmentSpecs;
 		FramebufferTextureSpec m_depthAttachmentSpec;
@@ -24,7 +24,15 @@ namespace PotatoEngine::Core::Rendering {
 
 	public:
 		OpenGL_Framebuffer(const FramebufferSpec& spec)
-			: m_spec(spec) {
+			: m_spec(spec), m_fbo(0), m_depthAttachment(0) {
+
+			for (auto& attachment : spec.Attachments.Attachments) {
+				if (attachment.Format == FramebufferTextureFormat::DEPTH24STENCIL8)
+					m_depthAttachmentSpec = attachment;
+				else
+					m_colorAttachmentSpecs.push_back(attachment);
+			}
+
 			Invalidate();
 		}
 
@@ -38,7 +46,7 @@ namespace PotatoEngine::Core::Rendering {
 		uint32_t ToGLFormat(const FramebufferTextureFormat format) {
 			switch (format) {
 			case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
-			case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+			case FramebufferTextureFormat::RED_INTEGER: return GL_R32I;
 			case FramebufferTextureFormat::DEPTH24STENCIL8: return GL_DEPTH24_STENCIL8;
 			default:
 				return 0;
