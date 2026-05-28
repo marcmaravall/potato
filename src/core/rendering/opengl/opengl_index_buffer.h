@@ -16,6 +16,16 @@ namespace PotatoEngine::Core::Rendering {
 		std::vector<size_t> m_data;
 
 	public:
+		OpenGL_IndexBuffer(uint32_t* indices, uint32_t count) {
+			glGenBuffers(1, &m_id);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+			m_data.reserve(count);
+			for (uint32_t i = 0; i < count; i++) {
+				m_data.push_back(indices[i]);
+			}
+		}
+
 		OpenGL_IndexBuffer() { glGenBuffers(1, &m_id); }
 		~OpenGL_IndexBuffer() { }
 	
