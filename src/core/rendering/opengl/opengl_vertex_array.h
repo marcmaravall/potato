@@ -25,7 +25,11 @@ namespace PotatoEngine::Core::Rendering {
 		void Unbind() const override { glBindVertexArray(0); }
 
 		void AddVertexBuffer(const Ref<VertexBuffer>& vb) override;
+		// TODO: implement
 		void SetIndexBuffer(const Ref<IndexBuffer>& ib) override { m_indexBuffer = ib; }
+	
+		const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const { return m_vertexBuffers; }
+		const Ref<IndexBuffer>& GetIndexBuffer() const { return m_indexBuffer; }
 	};
 }
 

@@ -10,7 +10,7 @@ namespace PotatoEngine::Core::Rendering {
 
 	class VertexArray {
 	public:
-		virtual ~VertexArray() = 0;
+		virtual ~VertexArray() = default;
 	
 	public:
 		virtual void Bind() const = 0;
@@ -21,7 +21,7 @@ namespace PotatoEngine::Core::Rendering {
 		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
 
-		static Ref<VertexArray> Create();
+		static Scope<VertexArray> Create();
 	};
 };
 
