@@ -43,14 +43,31 @@ namespace PotatoEngine::Core::Rendering {
 		}
 
 	public:
-		uint32_t ToGLFormat(const FramebufferTextureFormat format) {
+		GLenum ToGLInternalFormat(FramebufferTextureFormat format) {
 			switch (format) {
-			case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
-			case FramebufferTextureFormat::RED_INTEGER: return GL_R32I;
-			case FramebufferTextureFormat::DEPTH24STENCIL8: return GL_DEPTH24_STENCIL8;
-			default:
-				return 0;
+			case FramebufferTextureFormat::RGBA8:
+				return GL_RGBA8;
+
+			case FramebufferTextureFormat::RED_INTEGER:
+				return GL_R32I;
+
+			case FramebufferTextureFormat::DEPTH24STENCIL8:
+				return GL_DEPTH24_STENCIL8;
 			}
+
+			return 0;
+		}
+
+		GLenum ToGLDataFormat(FramebufferTextureFormat format) {
+			switch (format) {
+			case FramebufferTextureFormat::RGBA8:
+				return GL_RGBA;
+
+			case FramebufferTextureFormat::RED_INTEGER:
+				return GL_RED_INTEGER;
+			}
+
+			return 0;
 		}
 
 	public:
@@ -78,10 +95,12 @@ namespace PotatoEngine::Core::Rendering {
 
 		void ClearAttachment(uint32_t attachmentIndex, int value) override {
 			auto& spec = m_colorAttachmentSpecs[attachmentIndex];
-			glClearTexImage(m_colorAttachments[attachmentIndex], 0, ToGLFormat(spec.Format), GL_INT, &value);
+			glClearTexImage(m_colorAttachments[attachmentIndex], 0, ToGLDataFormat(spec.Format), GL_INT, &value);
 		}
 
 		uint32_t GetColorAttachmentID(uint32_t index = 0) const override {
+			assert(index < m_colorAttachments.size() && "Index out of bounds!");
+
 			return m_colorAttachments[index];
 		}
 
