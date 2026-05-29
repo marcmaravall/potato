@@ -8,8 +8,8 @@
 namespace PotatoEngine::Core::Rendering {
 	class OpenGL_Shader : public Shader {
 	private:
-		GLuint m_id;
-		std::string m_debugErrorLog;
+		GLuint m_id = 0;
+		std::string m_debugErrorLog = "";
 	
 	public:
 		OpenGL_Shader(ShaderType type) : Shader(type) {
@@ -17,6 +17,14 @@ namespace PotatoEngine::Core::Rendering {
 				m_id = glCreateShader(GL_VERTEX_SHADER);
 			else if (type == ShaderType::FRAGMENT)
 				m_id = glCreateShader(GL_FRAGMENT_SHADER);
+		}
+
+		OpenGL_Shader(ShaderType type, const std::string& source) : Shader(type, source) {
+			if (type == ShaderType::VERTEX)
+				m_id = glCreateShader(GL_VERTEX_SHADER);
+			else if (type == ShaderType::FRAGMENT)
+				m_id = glCreateShader(GL_FRAGMENT_SHADER);
+			Source(source);
 		}
 
 		~OpenGL_Shader() {}

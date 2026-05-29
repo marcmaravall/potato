@@ -12,8 +12,8 @@ namespace PotatoEngine::Core::Rendering {
 
 	class OpenGL_ShaderProgram : public ShaderProgram {
 	private:
-		GLuint m_id;
-		std::string m_debugErrorLog;
+		GLuint m_id = 0;
+		std::string m_debugErrorLog = "";
 
 	public:
 		OpenGL_ShaderProgram() {
