@@ -1,6 +1,7 @@
 #ifndef POTATO_SHADER_H
 #define POTATO_SHADER_H
 
+#include <filesystem>
 #include <ref_scope.h>
 #include <string>
 
@@ -18,6 +19,12 @@ namespace PotatoEngine::Core::Rendering {
 		Shader(ShaderType type) : m_type(type) {};
 
 		virtual ~Shader() = default;
+
+		void CompileFromFile(const std::string& filepath) {
+			std::string source = std::filesystem::path(filepath).string();
+			Source(source);
+			Compile();
+		}
 
 		virtual void Source(const std::string& source) = 0;
 		virtual void Compile() = 0;

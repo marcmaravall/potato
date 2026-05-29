@@ -60,6 +60,12 @@ namespace PotatoEngine::Core::Rendering {
 				m_debugErrorLog = infoLog;
 			}
 		}
+
+	public:
+		void Uniform1i(const std::string& name, int value) override { glUniform1i(glGetUniformLocation(m_id, name.c_str()), value); }
+		void Uniform1f(const std::string& name, float value) override { glUniform1f(glGetUniformLocation(m_id, name.c_str()), value); }
+		void Uniform1u(const std::string& name, uint32_t value) override { glUniform1ui(glGetUniformLocation(m_id, name.c_str()), value); }
+		void Uniform1b(const std::string& name, bool value) override { glUniform1i(glGetUniformLocation(m_id, name.c_str()), static_cast<int>(value)); }
 	};
 }
 

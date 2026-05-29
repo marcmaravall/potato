@@ -20,6 +20,12 @@ namespace PotatoEngine::Core::Rendering {
 		virtual void Use() = 0;
 		virtual void Unuse() = 0;
 
+	public:
+		virtual void Uniform1i(const std::string& name, int value) = 0;
+		virtual void Uniform1f(const std::string& name, float value) = 0;
+		virtual void Uniform1u(const std::string& name, uint32_t value) = 0;
+		virtual void Uniform1b(const std::string& name, bool value) = 0;
+
 		static Scope<ShaderProgram> Create();
 	};
 }

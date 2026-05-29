@@ -14,6 +14,7 @@
 #include "context.h"
 
 #include <imgui.h>
+#include <GLFW/glfw3.h>
 
 namespace PotatoEngine::Editor {
 
