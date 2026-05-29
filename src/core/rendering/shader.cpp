@@ -8,6 +8,8 @@ namespace PotatoEngine::Core::Rendering {
 		switch (RendererAPI::s_Backend) {
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Shader>(type);
 		}
+
+		assert(false && "Unknown RendererAPI backend!");
 		return nullptr;
 	}
 
@@ -15,6 +17,8 @@ namespace PotatoEngine::Core::Rendering {
 		switch (RendererAPI::s_Backend) {
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Shader>(type, source);
 		}
+
+		assert(false && "Unknown RendererAPI backend!");
 		return nullptr;
 	}
 }

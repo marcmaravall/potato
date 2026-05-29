@@ -1,11 +1,14 @@
 #ifndef POTATO_EDITOR_VIEWPORT_H
 #define POTATO_EDITOR_VIEWPORT_H
 
+#include <meb.h>
 #include <memory>
 
 #include <core/rendering/renderer_api.h>
 #include <core/rendering/framebuffer.h>
 #include <core/rendering/shader_program.h>
+#include <core/rendering/vertex_array.h>
+#include <core/rendering/vertex_buffer.h>
 
 #include "panel.h"
 #include "context.h"
@@ -18,8 +21,8 @@ namespace PotatoEngine::Editor {
 	private:
 		std::unique_ptr<Core::Rendering::RendererAPI> m_api;
 		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
+
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
-		std::unique_ptr<Core::Rendering::VertexBuffer> m_vao;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		float m_width = 0, m_height = 0;
 

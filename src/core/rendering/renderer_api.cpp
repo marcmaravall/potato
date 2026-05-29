@@ -9,7 +9,9 @@ namespace PotatoEngine::Core::Rendering {
 		
 		switch (backend) {
 		case Backend::OpenGL: return CreateScope<OpenGL_RendererAPI>();
-		default: return nullptr;
 		}
+
+		assert(false && "Unknown RendererAPI backend!");
+		return nullptr;
 	}
 }

@@ -8,7 +8,7 @@ namespace PotatoEngine::Core::Rendering {
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Framebuffer>(spec);
 		}
 
-		// TODO: dont do this
-		return CreateScope<OpenGL_Framebuffer>(spec);
+		assert(false && "Unknown RendererAPI backend!");
+		return nullptr;
 	}
 }

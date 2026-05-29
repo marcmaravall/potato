@@ -31,6 +31,19 @@ namespace PotatoEngine::Core::Rendering {
 
 		GLuint GetID() { return m_id; }
 
+		bool CompileSuccessful() override {
+			GLint success;
+			glGetShaderiv(m_id, GL_COMPILE_STATUS, &success);
+			return success == GL_TRUE;
+		}
+
+		std::string& GetDebugErrorLog() override {
+			GLchar infoLog[512];
+			glGetShaderInfoLog(m_id, 512, nullptr, infoLog);
+			m_debugErrorLog = infoLog;
+			return m_debugErrorLog;
+		}
+
 		void Source(const std::string& source) override { 
 			const char* src = source.c_str();
 			glShaderSource(m_id, 1, &src, nullptr);

@@ -8,7 +8,10 @@ namespace PotatoEngine::Core::Rendering {
 		switch (RendererAPI::s_Backend)
 		{
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_VertexArray>();
-		default: return nullptr; 
+		
 		}
+
+		assert(false && "Unknown RendererAPI backend!");
+		return nullptr;
 	}
 }

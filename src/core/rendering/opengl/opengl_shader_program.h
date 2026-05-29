@@ -24,6 +24,27 @@ namespace PotatoEngine::Core::Rendering {
 			glDeleteProgram(m_id);
 		}
 
+		void Use() override {
+			glUseProgram(m_id);
+		}
+
+		void Unuse() override {
+			glUseProgram(0);
+		}
+
+		bool LinkSuccessful() override {
+			GLint success;
+			glGetProgramiv(m_id, GL_LINK_STATUS, &success);
+			return success == GL_TRUE;
+		}
+
+		std::string& GetDebugErrorLog() override {
+			GLchar infoLog[512];
+			glGetProgramInfoLog(m_id, 512, nullptr, infoLog);
+			m_debugErrorLog = infoLog;
+			return m_debugErrorLog;
+		}
+
 		void AttachShader(const Shader& shader) override {
 			OpenGL_Shader glShader = dynamic_cast<const OpenGL_Shader&>(shader);
 			glAttachShader(m_id, glShader.GetID());

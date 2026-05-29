@@ -22,6 +22,9 @@ namespace PotatoEngine::Core::Rendering {
 		virtual void Source(const std::string& source) = 0;
 		virtual void Compile() = 0;
 
+		virtual bool CompileSuccessful() = 0;
+		virtual std::string& GetDebugErrorLog() = 0;
+
 		Shader(ShaderType type, const std::string& source) : m_type(type) {}
 
 	public:

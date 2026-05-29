@@ -9,8 +9,6 @@
 #include <rendering/vertex_buffer.h>
 #include <rendering/buffer_layout.h>
 
-// TODO: implement 
-
 namespace PotatoEngine::Core::Rendering {
 	class OpenGL_VertexBuffer : public VertexBuffer {
     private:
@@ -20,6 +18,7 @@ namespace PotatoEngine::Core::Rendering {
     public:
         OpenGL_VertexBuffer(uint32_t size) {
 			glGenBuffers(1, &m_id);
+            
         }
 
         OpenGL_VertexBuffer(float* vertices, uint32_t size) {

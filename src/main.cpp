@@ -10,5 +10,5 @@ int main(int argc, char** argv) {
 }
 
 #define MEB_IMPLEMENTATION
-#define MEB_LOG_TO_FILE
+#define MEB_LOG_TO_STDOUT
 #include <meb.h>

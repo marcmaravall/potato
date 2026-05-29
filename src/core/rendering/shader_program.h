@@ -14,6 +14,12 @@ namespace PotatoEngine::Core::Rendering {
 		virtual void AttachShader (const Shader& shader) = 0;
 		virtual void LinkProgram() = 0;
 
+		virtual bool LinkSuccessful() = 0;
+		virtual std::string& GetDebugErrorLog() = 0;
+
+		virtual void Use() = 0;
+		virtual void Unuse() = 0;
+
 		static Scope<ShaderProgram> Create();
 	};
 }

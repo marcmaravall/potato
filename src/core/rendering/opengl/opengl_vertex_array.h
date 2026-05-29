@@ -19,13 +19,12 @@ namespace PotatoEngine::Core::Rendering {
 
 	public:
 		OpenGL_VertexArray() { glGenVertexArrays(1, &m_id); }
-		~OpenGL_VertexArray() { glBindVertexArray(0); }
+		~OpenGL_VertexArray() { glDeleteVertexArrays(1, &m_id); }
 
 		void Bind()  const override { glBindVertexArray(m_id); }
 		void Unbind() const override { glBindVertexArray(0); }
 
 		void AddVertexBuffer(const Ref<VertexBuffer>& vb) override;
-		// TODO: implement
 		void SetIndexBuffer(const Ref<IndexBuffer>& ib) override { m_indexBuffer = ib; }
 	
 		const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const { return m_vertexBuffers; }

@@ -7,7 +7,8 @@ namespace PotatoEngine::Core::Rendering {
 	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count) {
 		switch (RendererAPI::s_Backend) {
 		case RendererAPI::Backend::OpenGL: return CreateRef<OpenGL_IndexBuffer>(indices, count);
-		default: return nullptr;
 		}
+		assert(false && "Unknown RendererAPI backend!");
+		return nullptr;
 	}
 }
