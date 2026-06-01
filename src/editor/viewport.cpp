@@ -33,26 +33,33 @@ namespace PotatoEngine::Editor {
 
         const char* vertSrc = R"(
         #version 450 core
-        layout(location = 0) in vec3 a_Position;
-        layout(location = 1) in vec3 a_Color;
-
-        uniform float u_Sin;
-
-        out vec4 v_Color;
-        void main() {
-            v_Color = vec4(a_Color, 1.0);
-            vec4 pos = vec4(a_Position, 1.0);
-            pos.x += sin(u_Sin) * 0.5;
-            gl_Position = pos;
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aColor;
+        layout (location = 2) in vec2 aTexCoord;
+        
+        out vec3 ourColor;
+        out vec2 TexCoord;
+        
+        void main()
+        {
+            gl_Position = vec4(aPos, 1.0);
+            ourColor = aColor;
+            TexCoord = aTexCoord;
         }
         )";
 
         const char* fragSrc = R"(
         #version 450 core
-        in vec4 v_Color;
         out vec4 FragColor;
-        void main() {
-            FragColor = v_Color;
+  
+        in vec3 ourColor;
+        in vec2 TexCoord;
+
+        uniform sampler2D ourTexture;
+
+        void main()
+        {
+            FragColor = texture(ourTexture, TexCoord);
         }
         )";
 
@@ -81,10 +88,12 @@ namespace PotatoEngine::Editor {
         }
 
         float vertices[] = {
-            -0.5f, -0.5f, 0.0f,  1.0, 0.0, 0.0,
-             0.5f, -0.5f, 0.0f,  0.0, 1.0, 0.0,
-             0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0
+            -0.5f, -0.5f, 0.0f,  1.0, 0.0, 0.0, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f,  0.0, 1.0, 0.0, 0.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
+
+		m_texture = Texture::Create("assets/tests/texture.png");
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));
 		vbo->SetData(vertices, sizeof(vertices));
@@ -92,7 +101,8 @@ namespace PotatoEngine::Editor {
 
         BufferLayout layout = {
             { ShaderDataType::Float3, "a_Position" },
-            { ShaderDataType::Float3, "a_Color" }
+            { ShaderDataType::Float3, "a_Color" },
+			{ ShaderDataType::Float2, "a_TexCoord" }
         };
         vbo->SetLayout(layout);
 
@@ -123,7 +133,8 @@ namespace PotatoEngine::Editor {
         m_api->Clear();
 
         m_shaderProgram->Use();
-		m_shaderProgram->Uniform1f("u_Sin", (float)glfwGetTime());
+
+		m_texture->Bind();
         m_vao->Bind();
 
         m_api->DrawArrays(3);

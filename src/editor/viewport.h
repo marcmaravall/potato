@@ -9,6 +9,7 @@
 #include <core/rendering/shader_program.h>
 #include <core/rendering/vertex_array.h>
 #include <core/rendering/vertex_buffer.h>
+#include <core/rendering/texture.h>
 
 #include "panel.h"
 #include "context.h"
@@ -24,6 +25,7 @@ namespace PotatoEngine::Editor {
 		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
 
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
+		std::unique_ptr<Core::Rendering::Texture> m_texture;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		float m_width = 0, m_height = 0;
 

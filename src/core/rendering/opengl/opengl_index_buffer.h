@@ -27,7 +27,7 @@ namespace PotatoEngine::Core::Rendering {
 		}
 
 		OpenGL_IndexBuffer() { glGenBuffers(1, &m_id); }
-		~OpenGL_IndexBuffer() { }
+		~OpenGL_IndexBuffer() { glDeleteBuffers(1, &m_id); }
 	
 	public:
 		void Bind() const override { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id); }

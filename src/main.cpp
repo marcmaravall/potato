@@ -9,6 +9,9 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 #define MEB_IMPLEMENTATION
 #define MEB_LOG_TO_STDOUT
 #include <meb.h>
