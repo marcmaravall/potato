@@ -37,6 +37,7 @@ target_link_libraries(imgui_lib PUBLIC glfw)
 file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" 
     "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" "src/platform/windows/*.cpp"
     "src/platform/*.cpp"
+    "src/core/assets_manager/*.cpp"
 )
 
 include_directories(potato PUBLIC "src/core" "src/"

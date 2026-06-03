@@ -6,6 +6,10 @@ namespace PotatoEngine::Editor {
 
     Viewport::Viewport(std::unique_ptr<EditorContext> ctx) : EditorPanel("Viewport", std::move(ctx))
     {
+
+        m_assetsManager = Core::AssetsManager();
+
+
         m_api = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         // m_api->Init();
 
@@ -93,7 +97,8 @@ namespace PotatoEngine::Editor {
 			 0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
 
-		m_texture = Texture::Create("assets/tests/texture.png");
+		m_texture = Texture::Create((m_assetsManager.GetRoot() + 
+            Core::AssetsManager::Path("/assets/tests/texture.gif").c_str()));
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));
 		vbo->SetData(vertices, sizeof(vertices));

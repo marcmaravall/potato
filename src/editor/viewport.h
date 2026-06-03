@@ -11,6 +11,8 @@
 #include <core/rendering/vertex_buffer.h>
 #include <core/rendering/texture.h>
 
+#include <core/assets_manager/assets_manager.h>
+
 #include "panel.h"
 #include "context.h"
 
@@ -21,12 +23,16 @@ namespace PotatoEngine::Editor {
 
 	class Viewport : public EditorPanel {
 	private:
+		// TODO: move:
+		
 		std::unique_ptr<Core::Rendering::RendererAPI> m_api;
 		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
 
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
 		std::unique_ptr<Core::Rendering::Texture> m_texture;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
+
+		Core::AssetsManager m_assetsManager;
 		float m_width = 0, m_height = 0;
 
 	public:
