@@ -6,6 +6,7 @@ using namespace PotatoEngine::Core::Rendering;
 EditorApplication::EditorApplication() {
 	// Only supports Windows
 	SetPlatform(new Platform::Win32_API());
+	m_context = EditorContext();
 }
 
 EditorApplication::~EditorApplication() {
@@ -43,9 +44,9 @@ void EditorApplication::OnStart() {
 	m_platform->SetConsoleVisibility(false);
 	Theme::SetCapMotchaTheme();
 
-	AddPanel<Viewport>(std::make_unique<EditorContext>(m_context));
-	AddPanel<Console>(std::make_unique<EditorContext>(m_context));
-	AddPanel<Inspector>(std::make_unique<EditorContext>(m_context));
+	AddPanel<Viewport>(m_context);
+	AddPanel<Console>(m_context);
+	AddPanel<Inspector>(m_context);
 }
 
 void EditorApplication::OnUpdate() {

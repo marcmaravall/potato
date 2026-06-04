@@ -14,7 +14,7 @@
 #include <core/assets_manager/assets_manager.h>
 
 #include "panel.h"
-#include "context.h"
+#include "editor_context.h"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>
@@ -32,11 +32,10 @@ namespace PotatoEngine::Editor {
 		std::unique_ptr<Core::Rendering::Texture> m_texture;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 
-		Core::AssetsManager m_assetsManager;
 		float m_width = 0, m_height = 0;
 
 	public:
-		Viewport(std::unique_ptr<EditorContext> ctx);
+		Viewport(EditorContext& ctx);
 
 	protected:
 		void OnBegin() override;

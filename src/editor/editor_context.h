@@ -3,18 +3,25 @@
 
 #include <core/logging/debug_system.h>
 
+#include <core/assets_manager/assets_manager.h>
+
 namespace PotatoEngine::Editor {
 
 	class EditorContext {
 
 	private:
 
+
 	public:
 		EditorContext();
 		~EditorContext();
 
 	public:
-		Core::Logging::DebugSystem m_debugSystem;
+		Core::AssetsManager AssetsManager;
+		Core::Logging::DebugSystem DebugSystem;
+
+	public:
+		// static EditorContext* s_Instance;
 	};
 }
 

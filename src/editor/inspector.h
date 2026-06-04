@@ -9,7 +9,7 @@ namespace PotatoEngine::Editor {
 
 	class Inspector : public EditorPanel {
 	public:
-		Inspector(std::shared_ptr<EditorContext> ctx) : EditorPanel("Inspector", std::move(ctx)) {}
+		Inspector(EditorContext& ctx) : EditorPanel("Inspector", ctx) {}
 	
 	protected:
 		void OnBegin() override;

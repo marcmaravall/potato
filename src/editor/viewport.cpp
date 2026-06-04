@@ -4,12 +4,8 @@ using namespace PotatoEngine::Core::Rendering;
 
 namespace PotatoEngine::Editor {
 
-    Viewport::Viewport(std::unique_ptr<EditorContext> ctx) : EditorPanel("Viewport", std::move(ctx))
+    Viewport::Viewport(EditorContext& ctx) : EditorPanel("Viewport", ctx)
     {
-
-        m_assetsManager = Core::AssetsManager();
-
-
         m_api = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         // m_api->Init();
 
@@ -71,12 +67,12 @@ namespace PotatoEngine::Editor {
         auto fragment = Shader::Create(ShaderType::FRAGMENT, fragSrc);
         vertex->Compile();
 		if (!vertex->CompileSuccessful()) {
-            MEB_LOG_ERROR("Vertex shader compilation failed: {0}", vertex->GetDebugErrorLog());
+            MEB_LOG_ERROR("Vertex shader compilation failed");
             exit(1);
         }
         fragment->Compile();
         if (!fragment->CompileSuccessful()) {
-            MEB_LOG_ERROR("Fragment shader compilation failed: {0}", fragment->GetDebugErrorLog());
+            MEB_LOG_ERROR("Fragment shader compilation failed");
             exit(1);
         }
 
@@ -85,7 +81,7 @@ namespace PotatoEngine::Editor {
         m_shaderProgram->AttachShader(*fragment);
         m_shaderProgram->LinkProgram();
 		if (!m_shaderProgram->LinkSuccessful()) {
-            MEB_LOG_ERROR("Shader program linking failed: {0}", m_shaderProgram->GetDebugErrorLog());
+            MEB_LOG_ERROR("Shader program linking failed");
         }
         else {
 			MEB_LOG_INFO("Shader program linked successfully!");
@@ -97,7 +93,7 @@ namespace PotatoEngine::Editor {
 			 0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
 
-		m_texture = Texture::Create((m_assetsManager.GetRoot() + 
+		m_texture = Texture::Create((m_editorContext.AssetsManager.GetRoot() + 
             Core::AssetsManager::Path("/assets/tests/texture.gif").c_str()));
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));

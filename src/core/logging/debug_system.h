@@ -35,6 +35,9 @@ namespace PotatoEngine::Core::Logging {
 
 	public:
 		void Log(const Message& message);
+		void Log(const std::string& message, const Message::Type type = Message::Type::_INFO) {
+			Log(Message(message, type));
+		}
 		void PopLast();
 		void Clear();
 

@@ -16,7 +16,7 @@
 #include "platform/api.h"
 
 #include "panel.h"
-#include "context.h"
+#include "editor_context.h"
 #include "viewport.h"
 #include "console.h"
 #include "inspector.h"
@@ -42,10 +42,10 @@ namespace PotatoEngine::Editor {
 		GLFWwindow  *m_glfwWindow = nullptr;
 		Platform::PlatformAPI *m_platform = nullptr;
 
+		EditorContext m_context;
 		std::vector<std::unique_ptr<EditorPanel>> m_panels;
 
 	public:
-		EditorContext m_context;
 
 	private:
 		void menuBar() const;

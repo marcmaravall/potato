@@ -7,7 +7,7 @@
 #include <platform/api.h>
 
 #include "panel.h"
-#include "context.h"
+#include "editor_context.h"
 
 #include <misc/cpp/imgui_stdlib.h>
 
@@ -15,7 +15,7 @@ namespace PotatoEngine::Editor {
 
 	class Console : public EditorPanel {
 	public:
-		Console(std::shared_ptr<EditorContext> ctx) : EditorPanel("Console", std::move(ctx)) {}
+		Console(EditorContext& ctx) : EditorPanel("Console", ctx) {}
 
 	protected:
 		void OnBegin() override;
