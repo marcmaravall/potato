@@ -8,12 +8,12 @@
 #include <ref_scope.h>
 
 namespace PotatoEngine::Core::Rendering {
-	class Texture {
+	class Texture2D {
 	public:
-		virtual ~Texture() = default;
+		virtual ~Texture2D() = default;
 
 	public:
-		Texture() = default;
+		Texture2D() = default;
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 
@@ -22,8 +22,8 @@ namespace PotatoEngine::Core::Rendering {
 		virtual int GetChannels() const = 0;
 
 	public:
-		static Scope<Texture> Create(uint32_t width, uint32_t height);
-		static Scope<Texture> Create(const std::string& path);
+		static Scope<Texture2D> Create(uint32_t width, uint32_t height);
+		static Scope<Texture2D> Create(const std::string& path);
 	};
 };
 

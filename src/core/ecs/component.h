@@ -18,6 +18,7 @@ namespace PotatoEngine::Core::ECS {
 
 	public:
 		Component() = default;
+		Component(const std::string& name) : Name(name) {}
 		~Component() = default;
 	};
 }

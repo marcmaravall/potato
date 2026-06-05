@@ -9,8 +9,8 @@ namespace PotatoEngine::Core::ECS {
 
 	class Entity {
 	public:
-		std::vector<Entity> children;
-		std::vector<Component> components;
+		std::vector<Entity> Children;
+		std::vector<Component> Components;
 
 	public:
 		Entity() = default;

@@ -2,7 +2,7 @@
 #define POTATO_OPENGL_TEXTURE_H
 
 #include <glad/glad.h>
-#include <rendering/texture.h>
+#include <rendering/texture2d.h>
 
 #include <meb.h>
 #include <stb_image.h>
@@ -11,7 +11,7 @@
 
 namespace PotatoEngine::Core::Rendering {
 	
-	class OpenGL_Texture : public Texture {
+	class OpenGL_Texture2D : public Texture2D {
 	private:
 		GLuint m_id = 0;
 		int m_width = 0;
@@ -19,10 +19,10 @@ namespace PotatoEngine::Core::Rendering {
 		int m_channels = 0;
 
 	public:
-		OpenGL_Texture() { glGenTextures(1, &m_id); }
-		OpenGL_Texture(uint32_t width, uint32_t height) {}
+		OpenGL_Texture2D() { glGenTextures(1, &m_id); }
+		OpenGL_Texture2D(uint32_t width, uint32_t height) {}
 		
-		OpenGL_Texture(const std::string& filepath) {
+		OpenGL_Texture2D(const std::string& filepath) {
 			glGenTextures(1, &m_id);
 			glBindTexture(GL_TEXTURE_2D, m_id);
 
@@ -43,7 +43,7 @@ namespace PotatoEngine::Core::Rendering {
 			stbi_image_free(data);
 		}
 
-		~OpenGL_Texture() { 
+		~OpenGL_Texture2D() { 
 			glDeleteTextures(1, &m_id); 
 		}
 

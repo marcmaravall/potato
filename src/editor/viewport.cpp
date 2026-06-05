@@ -93,7 +93,7 @@ namespace PotatoEngine::Editor {
 			 0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
 
-		m_texture = Texture::Create((m_editorContext.AssetsManager.GetRoot() + 
+		m_texture = Texture2D::Create((m_editorContext.AssetsManager.GetRoot() + 
             Core::AssetsManager::Path("/assets/tests/texture.gif").c_str()));
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));
