@@ -24,6 +24,8 @@
 #include "core/logging/debug_system.h"
 #include "theme.h"
 
+#include <core/engine_context.h>
+
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -42,7 +44,7 @@ namespace PotatoEngine::Editor {
 		GLFWwindow  *m_glfwWindow = nullptr;
 		Platform::PlatformAPI *m_platform = nullptr;
 
-		EditorContext m_context;
+		Core::EngineContext m_context;
 		std::vector<std::unique_ptr<EditorPanel>> m_panels;
 
 	public:

@@ -1,7 +1,7 @@
 #ifndef POTATO_EDITOR_PANEL_H
 #define POTATO_EDITOR_PANEL_H
 
-#include "editor_context.h"
+#include <core/engine_context.h>
 
 #include <memory>
 #include <string>
@@ -19,12 +19,12 @@ namespace PotatoEngine::Editor {
         std::string m_title;
         bool m_isOpen;
 
-        EditorContext& m_editorContext;
+        Core::EngineContext& m_engineContext;
         ImGuiWindowFlags m_flags = 0;
 
     public:
-        EditorPanel(const char* title, EditorContext& ec, bool defaultOpen = true)
-            : m_title(title), m_isOpen(defaultOpen), m_editorContext(ec) {
+        EditorPanel(const char* title, Core::EngineContext& ec, bool defaultOpen = true)
+            : m_title(title), m_isOpen(defaultOpen), m_engineContext(ec) {
         }
 
         virtual ~EditorPanel() = default;

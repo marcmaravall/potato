@@ -12,9 +12,9 @@
 #include <core/rendering/texture2d.h>
 
 #include <core/assets_manager/assets_manager.h>
+#include <core/engine_context.h>
 
 #include "panel.h"
-#include "editor_context.h"
 
 #include <imgui.h>
 #include <GLFW/glfw3.h>
@@ -35,7 +35,7 @@ namespace PotatoEngine::Editor {
 		float m_width = 0, m_height = 0;
 
 	public:
-		Viewport(EditorContext& ctx);
+		Viewport(Core::EngineContext& ctx);
 
 	protected:
 		void OnBegin() override;

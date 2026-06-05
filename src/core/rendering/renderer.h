@@ -19,7 +19,7 @@ namespace PotatoEngine::Core::Rendering {
 	public:
 		void RenderScene();
 
-		Renderer(EngineContext& engineContext) : m_engineContext(engineContext) {}
+		Renderer(Core::EngineContext& engineContext) : m_engineContext(engineContext) {}
 		~Renderer() = default;
 	};
 };

@@ -4,7 +4,7 @@ using namespace PotatoEngine::Core::Rendering;
 
 namespace PotatoEngine::Editor {
 
-    Viewport::Viewport(EditorContext& ctx) : EditorPanel("Viewport", ctx)
+    Viewport::Viewport(Core::EngineContext& ctx) : EditorPanel("Viewport", ctx)
     {
         m_api = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         // m_api->Init();
@@ -93,7 +93,7 @@ namespace PotatoEngine::Editor {
 			 0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
 
-		m_texture = Texture2D::Create((m_editorContext.AssetsManager.GetRoot() + 
+		m_texture = Texture2D::Create((m_engineContext.AssetsManager.GetRoot() + 
             Core::AssetsManager::Path("/assets/tests/texture.gif").c_str()));
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));
