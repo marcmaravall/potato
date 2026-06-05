@@ -6,6 +6,10 @@ namespace PotatoEngine::Editor {
 
     Viewport::Viewport(Core::EngineContext& ctx) : EditorPanel("Viewport", ctx)
     {
+        ctx.Renderer.Init();
+
+        /*
+        
         m_api = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         // m_api->Init();
 
@@ -112,6 +116,8 @@ namespace PotatoEngine::Editor {
 
 		MEB_ASSERT(m_vao);
         MEB_ASSERT(m_shaderProgram);
+
+        */
     }
 
     void Viewport::OnBegin() {
@@ -126,8 +132,10 @@ namespace PotatoEngine::Editor {
         if (width > 0 && height > 0 && (width != m_width || height != m_height)) {
             m_width = width;
             m_height = height;
-            m_framebuffer->Resize(width, height);
+			m_engineContext.Renderer.Resize(m_width, m_height);
         }
+
+        /*
 
         m_framebuffer->Bind();
         m_api->SetViewport(0, 0, m_width, m_height);
@@ -144,7 +152,10 @@ namespace PotatoEngine::Editor {
 		m_shaderProgram->Unuse();
         m_framebuffer->Unbind();
 
-        ImTextureID texId = (ImTextureID)(uintptr_t)m_framebuffer->GetColorAttachmentID(0);
+        */
+        m_engineContext.Renderer.RenderScene();
+
+        ImTextureID texId = (ImTextureID)(uintptr_t)m_engineContext.Renderer.GetFramebuffer().GetColorAttachmentID(0);
         ImGui::Image(texId, avail, ImVec2(0, 1), ImVec2(1, 0));
     }
 

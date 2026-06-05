@@ -4,7 +4,7 @@
 #include <iostream>
 #include <assets_manager/assets_manager.h>
 #include <logging/debug_system.h>
-
+#include <rendering/renderer.h>
 #include <ecs/entity.h>
 
 namespace PotatoEngine::Core {
@@ -13,8 +13,13 @@ namespace PotatoEngine::Core {
 	public:
 		AssetsManager AssetsManager;
 		Logging::DebugSystem DebugSystem;
+		Rendering::Renderer Renderer;
 
 		ECS::Entity RootEntity;
+	
+	public:
+		EngineContext();
+		~EngineContext();
 	};
 }
 

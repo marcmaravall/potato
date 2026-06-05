@@ -6,7 +6,6 @@ using namespace PotatoEngine::Core::Rendering;
 EditorApplication::EditorApplication() {
 	// Only supports Windows
 	SetPlatform(new Platform::Win32_API());
-	m_context = Core::EngineContext();
 }
 
 EditorApplication::~EditorApplication() {

@@ -4,13 +4,6 @@
 #include <meb.h>
 #include <memory>
 
-#include <core/rendering/renderer_api.h>
-#include <core/rendering/framebuffer.h>
-#include <core/rendering/shader_program.h>
-#include <core/rendering/vertex_array.h>
-#include <core/rendering/vertex_buffer.h>
-#include <core/rendering/texture2d.h>
-
 #include <core/assets_manager/assets_manager.h>
 #include <core/engine_context.h>
 
@@ -24,13 +17,6 @@ namespace PotatoEngine::Editor {
 	class Viewport : public EditorPanel {
 	private:
 		// TODO: move:
-		
-		std::unique_ptr<Core::Rendering::RendererAPI> m_api;
-		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
-
-		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
-		std::unique_ptr<Core::Rendering::Texture2D> m_texture;
-		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 
 		float m_width = 0, m_height = 0;
 
