@@ -7,10 +7,17 @@ void Inspector::OnBegin() {
 }
 
 void Inspector::OnRender() {
-	ImGui::Text("TODO: implement ");
-	if (ImGui::Button("Test")) {
-		m_engineContext.DebugSystem.Log("Test button clicked in Inspector panel!");
-	}
+    ImGui::SeparatorText("Inspector");
+    
+    if (ImGui::BeginPopupContextWindow()) {
+        if (ImGui::MenuItem("New")) {
+
+        }
+
+        // if (ImGui::MenuItem(""))
+
+        ImGui::EndPopup();
+    }
 } 
 
 void Inspector::OnEnd() {

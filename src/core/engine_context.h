@@ -15,7 +15,7 @@ namespace PotatoEngine::Core {
 		Logging::DebugSystem DebugSystem;
 		Rendering::Renderer Renderer;
 
-		ECS::Entity RootEntity;
+		std::vector<ECS::Entity> Entities;
 	
 	public:
 		EngineContext();

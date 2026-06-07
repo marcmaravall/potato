@@ -20,6 +20,7 @@
 #include "viewport.h"
 #include "console.h"
 #include "inspector.h"
+#include "hierarchy.h"
 
 #include "core/logging/debug_system.h"
 #include "theme.h"

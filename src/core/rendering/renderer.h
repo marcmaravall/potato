@@ -32,16 +32,22 @@ namespace PotatoEngine::Core::Rendering {
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		
 		Core::EngineContext& m_engineContext;
+
+		int m_width = 0;
+		int m_height = 0;
 	
 	public:
 		void Init();
 
 		void RenderScene();
 
-		void Resize(uint32_t width, uint32_t height) const {
+		void Resize(uint32_t width, uint32_t height) {
 			if (m_framebuffer) {
 				m_framebuffer->Resize(width, height);
 			}
+
+			m_width = width;
+			m_height = height;
 		}
 
 		const Framebuffer& GetFramebuffer() { return *m_framebuffer; }

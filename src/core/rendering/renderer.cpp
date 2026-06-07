@@ -142,8 +142,7 @@ namespace PotatoEngine::Core::Rendering {
 		*/
 
         m_framebuffer->Bind();
-		// TODO: set to framebuffer's dimensions
-        m_rendererAPI->SetViewport(0, 0, 1000, 1000);
+        m_rendererAPI->SetViewport(0, 0, m_width, m_height);
         m_rendererAPI->Clear();
 
         m_shaderProgram->Use();

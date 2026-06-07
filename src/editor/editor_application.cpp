@@ -46,6 +46,7 @@ void EditorApplication::OnStart() {
 	AddPanel<Viewport>(m_context);
 	AddPanel<Console>(m_context);
 	AddPanel<Inspector>(m_context);
+	AddPanel<HierarchyPanel>(m_context);
 }
 
 void EditorApplication::OnUpdate() {

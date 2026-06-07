@@ -9,6 +9,8 @@ namespace PotatoEngine::Core::ECS {
 
 	class Entity {
 	public:
+		std::string Name = "DEFAULT";
+
 		std::vector<Entity> Children;
 		std::vector<Component> Components;
 
@@ -16,7 +18,7 @@ namespace PotatoEngine::Core::ECS {
 		Entity() = default;
 		~Entity() = default;
 
-
+		Entity(const std::string& name) { Name = name; }
 	};
 }
 
