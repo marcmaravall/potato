@@ -2,6 +2,7 @@
 #define POTATO_ECS_ENTITY_H
 
 #include "component.h"
+#include "system.h"
 
 #include <memory>
 #include <vector>
@@ -14,6 +15,7 @@ namespace PotatoEngine::Core::ECS {
 
 		std::vector<Entity> Children;
 		std::vector<Component*> Components;
+		std::vector<System*> Systems;
 
 	public:
 		Entity() = default;
@@ -24,6 +26,18 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		void Add(Component* component) {
 			Components.push_back(component);
+		}
+
+		void Add(System* system) {
+			Systems.push_back(system);
+		}
+
+		void Remove(Component* component) {
+			Components.erase(std::remove(Components.begin(), Components.end(), component), Components.end());
+		}
+
+		void Remove(System* system) {
+			Systems.erase(std::remove(Systems.begin(), Systems.end(), system), Systems.end());
 		}
 	};
 }

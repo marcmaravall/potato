@@ -26,10 +26,11 @@ void Inspector::OnRender() {
     ImGui::Separator();
     ImGui::Spacing();
 
-    for (auto& component : entity->Components) {
+    for (auto component : entity->Components) {
         if (ImGui::CollapsingHeader(component->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::PushID(component);
 			Registry.Render(component);
+			ImGui::Spacing();
             ImGui::PopID();
         }
     }

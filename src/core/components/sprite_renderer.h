@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 
 namespace PotatoEngine::Core::Components {
-	class SpriteRenderer : public ECS::Component {
+	class SpriteRendererData : public ECS::Component {
 	public:
 		Core::Rendering::Texture2D* Texture;
 		glm::vec4 Color = glm::vec4(1.0f);
@@ -17,9 +17,11 @@ namespace PotatoEngine::Core::Components {
 		bool FlipX = false, FlipY = false;
 
 	public:
-		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
+		SpriteRendererData() : ECS::Component("Sprite Renderer") {}
 		
-		~SpriteRenderer() = default;
+		~SpriteRendererData() = default;
+
+		void nothing() override {}
 	};
 }
 

@@ -15,7 +15,6 @@
 namespace PotatoEngine::Editor {
 	class ComponentInspectorRegistry {
 	private:
-		std::string m_errorMessage = "No inspector registered for this component";
 		std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
 
 	public:
@@ -23,7 +22,7 @@ namespace PotatoEngine::Editor {
 		void Add(std::function<void(ComponentType&)> inspectorFunction) {
 			m_renderers[typeid(ComponentType)] = [inspectorFunction](void* component) {
 				inspectorFunction(*static_cast<ComponentType*>(component));
-				};
+			};
 		}
 
 		void Render(void* component, std::type_index type) {
@@ -32,7 +31,7 @@ namespace PotatoEngine::Editor {
 				it->second(component);
 			}
 			else {
-				ImGui::TextDisabled(m_errorMessage.c_str());
+				ImGui::TextDisabled("No inspector for: %s", type.name());
 			}
 		}
 
@@ -41,7 +40,7 @@ namespace PotatoEngine::Editor {
 			if (it != m_renderers.end())
 				it->second(c);
 			else
-				ImGui::TextDisabled(m_errorMessage.c_str());
+				ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
 		}
 
 		ComponentInspectorRegistry() {
@@ -58,7 +57,7 @@ namespace PotatoEngine::Editor {
 		ComponentInspectorRegistry Registry;
 
 		Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {
-			Registry.Add<Core::Components::SpriteRenderer>([](Core::Components::SpriteRenderer& sr) {
+			Registry.Add<Core::Components::SpriteRendererData>([](Core::Components::SpriteRendererData& sr) {
 				ImGui::ColorEdit4("Color", &sr.Color[0]);
 				ImGui::InputFloat2("Pivot", &sr.Pivot[0]);
 				ImGui::Checkbox("Flip X", &sr.FlipX);

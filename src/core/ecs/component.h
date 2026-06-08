@@ -9,17 +9,13 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		std::string Name = "[DEFAULT_COMPONENT]";
 
-		virtual void Awake() {};
-
-		virtual void Start() {};
-		virtual void Update() {};
-		
-		virtual void Destroy() {};
-
 	public:
 		Component() = default;
 		Component(const std::string& name) : Name(name) {}
 		~Component() = default;
+
+		// to make this class abstract
+		virtual void nothing() = 0;
 	};
 }
 
