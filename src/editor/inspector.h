@@ -6,11 +6,65 @@
 #include "panel.h"
 #include <core/engine_context.h>
 
+#include <typeindex>
+#include <functional>
+#include <unordered_map>
+
+#include <components/sprite_renderer.h>
+
 namespace PotatoEngine::Editor {
+	class ComponentInspectorRegistry {
+	private:
+		std::string m_errorMessage = "No inspector registered for this component";
+		std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
+
+	public:
+		template<typename ComponentType>
+		void Add(std::function<void(ComponentType&)> inspectorFunction) {
+			m_renderers[typeid(ComponentType)] = [inspectorFunction](void* component) {
+				inspectorFunction(*static_cast<ComponentType*>(component));
+				};
+		}
+
+		void Render(void* component, std::type_index type) {
+			auto it = m_renderers.find(type);
+			if (it != m_renderers.end()) {
+				it->second(component);
+			}
+			else {
+				ImGui::TextDisabled(m_errorMessage.c_str());
+			}
+		}
+
+		void Render(Core::ECS::Component* c) {
+			auto it = m_renderers.find(typeid(*c));
+			if (it != m_renderers.end())
+				it->second(c);
+			else
+				ImGui::TextDisabled(m_errorMessage.c_str());
+		}
+
+		ComponentInspectorRegistry() {
+			m_renderers.reserve(10);
+		}
+
+		~ComponentInspectorRegistry() = default;
+	};
 
 	class Inspector : public EditorPanel {
+	private:
+
 	public:
-		Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {}
+		ComponentInspectorRegistry Registry;
+
+		Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {
+			Registry.Add<Core::Components::SpriteRenderer>([](Core::Components::SpriteRenderer& sr) {
+				ImGui::ColorEdit4("Color", &sr.Color[0]);
+				ImGui::InputFloat2("Pivot", &sr.Pivot[0]);
+				ImGui::Checkbox("Flip X", &sr.FlipX);
+				ImGui::Checkbox("Flip Y", &sr.FlipY);
+			});
+		}
 	
 	protected:
 		void OnBegin() override;

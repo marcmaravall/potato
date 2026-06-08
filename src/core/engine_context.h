@@ -16,6 +16,7 @@ namespace PotatoEngine::Core {
 		Rendering::Renderer Renderer;
 
 		std::vector<ECS::Entity> Entities;
+		ECS::Entity* SelectedEntity = nullptr;
 	
 	public:
 		EngineContext();

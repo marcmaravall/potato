@@ -6,14 +6,30 @@ namespace PotatoEngine::Editor {
 
 	}
 
-	static void RenderEntityNode(Core::ECS::Entity* entity) {
-		if (ImGui::TreeNode(entity->Name.c_str())) {
-			for (auto& child : entity->Children) {
-				RenderEntityNode(&child);
-			}
-			ImGui::TreePop();
-		}
-	}
+    static void RenderEntityNode(Core::ECS::Entity* entity, Core::ECS::Entity*& selectedEntity) {
+        ImGuiTreeNodeFlags flags =
+            (selectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0) |
+            ImGuiTreeNodeFlags_OpenOnArrow;
+
+        bool opened = ImGui::TreeNodeEx(
+            (void*)entity,
+            flags,
+            "%s",
+            entity->Name.c_str()
+        );
+
+        if (ImGui::IsItemClicked()) {
+            selectedEntity = entity;
+        }
+
+        if (opened) {
+            for (auto& child : entity->Children) {
+                RenderEntityNode(&child, selectedEntity);
+            }
+
+            ImGui::TreePop();
+        }
+    }
 
 	void HierarchyPanel::OnRender() {
 
@@ -25,7 +41,7 @@ namespace PotatoEngine::Editor {
 		}
 		
 		for (auto& entity : m_engineContext.Entities) {
-			RenderEntityNode(&entity);
+			RenderEntityNode(&entity, m_engineContext.SelectedEntity);
 		}
 	}
 

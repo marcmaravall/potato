@@ -7,7 +7,7 @@ namespace PotatoEngine::Core::ECS {
 
 	class Component {
 	public:
-		std::string Name = "";
+		std::string Name = "[DEFAULT_COMPONENT]";
 
 		virtual void Awake() {};
 
