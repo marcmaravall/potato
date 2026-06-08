@@ -32,13 +32,18 @@ void EditorApplication::OnStart() {
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+	std::string imguiPath = m_context.AssetsManager.Path(m_context.AssetsManager.GetRoot() + "/tests/imgui.ini");
+	m_context.DebugSystem.Log("Loaded ImGui from: " + imguiPath);
+	ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
+	ImGui_ImplOpenGL3_Init("#version 450");
 
 	m_platform->SetConsoleVisibility(false);
 	Theme::SetCapMotchaTheme();
@@ -47,6 +52,7 @@ void EditorApplication::OnStart() {
 	AddPanel<Console>(m_context);
 	AddPanel<Inspector>(m_context);
 	AddPanel<HierarchyPanel>(m_context);
+	AddPanel<GamePlayer>(m_context);
 }
 
 void EditorApplication::OnUpdate() {

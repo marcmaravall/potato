@@ -21,6 +21,7 @@
 #include "console.h"
 #include "inspector.h"
 #include "hierarchy.h"
+#include "game_player.h"
 
 #include "core/logging/debug_system.h"
 #include "theme.h"
@@ -36,7 +37,7 @@
 #endif
 
 // ImGui is the default editor library
-#define POTATO_EDITOR_USE_IMGUI true
+#define POTATO_EDITOR_USE_IMGUI
 
 namespace PotatoEngine::Editor {
 

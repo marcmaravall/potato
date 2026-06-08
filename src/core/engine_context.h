@@ -11,6 +11,8 @@ namespace PotatoEngine::Core {
 
 	class EngineContext {
 	public:
+		bool IsRunning = false;
+
 		AssetsManager AssetsManager;
 		Logging::DebugSystem DebugSystem;
 		Rendering::Renderer Renderer;
