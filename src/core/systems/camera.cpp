@@ -7,7 +7,7 @@ namespace PotatoEngine::Core::Systems {
 	}
 
 	void CameraSystem::OnUpdate() {
-
+		
 	}
 
 	void CameraSystem::OnDestroy() {

@@ -114,7 +114,7 @@ namespace PotatoEngine::Core::Rendering {
 	}
 
 	void Renderer::RenderScene() {
-		
+
 		/*
 		std::queue<ECS::Entity> entityQueue;
 		entityQueue.push(m_engineContext.RootEntity);
@@ -145,15 +145,16 @@ namespace PotatoEngine::Core::Rendering {
         m_rendererAPI->SetViewport(0, 0, m_width, m_height);
         m_rendererAPI->Clear();
 
-        m_shaderProgram->Use();
+        /*m_shaderProgram->Use();
 
         m_texture->Bind();
         m_vao->Bind();
 
         m_rendererAPI->DrawArrays(3);
-
         m_vao->Unbind();
         m_shaderProgram->Unuse();
+        */
+
         m_framebuffer->Unbind();
 	}
 }

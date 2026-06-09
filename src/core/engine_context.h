@@ -19,6 +19,7 @@ namespace PotatoEngine::Core {
 		class CameraSystem;
 	}
 
+	// TODO: change to unique and shared pointers
 	class EngineContext {
 	public:
 		bool IsRunning = false;

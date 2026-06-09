@@ -15,6 +15,7 @@ namespace PotatoEngine::Editor {
 	class HierarchyPanel : public EditorPanel {
 	public:
 		HierarchyPanel(Core::EngineContext& ctx) : EditorPanel("Hierarchy", ctx) {
+			/*
 			m_engineContext.Entities.push_back(Core::ECS::Entity("Paco"));
 			m_engineContext.Entities[0].Add(new Core::Components::SpriteRendererData());
 			m_engineContext.Entities[0].Add(new Core::Systems::SpriteRendererSystem(ctx));
@@ -22,7 +23,7 @@ namespace PotatoEngine::Editor {
 			m_engineContext.Entities[0].Children.push_back(Core::ECS::Entity("Hijo de Paco"));
 
 			m_engineContext.Entities.push_back(Core::ECS::Entity("Puta"));
-			m_engineContext.Entities[1].Children.push_back(Core::ECS::Entity("te la creiste we xd"));
+			m_engineContext.Entities[1].Children.push_back(Core::ECS::Entity("te la creiste we xd"));*/
 		}
 
 	protected:

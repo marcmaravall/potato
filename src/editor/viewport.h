@@ -16,8 +16,6 @@ namespace PotatoEngine::Editor {
 
 	class Viewport : public EditorPanel {
 	private:
-		// TODO: move:
-
 		float m_width = 0, m_height = 0;
 
 	public:
