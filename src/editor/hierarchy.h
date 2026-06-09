@@ -23,9 +23,6 @@ namespace PotatoEngine::Editor {
 
 			m_engineContext.Entities.push_back(Core::ECS::Entity("Puta"));
 			m_engineContext.Entities[1].Children.push_back(Core::ECS::Entity("te la creiste we xd"));
-
-			m_engineContext.Entities.push_back(Core::ECS::Entity("Camera"));
-			m_engineContext.Entities[2].Components.push_back(new Core::Components::CameraData());
 		}
 
 	protected:

@@ -7,7 +7,7 @@ namespace PotatoEngine::Core::Systems {
 
 	class CameraSystem : public ECS::System {
 	public:
-		CameraSystem : ECS::System("") {}
+		CameraSystem(EngineContext& ctx) : ECS::System(ctx, "Camera System") {}
 		~CameraSystem() = default;
 
 	public:

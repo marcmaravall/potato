@@ -2,6 +2,8 @@
 #define POTATO_ENGINE_H
 
 #include <iostream>
+#include <vector>
+
 #include <assets_manager/assets_manager.h>
 #include <logging/debug_system.h>
 #include <rendering/renderer.h>
@@ -13,11 +15,16 @@
 
 namespace PotatoEngine::Core {
 
+	namespace Systems {
+		class CameraSystem;
+	}
+
 	class EngineContext {
 	public:
 		bool IsRunning = false;
 
-		Components::CameraData Camera;
+		Components::CameraData* MainCameraData;
+		Systems::CameraSystem*  MainCameraSystem;
 		
 		AssetsManager AssetsManager;
 		Logging::DebugSystem DebugSystem;
@@ -27,9 +34,6 @@ namespace PotatoEngine::Core {
 		ECS::Entity* SelectedEntity = nullptr;
 
 	public:
-		Components::CameraData& GetCameraData() {
-			return Camera;
-		}
 	
 	public:
 		EngineContext();

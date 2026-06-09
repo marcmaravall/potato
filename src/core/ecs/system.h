@@ -8,7 +8,7 @@ namespace PotatoEngine::Core::ECS {
 	class Entity;
 
 	class System {
-	private:
+	protected:
 		EngineContext& m_context;
 
 	public:

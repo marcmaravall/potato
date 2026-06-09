@@ -2,12 +2,14 @@
 #define POTATO_ECS_ENTITY_H
 
 #include "component.h"
-#include "system.h"
 
+#include <algorithm>
 #include <memory>
 #include <vector>
 
 namespace PotatoEngine::Core::ECS {
+
+	class System;
 
 	class Entity {
 	public:
@@ -21,8 +23,10 @@ namespace PotatoEngine::Core::ECS {
 		Entity() = default;
 		~Entity() = default;
 
-		Entity(const std::string& name) { Name = name; }
-	
+		Entity(const std::string& name) {
+			Name = name;
+		}
+
 	public:
 		void Add(Component* component) {
 			Components.push_back(component);
@@ -33,11 +37,41 @@ namespace PotatoEngine::Core::ECS {
 		}
 
 		void Remove(Component* component) {
-			Components.erase(std::remove(Components.begin(), Components.end(), component), Components.end());
+			Components.erase(
+				std::remove(Components.begin(), Components.end(), component),
+				Components.end()
+			);
 		}
 
 		void Remove(System* system) {
-			Systems.erase(std::remove(Systems.begin(), Systems.end(), system), Systems.end());
+			Systems.erase(
+				std::remove(Systems.begin(), Systems.end(), system),
+				Systems.end()
+			);
+		}
+
+		template<typename T>
+		T* GetComponent() {
+			static_assert(std::is_base_of<Component, T>, "T must derive from component!");
+
+			for (Component* component : Components) {
+				if (auto casted = dynamic_cast<T*>(component)) {
+					return casted;
+				}
+			}
+			return nullptr;
+		}
+
+		template<typename T>
+		T* GetSystem() {
+			static_assert(std::is_base_of<Component, T>, "T must derive from component!");
+			
+			for (System* system : Systems) {
+				if (auto casted = dynamic_cast<T*>(system)) {
+					return casted;
+				}
+			}
+			return nullptr;
 		}
 	};
 }
