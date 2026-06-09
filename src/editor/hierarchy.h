@@ -4,6 +4,7 @@
 #include "panel.h"
 #include <core/engine_context.h>
 
+#include <core/components/camera.h>
 #include <core/components/sprite_renderer.h>
 #include <core/systems/sprite_renderer.h>
 
@@ -22,6 +23,9 @@ namespace PotatoEngine::Editor {
 
 			m_engineContext.Entities.push_back(Core::ECS::Entity("Puta"));
 			m_engineContext.Entities[1].Children.push_back(Core::ECS::Entity("te la creiste we xd"));
+
+			m_engineContext.Entities.push_back(Core::ECS::Entity("Camera"));
+			m_engineContext.Entities[2].Components.push_back(new Core::Components::CameraData());
 		}
 
 	protected:

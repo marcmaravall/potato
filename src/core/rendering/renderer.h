@@ -39,6 +39,10 @@ namespace PotatoEngine::Core::Rendering {
 	public:
 		void Init();
 
+		void SetClearColor(glm::vec3 color) {
+			m_rendererAPI->SetClearColor(glm::vec4(color, 1.0));
+		}
+
 		void RenderScene();
 
 		void Resize(uint32_t width, uint32_t height) {

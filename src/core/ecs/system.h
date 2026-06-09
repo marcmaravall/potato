@@ -5,12 +5,16 @@
 #include <string>
 
 namespace PotatoEngine::Core::ECS {
+	class Entity;
+
 	class System {
 	private:
 		EngineContext& m_context;
 
 	public:
+		Entity* Parent = nullptr;
 		std::string Name = "";
+
 	public:
 		System(EngineContext& ctx, const std::string& name) : m_context(ctx), Name(name) {}
 		

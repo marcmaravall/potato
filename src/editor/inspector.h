@@ -11,6 +11,7 @@
 #include <unordered_map>
 
 #include <components/sprite_renderer.h>
+#include <components/camera.h>
 
 namespace PotatoEngine::Editor {
 	class ComponentInspectorRegistry {
@@ -62,6 +63,10 @@ namespace PotatoEngine::Editor {
 				ImGui::InputFloat2("Pivot", &sr.Pivot[0]);
 				ImGui::Checkbox("Flip X", &sr.FlipX);
 				ImGui::Checkbox("Flip Y", &sr.FlipY);
+			});
+
+			Registry.Add<Core::Components::CameraData>([](Core::Components::CameraData& c) {
+				ImGui::ColorEdit3("Clear Color", &c.ClearColor[0]);
 			});
 		}
 	
