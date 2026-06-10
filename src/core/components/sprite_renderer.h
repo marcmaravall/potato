@@ -9,7 +9,7 @@
 namespace PotatoEngine::Core::Components {
 	class SpriteRendererData : public ECS::Component {
 	public:
-		Core::Rendering::Texture2D* Texture;
+		Core::Rendering::Texture2D* Texture = nullptr;
 		glm::vec4 Color = glm::vec4(1.0f);
 		glm::vec2 Pivot = glm::vec2(0.5f);
 		

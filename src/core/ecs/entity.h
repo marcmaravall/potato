@@ -11,13 +11,15 @@ namespace PotatoEngine::Core::ECS {
 
 	class System;
 
+	typedef uint64_t EntityID;
+
 	class Entity {
 	public:
 		std::string Name = "[DEFAULT_ENTITY]";
 
 		std::vector<Entity> Children;
 		std::vector<Component*> Components;
-		std::vector<System*> Systems;
+		// std::vector<System*> Systems;
 
 	public:
 		Entity() = default;
@@ -32,21 +34,10 @@ namespace PotatoEngine::Core::ECS {
 			Components.push_back(component);
 		}
 
-		void Add(System* system) {
-			Systems.push_back(system);
-		}
-
 		void Remove(Component* component) {
 			Components.erase(
 				std::remove(Components.begin(), Components.end(), component),
 				Components.end()
-			);
-		}
-
-		void Remove(System* system) {
-			Systems.erase(
-				std::remove(Systems.begin(), Systems.end(), system),
-				Systems.end()
 			);
 		}
 
@@ -56,18 +47,6 @@ namespace PotatoEngine::Core::ECS {
 
 			for (Component* component : Components) {
 				if (auto casted = dynamic_cast<T*>(component)) {
-					return casted;
-				}
-			}
-			return nullptr;
-		}
-
-		template<typename T>
-		T* GetSystem() {
-			static_assert(std::is_base_of<Component, T>, "T must derive from component!");
-			
-			for (System* system : Systems) {
-				if (auto casted = dynamic_cast<T*>(system)) {
 					return casted;
 				}
 			}

@@ -58,7 +58,7 @@ void Inspector::OnRender() {
     }
 
     ImGui::Spacing();
-
+    /*
     if (!entity->Systems.empty()) {
         ImGui::TextColored(
             ImVec4(0.9f, 0.9f, 0.9f, 1.0f),
@@ -84,7 +84,7 @@ void Inspector::OnRender() {
 
             ImGui::PopID();
         }
-    }
+    }*/
 
     ImGui::PopFont();
 }

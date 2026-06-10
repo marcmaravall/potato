@@ -5,14 +5,12 @@
 #include <string>
 
 namespace PotatoEngine::Core::ECS {
-	class Entity;
 
 	class System {
 	protected:
 		EngineContext& m_context;
 
 	public:
-		Entity* Parent = nullptr;
 		std::string Name = "";
 
 	public:

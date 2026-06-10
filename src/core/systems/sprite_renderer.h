@@ -11,17 +11,9 @@ namespace PotatoEngine::Core::Systems {
 		~SpriteRendererSystem() = default;
 	
 	public:
-		void OnStart() override {
-
-		}
-
-		void OnUpdate() override {
-
-		}
-
-		void OnDestroy() override {
-
-		}
+		void OnStart() override;
+		void OnUpdate() override;
+		void OnDestroy() override;
 	};
 }
 

@@ -4,7 +4,7 @@ namespace PotatoEngine::Core {
 
 	// TODO: implement OnStart and OnDestroy if needed
 	void Executable::OnStart() {
-		std::stack<ECS::Entity*> entityStack;
+		/*std::stack<ECS::Entity*> entityStack;
 
 		for (auto& entity : m_context.Entities) {
 			entityStack.push(&entity);
@@ -21,11 +21,11 @@ namespace PotatoEngine::Core {
 			for (auto& child : entity->Children) {
 				entityStack.push(&child);
 			}
-		}
+		}*/
 	}
 
 	void Executable::OnUpdate() {
-		std::stack<ECS::Entity*> entityStack;
+		/*std::stack<ECS::Entity*> entityStack;
 
 		for (auto& entity : m_context.Entities) {
 			entityStack.push(&entity);
@@ -43,10 +43,11 @@ namespace PotatoEngine::Core {
 				entityStack.push(&child);
 			}
 		}
+		*/
 	}
 	
 	void Executable::OnDestroy() {
-		std::stack<ECS::Entity*> entityStack;
+		/*std::stack<ECS::Entity*> entityStack;
 
 		for (auto& entity : m_context.Entities) {
 			entityStack.push(&entity);
@@ -63,6 +64,6 @@ namespace PotatoEngine::Core {
 			for (auto& child : entity->Children) {
 				entityStack.push(&child);
 			}
-		}
+		}*/
 	} 
 }
