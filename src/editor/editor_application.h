@@ -34,6 +34,8 @@
 
 #ifdef _WIN32
 #include "platform/windows/win32.h"
+#elif __linux__
+#include "platform/linux/linux.h"
 #endif
 
 // ImGui is the default editor library

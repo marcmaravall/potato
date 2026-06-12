@@ -5,7 +5,7 @@ using namespace PotatoEngine::Core::Rendering;
 
 EditorApplication::EditorApplication() {
 	// Only supports Windows
-	SetPlatform(new Platform::Win32_API());
+	SetPlatform(new Platform::Linux_API());
 }
 
 EditorApplication::~EditorApplication() {

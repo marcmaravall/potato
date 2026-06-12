@@ -17,15 +17,17 @@ namespace PotatoEngine::Core {
 	}
 
 	std::string AssetsManager::Path(const std::string& str) {
-#ifdef _WIN32
 		std::string out = str;
+#ifdef _WIN32
 		for (char& c : out) {
 			if (c == '/') c = '\\';
 		}
-
-		return out;
 #elif __linux__
-		return "TODO: implement";
+		for (char& c : out) {
+			if (c == '\\') c = '/';
+		}
+
 #endif 
+		return out;
 	}
 }

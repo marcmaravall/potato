@@ -92,8 +92,9 @@ namespace PotatoEngine::Core::Rendering {
              0.0f,  0.5f, 0.0f,  0.0, 0.0, 1.0, 1.0f, 0.0f
         };
 
-        m_texture = Texture2D::Create((m_engineContext.AssetsManager.GetRoot() +
-            Core::AssetsManager::Path("/assets/tests/texture.gif").c_str()));
+        std::string path = Core::AssetsManager::Path("/assets/tests/texture.gif");
+        std::cout << "loading texture from: " << path << "\n";
+        m_texture = Texture2D::Create((m_engineContext.AssetsManager.GetRoot() + path.c_str()));
 
         auto vbo = VertexBuffer::Create(vertices, sizeof(vertices));
         vbo->SetData(vertices, sizeof(vertices));
