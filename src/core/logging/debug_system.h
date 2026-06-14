@@ -44,8 +44,7 @@ namespace PotatoEngine::Core::Logging {
 		std::vector<Message>& GetMessages() { return m_messages; }
 
 	public:
-		// Singleton:
-		static DebugSystem *s_Instance;
+		
 	};
 }
 
