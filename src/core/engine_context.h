@@ -27,7 +27,7 @@ namespace PotatoEngine::Core {
 		Components::CameraData* MainCameraData;
 		Systems::CameraSystem*  MainCameraSystem;
 		
-		AssetsManager AssetsManager;
+		Core::AssetsManager AssetsManager;
 		Logging::DebugSystem DebugSystem;
 		Rendering::Renderer Renderer;
 

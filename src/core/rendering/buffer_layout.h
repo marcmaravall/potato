@@ -27,6 +27,8 @@ namespace PotatoEngine::Core::Rendering {
         case ShaderDataType::Mat4: return 64;
         case ShaderDataType::Bool: return 1;
         }
+
+        return -1;
     }
 
     struct BufferElement {

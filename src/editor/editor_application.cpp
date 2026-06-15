@@ -4,8 +4,11 @@ using namespace PotatoEngine::Editor;
 using namespace PotatoEngine::Core::Rendering;
 
 EditorApplication::EditorApplication() {
-	// Only supports Windows
+#ifdef _WIN32
 	SetPlatform(new Platform::Win32_API());
+#elif __linux__
+	SetPlatform(new Platform::Linux_API());
+#endif
 }
 
 EditorApplication::~EditorApplication() {

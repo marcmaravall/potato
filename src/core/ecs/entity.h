@@ -43,7 +43,7 @@ namespace PotatoEngine::Core::ECS {
 
 		template<typename T>
 		T* GetComponent() {
-			static_assert(std::is_base_of<Component, T>, "T must derive from component!");
+			// static_assert(std::is_base_of<Component, T>);
 
 			for (Component* component : Components) {
 				if (auto casted = dynamic_cast<T*>(component)) {

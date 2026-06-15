@@ -30,14 +30,14 @@ void Console::OnRender() {
     ImGui::SameLine();
 
     if (ImGui::Button("Add")) {
-        DebugSystem::s_Instance->Log(DebugSystem::Message(s, t));
+        m_engineContext.DebugSystem.Log(DebugSystem::Message(s, t));
         s = "";
     }
     
     ImGui::SameLine();
 
     if (ImGui::Button("Clear")) {
-        DebugSystem::s_Instance->Clear();
+        m_engineContext.DebugSystem.Clear();
     }
 
     ImGui::SameLine();
@@ -56,7 +56,7 @@ void Console::OnRender() {
 
     ImGui::Separator();
 
-    for (auto& message : DebugSystem::s_Instance->GetMessages()) {
+    for (auto& message : m_engineContext.DebugSystem.GetMessages()) {
         ImColor color;
 
         switch (message._Type) {
@@ -66,7 +66,7 @@ void Console::OnRender() {
         default:                                   color = IM_COL32(255, 255, 255, 255); break;
         }
 
-        ImGui::TextColored(color, message.Text.c_str());
+        ImGui::TextColored(color, message.Text.c_str(), "");
     }
 }
 

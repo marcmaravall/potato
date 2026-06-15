@@ -3,7 +3,7 @@
 using namespace PotatoEngine::Core::Rendering;
 
 void OpenGL_VertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vb) {
-    MEB_ASSERT(!vb->GetLayout().GetElements().empty(), "Vertex buffer has no layout!");
+    MEB_ASSERT(!vb->GetLayout().GetElements().empty() && "Vertex buffer has no layout!");
 
     glBindVertexArray(m_id);
     vb->Bind();
