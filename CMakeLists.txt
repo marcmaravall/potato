@@ -39,6 +39,7 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp"
     # TODO: compile to current platform
     #"src/platform/linux/*.cpp"
     "src/platform/windows/*.cpp"
+    "src/core/ecs/*.cpp"
     
     "src/platform/*.cpp"
     "src/core/assets_manager/*.cpp"

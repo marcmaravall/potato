@@ -26,7 +26,7 @@ void Inspector::OnRender() {
     ImGui::Separator();
 
     ImGui::PushItemWidth(-1);
-    ImGui::InputTextWithHint("##EntityName", "Entity Name", &entity->Name);
+    // ImGui::InputTextWithHint("##EntityName", "Entity Name" /*,&entity->Name*/);
     ImGui::PopItemWidth();
 
     ImGui::Spacing();
@@ -36,7 +36,9 @@ void Inspector::OnRender() {
 
     ImGui::Separator();
 
-    for (auto* component : entity->Components) {
+    // TODO: reimplement with new ecs layout
+    /*
+    for (auto* component : entity->m_components) {
         ImGui::PushID(component);
 
         if (ImGui::CollapsingHeader(component->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -49,7 +51,7 @@ void Inspector::OnRender() {
         }
 
         ImGui::PopID();
-    }
+    }*/
 
     ImGui::Spacing();
 

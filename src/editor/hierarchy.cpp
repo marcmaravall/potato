@@ -6,8 +6,9 @@ namespace PotatoEngine::Editor {
 
 	}
 
+    // TODO: implement with new ecs layout
     static void RenderEntityNode(Core::ECS::Entity* entity, Core::ECS::Entity*& selectedEntity) {
-        ImGuiTreeNodeFlags flags =
+        /*ImGuiTreeNodeFlags flags =
             (selectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0) |
             ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -28,11 +29,11 @@ namespace PotatoEngine::Editor {
             }
 
             ImGui::TreePop();
-        }
+        }*/
     }
 
 	void HierarchyPanel::OnRender() {
-
+        /*
 		if (ImGui::BeginPopupContextWindow()) {
 			if (ImGui::MenuItem("New Entity")) {
 				m_engineContext.Entities.push_back(Core::ECS::Entity("New Entity"));
@@ -43,6 +44,7 @@ namespace PotatoEngine::Editor {
 		for (auto& entity : m_engineContext.Entities) {
 			RenderEntityNode(&entity, m_engineContext.SelectedEntity);
 		}
+        */
 	}
 
 	void HierarchyPanel::OnEnd() {

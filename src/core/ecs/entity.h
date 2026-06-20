@@ -3,56 +3,57 @@
 
 #include "component.h"
 
-#include <algorithm>
+#include <unordered_map>
+#include <type_traits>
+#include <typeindex>
 #include <memory>
-#include <vector>
+#include <stdexcept>
 
 namespace PotatoEngine::Core::ECS {
 
-	class System;
+    class Entity {
+    private:
+        std::unordered_map<std::type_index, std::unique_ptr<Component>> m_components;
 
-	typedef uint64_t EntityID;
+    public:
+        Entity() = default;
+        ~Entity() = default;
+        explicit Entity(const std::string& name) {}
 
-	class Entity {
-	public:
-		std::string Name = "[DEFAULT_ENTITY]";
+    public:
+        template<typename T, typename... Args>
+        T& Add(Args&&... args) {
+            static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
 
-		std::vector<Entity> Children;
-		std::vector<Component*> Components;
-		// std::vector<System*> Systems;
+            auto component = std::make_unique<T>(std::forward<Args>(args)...);
+            T& ref = *component;
+            m_components[typeid(T)] = std::move(component);
+            return ref;
+        }
 
-	public:
-		Entity() = default;
-		~Entity() = default;
+        template<typename T>
+        void Remove() {
+            static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
 
-		Entity(const std::string& name) {
-			Name = name;
-		}
+            m_components.erase(typeid(T));
+        }
 
-	public:
-		void Add(Component* component) {
-			Components.push_back(component);
-		}
+        template<typename T>
+        T& Get() {
+            static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
 
-		void Remove(Component* component) {
-			Components.erase(
-				std::remove(Components.begin(), Components.end(), component),
-				Components.end()
-			);
-		}
+            auto it = m_components.find(typeid(T));
+            if (it == m_components.end())
+                throw std::runtime_error("Entity does not have component");
 
-		template<typename T>
-		T* GetComponent() {
-			// static_assert(std::is_base_of<Component, T>);
+            return static_cast<T&>(*it->second);
+        }
 
-			for (Component* component : Components) {
-				if (auto casted = dynamic_cast<T*>(component)) {
-					return casted;
-				}
-			}
-			return nullptr;
-		}
-	};
+        template<typename T>
+        bool Has() const {
+            return m_components.contains(typeid(T));
+        }
+    };
 }
 
 #endif // POTATO_ECS_ENTITY_H

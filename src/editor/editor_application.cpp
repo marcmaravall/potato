@@ -20,7 +20,7 @@ void EditorApplication::OnStart() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+	
 	// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 
 	m_glfwWindow = glfwCreateWindow(1920, 1080, "Potato Engine", nullptr, nullptr);
