@@ -50,6 +50,17 @@ namespace PotatoEngine::Core::ECS {
         }
 
         template<typename T>
+        T* TryGet() {
+            static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
+
+            auto it = m_components.find(typeid(T));
+            if (it == m_components.end())
+                return nullptr;
+
+            return it->second;
+        }
+
+        template<typename T>
         bool Has() const {
             return m_components.contains(typeid(T));
         }
