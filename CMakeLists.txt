@@ -39,12 +39,13 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp"
     # TODO: compile to current platform
     #"src/platform/linux/*.cpp"
     "src/platform/windows/*.cpp"
-    "src/core/ecs/*.cpp"
     
     "src/platform/*.cpp"
     "src/core/assets_manager/*.cpp"
-    "src/core/systems/*.cpp"
-    "src/core/components/*.cpp"
+
+    "src/core/ecs/*.cpp"
+    "src/core/ecs/systems/*.cpp"
+    "src/core/ecs/components/*.cpp"
 )
 
 include_directories(potato PUBLIC "src/core" "src/"

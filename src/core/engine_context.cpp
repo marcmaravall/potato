@@ -2,8 +2,8 @@
 
 #include <core/rendering/renderer.h>
 
-#include <systems/example.h>
-#include <systems/camera.h>
+#include <ecs/systems/example.h>
+#include <ecs/systems/camera.h>
 
 namespace PotatoEngine::Core {
 	EngineContext::EngineContext()

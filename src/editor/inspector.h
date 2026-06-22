@@ -10,8 +10,8 @@
 #include <functional>
 #include <unordered_map>
 
-#include <components/sprite_renderer.h>
-#include <components/camera.h>
+#include <ecs/components/sprite_renderer.h>
+#include <ecs/components/camera.h>
 
 namespace PotatoEngine::Editor {
 	class ComponentInspectorRegistry {

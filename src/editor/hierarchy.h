@@ -4,9 +4,9 @@
 #include "panel.h"
 #include <core/engine_context.h>
 
-#include <core/components/camera.h>
-#include <core/components/sprite_renderer.h>
-#include <core/systems/sprite_renderer.h>
+#include <core/ecs/components/camera.h>
+#include <core/ecs/components/sprite_renderer.h>
+#include <core/ecs/systems/sprite_renderer.h>
 
 #include <stack>
 

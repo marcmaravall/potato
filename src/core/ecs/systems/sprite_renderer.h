@@ -4,16 +4,18 @@
 #include <engine_context.h>
 #include <ecs/system.h>
 
+#include <memory>
+
 namespace PotatoEngine::Core::Systems {
 	class SpriteRendererSystem : public ECS::System {
 	public:
 		SpriteRendererSystem(EngineContext& ctx) : ECS::System(ctx, "Sprite Renderer System") {}
 		~SpriteRendererSystem() = default;
 	
-	public:
-		void OnStart() override;
-		void OnUpdate() override;
-		void OnDestroy() override;
+	protected:
+		void OnStart(std::unique_ptr<ECS::Component> c) override;
+		void OnUpdate(std::unique_ptr<ECS::Component> c) override;
+		void OnDestroy(std::unique_ptr<ECS::Component> c) override;
 	};
 }
 

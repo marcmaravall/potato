@@ -20,6 +20,8 @@ namespace PotatoEngine::Core::ECS {
 		std::queue<EntityID> m_emptyStack;		
 		std::unordered_map<EntityID, std::unique_ptr<Entity>> m_entities;
 
+		std::vector<std::unique_ptr<System>> m_systems;
+
 	public:
 		// Entities
 		EntityID CreateEntity();

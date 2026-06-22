@@ -10,10 +10,10 @@ namespace PotatoEngine::Core::Systems {
 		CameraSystem(EngineContext& ctx) : ECS::System(ctx, "Camera System") {}
 		~CameraSystem() = default;
 
-	public:
-		void OnStart() override;
-		void OnUpdate() override;
-		void OnDestroy() override;
+	protected:
+		void OnStart(std::unique_ptr<ECS::Component> c) override;
+		void OnUpdate(std::unique_ptr<ECS::Component> c) override;
+		void OnDestroy(std::unique_ptr<ECS::Component> c) override;
 	};
 }
 

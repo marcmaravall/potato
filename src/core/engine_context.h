@@ -11,7 +11,7 @@
 #include <ecs/component.h>
 #include <ecs/system.h>
 
-#include <components/camera.h>
+#include <ecs/components/camera.h>
 
 namespace PotatoEngine::Core {
 
