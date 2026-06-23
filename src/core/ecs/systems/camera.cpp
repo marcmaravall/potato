@@ -1,9 +1,11 @@
 #include "camera.h"
+#include <engine_context.h>
 
 namespace PotatoEngine::Core::Systems {
 	using namespace ECS;
 	void CameraSystem::OnStart(std::unique_ptr<Component> c) {
-		m_context.Renderer.SetClearColor(m_context.MainCameraData->ClearColor);
+		// example
+		m_context.Renderer.SetClearColor(glm::vec3(1.0, 0.0, 0.0));
 	}
 
 	void CameraSystem::OnUpdate(std::unique_ptr<Component> c) {

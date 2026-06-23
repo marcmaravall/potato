@@ -65,7 +65,7 @@ namespace PotatoEngine::Editor {
 				ImGui::Checkbox("Flip Y", &sr.FlipY);
 			});
 
-			Registry.Add<Core::Components::CameraData>([](Core::Components::CameraData& c) {
+			Registry.Add<Core::ECS::Components::CameraData>([](Core::ECS::Components::CameraData& c) {
 				ImGui::ColorEdit3("Clear Color", &c.ClearColor[0]);
 			});
 		}

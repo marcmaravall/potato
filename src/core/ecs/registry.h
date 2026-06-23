@@ -4,8 +4,9 @@
 #include "component.h"
 #include "system.h"
 
-#include <stack>
+#include <queue>
 #include <functional>
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -35,7 +36,7 @@ namespace PotatoEngine::Core::ECS {
 
 		template<typename Component, typename... Args>
 		void AddComponent(EntityID entity, Args&&... args) {
-			m_entities[entity]->Add<Component>(args);
+			m_entities[entity]->Add<Component>(std::forward<Args>(args)...);
 		}
 
 		template<typename T>

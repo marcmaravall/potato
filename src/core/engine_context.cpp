@@ -2,24 +2,20 @@
 
 #include <core/rendering/renderer.h>
 
+#include <ecs/components/name.h>
 #include <ecs/systems/example.h>
 #include <ecs/systems/camera.h>
 
 namespace PotatoEngine::Core {
+	using namespace ECS;
 	EngineContext::EngineContext()
 		: Renderer(*this)
 	{
+		EntityID e = Registry.CreateEntity();
+		Registry.AddComponent<ECS::Components::Name>(e, "Paco");
 
-		// Entities.reserve(100);
-		/*
-		Entities.push_back(Core::ECS::Entity("Camera"));
-		Entities[0].Components.push_back(new Core::Components::CameraData());
-		//Entities[0].Systems.push_back(new Systems::CameraSystem(*this));
-		//Entities[0].Systems.push_back(new Systems::ExampleSystem(*this));
-
-		MainCameraData = dynamic_cast<Components::CameraData*>(Entities[0].Components[0]);
-		//MainCameraSystem = dynamic_cast<Systems::CameraSystem*>(Entities[0].Systems[0]);
-		*/
+		DebugSystem.Log(std::to_string(e));
+		DebugSystem.Log(Registry.GetComponent<ECS::Components::Name>(e).Value);
 	}
 	
 	EngineContext::~EngineContext() {

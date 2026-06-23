@@ -3,10 +3,13 @@
 
 #include "component.h"
 
-#include <engine_context.h>
 #include <string>
 #include <memory>
 #include <vector>
+
+namespace PotatoEngine::Core {
+	class EngineContext;
+}
 
 namespace PotatoEngine::Core::ECS {
 
@@ -22,10 +25,15 @@ namespace PotatoEngine::Core::ECS {
 		std::string Name = "";
 
 	public:
-		System(EngineContext& ctx, const std::string& name) : m_context(ctx), Name(name) {}
+		System(EngineContext& ctx, const std::string& name) 
+			: m_context(ctx), Name(name) {}
 		
 		virtual ~System() = default;
-	
+	public:
+		void AddComponent(std::unique_ptr<Component> component) {
+			m_components.push_back(std::move(component));
+		}
+
 	protected:
 		virtual void OnStart(std::unique_ptr<Component> c) = 0;
 		virtual void OnUpdate(std::unique_ptr<Component> c) = 0;

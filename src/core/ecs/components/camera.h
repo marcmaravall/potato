@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <ecs/component.h>
 
-namespace PotatoEngine::Core::Components {
+namespace PotatoEngine::Core::ECS::Components {
 
 	class CameraData : public ECS::Component {
 	public:

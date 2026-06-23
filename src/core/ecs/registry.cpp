@@ -1,20 +1,25 @@
 #include "registry.h"
 
 namespace PotatoEngine::Core::ECS {
-	void Registry::RemoveEntity(EntityID e) {
-		if (IsEmpty(e))
-			return;
-		m_entities[e].reset();
-		m_emptyStack.push(e);
-	}
+    void Registry::RemoveEntity(EntityID e) {
+        auto it = m_entities.find(e);
+        if (it == m_entities.end() || it->second == nullptr)
+            return;
+        it->second.reset();
+        m_emptyStack.push(e);
+    }
 
-	EntityID Registry::CreateEntity() {
-		if (m_emptyStack.empty()) {
-			return m_currentID++;
-		}
+    EntityID Registry::CreateEntity() {
+        EntityID id;
+        if (m_emptyStack.empty()) {
+            id = m_currentID++;
+        }
+        else {
+            id = m_emptyStack.front();
+            m_emptyStack.pop();
+        }
 
-		auto res = m_emptyStack.front();
-		m_emptyStack.pop();
-		return res;
-	}
+        m_entities.emplace(id, std::make_unique<Entity>());
+        return id;
+    }
 }

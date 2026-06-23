@@ -8,7 +8,8 @@ void Inspector::OnBegin() {
 }
 
 void Inspector::OnRender() {
-    auto* entity = m_engineContext.SelectedEntity;
+    // TODO: change to new api
+    void* entity = nullptr; // m_engineContext.SelectedEntity;
 
     if (!entity) {
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);

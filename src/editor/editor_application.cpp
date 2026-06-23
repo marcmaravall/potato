@@ -48,7 +48,7 @@ void EditorApplication::OnStart() {
 	ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
 	ImGui_ImplOpenGL3_Init("#version 450");
 
-	m_platform->SetConsoleVisibility(false);
+	// m_platform->SetConsoleVisibility(false);
 	Theme::SetCapMotchaTheme();
 
 	AddPanel<Viewport>(m_context);
