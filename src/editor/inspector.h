@@ -60,31 +60,7 @@ namespace PotatoEngine::Editor {
 	public:
 		ComponentInspectorRegistry Registry;
 
-		Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {
-			Registry.Add<Core::Components::SpriteRendererData>([](Core::Components::SpriteRendererData& sr) {
-				ImGui::ColorEdit4("Color", &sr.Color[0]);
-				ImGui::InputFloat2("Pivot", &sr.Pivot[0]);
-				ImGui::Checkbox("Flip X", &sr.FlipX);
-				ImGui::Checkbox("Flip Y", &sr.FlipY);
-			});
-
-			// TODO: implement
-			Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
-				ImGui::Text(name.Value.c_str());
-			});
-
-			Registry.Add<Core::ECS::Components::Children>([](Core::ECS::Components::Children& name) {
-				
-			});
-
-			Registry.Add<Core::ECS::Components::Parent>([](Core::ECS::Components::Parent& name) {
-				
-			});
-
-			Registry.Add<Core::ECS::Components::CameraData>([](Core::ECS::Components::CameraData& c) {
-				ImGui::ColorEdit3("Clear Color", &c.ClearColor[0]);
-			});
-		}
+		Inspector(Core::EngineContext& ctx);
 	
 	protected:
 		void OnBegin() override;

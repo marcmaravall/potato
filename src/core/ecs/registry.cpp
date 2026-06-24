@@ -34,7 +34,13 @@ namespace PotatoEngine::Core::ECS {
     EntityID Registry::CreateEntity(const std::string& name, EntityID parent, bool hasChildren) {
         EntityID e = CreateEntity(name, hasChildren);
         m_entities[e]->Add<Components::Parent>(parent);
-        
+
+        auto* parentChildren = m_entities[parent]->TryGet<Components::Children>();
+        if (!parentChildren) {
+            parentChildren = &m_entities[parent]->Add<Components::Children>();
+        }
+        parentChildren->Value.push_back(e);
+
         return e;
     }
 }

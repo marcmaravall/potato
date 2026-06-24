@@ -7,7 +7,7 @@ namespace PotatoEngine::Editor {
 
 	}
 
-    static void RenderEntityNode(Registry& reg, EntityID entity, EntityID& selectedEntity) {
+    static void RenderEntityNode(Registry& reg, EntityID entity, EntityID& selectedEntity, bool& isEntitySelected) {
         ImGuiTreeNodeFlags flags = (selectedEntity == entity ? 
             ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -16,7 +16,7 @@ namespace PotatoEngine::Editor {
         if (nameComponent)
             name = nameComponent->Value;
 
-        bool opened = ImGui::TreeNodeEx (
+        bool opened = ImGui::TreeNodeEx(
             (void*)entity,
             flags,
             "%s",
@@ -25,14 +25,21 @@ namespace PotatoEngine::Editor {
 
         if (ImGui::IsItemClicked()) {
             selectedEntity = entity;
+            isEntitySelected = true;
         }
+
+        float right = ImGui::GetWindowContentRegionMax().x;
+        float width = ImGui::CalcTextSize(std::to_string(entity).c_str()).x;
+
+        ImGui::SameLine(right - width - 10);
+        ImGui::TextDisabled("%llu", static_cast<uint64_t>(entity));
 
         auto* children = reg.TryGetComponent<Components::Children>(entity);
         
         if (opened) {
             if (children)
                 for (EntityID child : children->Value)
-                    RenderEntityNode(reg, child, selectedEntity);
+                    RenderEntityNode(reg, child, selectedEntity, isEntitySelected);
 
             ImGui::TreePop();
         }
@@ -40,7 +47,7 @@ namespace PotatoEngine::Editor {
 
 	void HierarchyPanel::OnRender() {
 		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
-            RenderEntityNode(m_engineContext.Registry, id, m_engineContext.SelectedEntity);
+            RenderEntityNode(m_engineContext.Registry, id, m_engineContext.SelectedEntity, m_engineContext.IsEntitySelected);
 		});
 	}
 

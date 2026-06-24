@@ -10,7 +10,7 @@ namespace PotatoEngine::Core::ECS::Components {
 		EntityID Value;
 
 	public:
-		Parent(EntityID parent) : Value(parent) {}
+		Parent(EntityID parent) : Component("Parent"), Value(parent) {}
 		~Parent() = default;
 
 		void nothing() override {}

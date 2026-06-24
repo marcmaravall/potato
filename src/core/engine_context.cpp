@@ -17,7 +17,8 @@ namespace PotatoEngine::Core {
 		DebugSystem.Log(std::to_string(e));
 		DebugSystem.Log(Registry.GetComponent<ECS::Components::Name>(e).Value);
 
-		EntityID child = Registry.CreateEntity();
+		EntityID child0 = Registry.CreateEntity("Hola", e);
+		EntityID child1 = Registry.CreateEntity("Otro hijo de Paco", e);
 	}
 	
 	EngineContext::~EngineContext() {

@@ -11,8 +11,8 @@ namespace PotatoEngine::Core::ECS::Components {
 		std::vector<EntityID> Value;
 
 	public:
-		Children() = default;
-		Children(std::vector<EntityID> children) : Value(std::move(children)) {}
+		Children() : Component("Children") {}
+		Children(std::vector<EntityID> children) : Component("Children"), Value(std::move(children)) {}
 		~Children() = default;
 
 		void nothing() override {}

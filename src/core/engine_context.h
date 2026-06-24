@@ -33,7 +33,9 @@ namespace PotatoEngine::Core {
 		Logging::DebugSystem DebugSystem;
 		Rendering::Renderer Renderer;
 
+		// TODO: move to editor context
 		ECS::EntityID SelectedEntity;
+		bool IsEntitySelected = false;
 
 	public:
 	
