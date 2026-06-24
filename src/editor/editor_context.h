@@ -17,8 +17,7 @@ namespace PotatoEngine::Editor {
 		~EditorContext();
 
 	public:
-		Core::AssetsManager AssetsManager;
-		Core::Logging::DebugSystem DebugSystem;
+		
 
 	public:
 		// static EditorContext* s_Instance;

@@ -10,6 +10,9 @@
 #include <functional>
 #include <unordered_map>
 
+#include <ecs/components/name.h>
+#include <ecs/components/parent.h>
+#include <ecs/components/children.h>
 #include <ecs/components/sprite_renderer.h>
 #include <ecs/components/camera.h>
 
@@ -63,6 +66,19 @@ namespace PotatoEngine::Editor {
 				ImGui::InputFloat2("Pivot", &sr.Pivot[0]);
 				ImGui::Checkbox("Flip X", &sr.FlipX);
 				ImGui::Checkbox("Flip Y", &sr.FlipY);
+			});
+
+			// TODO: implement
+			Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
+				ImGui::Text(name.Value.c_str());
+			});
+
+			Registry.Add<Core::ECS::Components::Children>([](Core::ECS::Components::Children& name) {
+				
+			});
+
+			Registry.Add<Core::ECS::Components::Parent>([](Core::ECS::Components::Parent& name) {
+				
 			});
 
 			Registry.Add<Core::ECS::Components::CameraData>([](Core::ECS::Components::CameraData& c) {

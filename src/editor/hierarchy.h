@@ -4,6 +4,10 @@
 #include "panel.h"
 #include <core/engine_context.h>
 
+#include <core/ecs/components/name.h>
+#include <core/ecs/components/children.h>
+#include <core/ecs/components/parent.h>
+
 #include <core/ecs/components/camera.h>
 #include <core/ecs/components/sprite_renderer.h>
 #include <core/ecs/systems/sprite_renderer.h>

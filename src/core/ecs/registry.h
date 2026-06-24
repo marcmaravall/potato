@@ -3,6 +3,7 @@
 #include "entity.h"
 #include "component.h"
 #include "system.h"
+#include "entity_id.h"
 
 #include <queue>
 #include <functional>
@@ -12,8 +13,6 @@
 
 // TODO: test behavior
 namespace PotatoEngine::Core::ECS {
-
-	typedef uint32_t EntityID;
 
 	class Registry {
 	private:
@@ -26,10 +25,16 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		// Entities
 		EntityID CreateEntity();
+		EntityID CreateEntity(const std::string& name, bool hasChildren = true);
+		EntityID CreateEntity(const std::string& name, EntityID parent, bool hasChildren = true);
 		
 		void RemoveEntity(EntityID entity);
 
-		bool IsEmpty(EntityID entity) { return m_entities[entity].get() == nullptr; }
+		bool IsEmpty(EntityID entity) const {
+			auto it = m_entities.find(entity);
+			return it == m_entities.end() || it->second == nullptr;
+		}
+
 		bool IsValid(EntityID entity) { return !IsEmpty(entity); }
 
 		// Components:
@@ -66,7 +71,30 @@ namespace PotatoEngine::Core::ECS {
 		// Iterators:
 		template<typename... T>
 		void Each(std::function<void(EntityID, T&...)> fn) {
+			for (auto& [id, entityPtr] : m_entities) {
+				if (!entityPtr) continue;
 
+				if ((entityPtr->template Has<T>() && ...)) {
+					fn(id, entityPtr->template Get<T>()...);
+				}
+			}
+		}
+
+		template<typename... T>
+		void Each_Not(std::function<void(EntityID)> fn) {
+			for (auto& [id, entityPtr] : m_entities) {
+				if (!entityPtr) continue;
+
+				if (!(entityPtr->template Has<T>() && ...)) {
+					fn(id);
+				}
+			}
+		}
+
+		void ForEachComponent(EntityID id, std::function<void(Component*)> fn) {
+			for (auto c : m_entities[id]->GetComponents()) {
+				fn(c);
+			}
 		}
 
 	public:

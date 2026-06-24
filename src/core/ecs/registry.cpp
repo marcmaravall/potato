@@ -22,4 +22,19 @@ namespace PotatoEngine::Core::ECS {
         m_entities.emplace(id, std::make_unique<Entity>());
         return id;
     }
+
+    EntityID Registry::CreateEntity(const std::string& name, bool hasChildren) {
+        EntityID e = CreateEntity();
+        m_entities[e]->Add<Components::Name>(name);
+        if (hasChildren)
+            m_entities[e]->Add<Components::Children>();
+        return e;
+    }
+
+    EntityID Registry::CreateEntity(const std::string& name, EntityID parent, bool hasChildren) {
+        EntityID e = CreateEntity(name, hasChildren);
+        m_entities[e]->Add<Components::Parent>(parent);
+        
+        return e;
+    }
 }

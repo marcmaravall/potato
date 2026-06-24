@@ -21,7 +21,6 @@ namespace PotatoEngine::Core {
 		class CameraSystem;
 	}
 
-	// TODO: change to unique and shared pointers
 	class EngineContext {
 	public:
 		bool IsRunning = false;
@@ -34,6 +33,7 @@ namespace PotatoEngine::Core {
 		Logging::DebugSystem DebugSystem;
 		Rendering::Renderer Renderer;
 
+		ECS::EntityID SelectedEntity;
 
 	public:
 	

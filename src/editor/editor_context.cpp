@@ -6,8 +6,7 @@ using namespace PotatoEngine::Core::Logging;
 // EditorContext* EditorContext::s_Instance = nullptr;
 
 EditorContext::EditorContext() {
-	DebugSystem = Core::Logging::DebugSystem();
-	AssetsManager = Core::AssetsManager();
+
 }
 
 EditorContext::~EditorContext() {

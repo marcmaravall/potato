@@ -1,50 +1,47 @@
 #include "hierarchy.h"
 
 namespace PotatoEngine::Editor {
+	using namespace Core::ECS;
 
 	void HierarchyPanel::OnBegin() {
 
 	}
 
-    // TODO: implement with new ecs layout
-    static void RenderEntityNode(Core::ECS::Entity* entity, Core::ECS::Entity*& selectedEntity) {
-        /*ImGuiTreeNodeFlags flags =
-            (selectedEntity == entity ? ImGuiTreeNodeFlags_Selected : 0) |
-            ImGuiTreeNodeFlags_OpenOnArrow;
+    static void RenderEntityNode(Registry& reg, EntityID entity, EntityID& selectedEntity) {
+        ImGuiTreeNodeFlags flags = (selectedEntity == entity ? 
+            ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 
-        bool opened = ImGui::TreeNodeEx(
+        std::string name = "[NULL]";
+        auto* nameComponent = reg.TryGetComponent<Components::Name>(entity);
+        if (nameComponent)
+            name = nameComponent->Value;
+
+        bool opened = ImGui::TreeNodeEx (
             (void*)entity,
             flags,
             "%s",
-            entity->Name.c_str()
+            name.c_str()
         );
 
         if (ImGui::IsItemClicked()) {
             selectedEntity = entity;
         }
 
+        auto* children = reg.TryGetComponent<Components::Children>(entity);
+        
         if (opened) {
-            for (auto& child : entity->Children) {
-                RenderEntityNode(&child, selectedEntity);
-            }
+            if (children)
+                for (EntityID child : children->Value)
+                    RenderEntityNode(reg, child, selectedEntity);
 
             ImGui::TreePop();
-        }*/
+        }
     }
 
 	void HierarchyPanel::OnRender() {
-        /*
-		if (ImGui::BeginPopupContextWindow()) {
-			if (ImGui::MenuItem("New Entity")) {
-				m_engineContext.Entities.push_back(Core::ECS::Entity("New Entity"));
-			}
-			ImGui::EndPopup();
-		}
-		
-		for (auto& entity : m_engineContext.Entities) {
-			RenderEntityNode(&entity, m_engineContext.SelectedEntity);
-		}
-        */
+		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
+            RenderEntityNode(m_engineContext.Registry, id, m_engineContext.SelectedEntity);
+		});
 	}
 
 	void HierarchyPanel::OnEnd() {

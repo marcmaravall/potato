@@ -3,6 +3,11 @@
 
 #include "component.h"
 
+#include "components/name.h"
+#include "components/children.h"
+#include "components/parent.h"
+#include "entity_id.h"
+
 #include <unordered_map>
 #include <type_traits>
 #include <typeindex>
@@ -18,7 +23,8 @@ namespace PotatoEngine::Core::ECS {
     public:
         Entity() = default;
         ~Entity() = default;
-        explicit Entity(const std::string& name) {}
+        Entity(const std::string& name, bool hasChildren = true);
+        Entity(const std::string& name, EntityID parent, bool hasChildren = true);
 
     public:
         template<typename T, typename... Args>
@@ -57,12 +63,22 @@ namespace PotatoEngine::Core::ECS {
             if (it == m_components.end())
                 return nullptr;
 
-            return it->second;
+            return static_cast<T*>(it->second.get());
+        }
+
+        std::vector<Component*> GetComponents() const {
+            std::vector<Component*> result;
+            result.reserve(m_components.size());
+
+            for (auto& [_, comp] : m_components)
+                result.push_back(comp.get());
+
+            return result;
         }
 
         template<typename T>
         bool Has() const {
-            return m_components.contains(typeid(T));
+            return m_components.find(typeid(T)) != m_components.end();
         }
     };
 }
