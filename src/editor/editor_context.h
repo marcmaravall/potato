@@ -3,6 +3,7 @@
 
 #include <core/logging/debug.h>
 
+#include <core/ecs/entity_id.h>
 #include <core/assets_manager/assets_manager.h>
 
 namespace PotatoEngine::Editor {
@@ -17,7 +18,8 @@ namespace PotatoEngine::Editor {
 		~EditorContext();
 
 	public:
-		
+		Core::ECS::EntityID SelectedEntity;
+		bool IsEntitySelected = false;
 
 	public:
 		// static EditorContext* s_Instance;

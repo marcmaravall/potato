@@ -12,7 +12,7 @@ namespace PotatoEngine::Editor {
 	private:
 		Core::Application* m_application;
 	public:
-		GamePlayer(Core::EngineContext& ctx) : EditorPanel("Game Player", ctx) {
+		GamePlayer(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Game Player", ctx, ectx) {
 			m_application = new Core::Executable(ctx);
 		}
 

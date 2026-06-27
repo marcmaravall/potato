@@ -67,7 +67,7 @@ namespace PotatoEngine::Editor {
 	public:
 		ComponentInspectorRegistry Registry;
 
-		Inspector(Core::EngineContext& ctx);
+		Inspector(Core::EngineContext& ctx, EditorContext& ectx);
 	
 	protected:
 		void OnBegin() override;

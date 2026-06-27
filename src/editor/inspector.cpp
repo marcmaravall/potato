@@ -5,7 +5,7 @@ namespace PotatoEngine::Editor {
     
     using namespace PotatoEngine::Core::ECS;
     
-    Inspector::Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {
+    Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
         Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
             char buffer[256]{};
             strcpy(buffer, name.Value.c_str());
@@ -79,13 +79,13 @@ namespace PotatoEngine::Editor {
     }
     
     void Inspector::OnRender() {
-        if (!m_engineContext.IsEntitySelected) {
+        if (!m_editorContext.IsEntitySelected) {
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);
             ImGui::TextDisabled("No entity selected");
             return;
         }
     
-        EntityID entity = m_engineContext.SelectedEntity;
+        EntityID entity = m_editorContext.SelectedEntity;
         ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
     
         ImGui::TextColored(
@@ -119,7 +119,7 @@ namespace PotatoEngine::Editor {
         
             for (const auto& name : components) {
                 if (ImGui::MenuItem(name.c_str())) {
-                    m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_engineContext.SelectedEntity));
+                    m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_editorContext.SelectedEntity));
                     ImGui::CloseCurrentPopup();
                 }
             }

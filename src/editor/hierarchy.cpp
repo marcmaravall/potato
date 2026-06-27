@@ -47,7 +47,7 @@ namespace PotatoEngine::Editor {
 
 	void HierarchyPanel::OnRender() {
 		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
-            RenderEntityNode(m_engineContext.Registry, id, m_engineContext.SelectedEntity, m_engineContext.IsEntitySelected);
+            RenderEntityNode(m_engineContext.Registry, id, m_editorContext.SelectedEntity, m_editorContext.IsEntitySelected);
 		});
 	}
 

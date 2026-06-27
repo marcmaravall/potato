@@ -36,8 +36,8 @@ void EditorApplication::OnStart() {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	std::string imguiPath = m_context.AssetsManager.Path(m_context.AssetsManager.GetRoot() + "/tests/imgui.ini");
-	m_context.Debug.Log("Loaded ImGui from: " + imguiPath);
+	std::string imguiPath = m_engineContext.AssetsManager.Path(m_engineContext.AssetsManager.GetRoot() + "/tests/imgui.ini");
+	m_engineContext.Debug.Log("Loaded ImGui from: " + imguiPath);
 	ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -51,11 +51,11 @@ void EditorApplication::OnStart() {
 	// m_platform->SetConsoleVisibility(false);
 	Theme::SetCapMotchaTheme();
 
-	AddPanel<Viewport>(m_context);
-	AddPanel<Console>(m_context);
-	AddPanel<Inspector>(m_context);
-	AddPanel<HierarchyPanel>(m_context);
-	AddPanel<GamePlayer>(m_context);
+	AddPanel<Viewport>(m_engineContext, m_editorContext);
+	AddPanel<Console>(m_engineContext, m_editorContext);
+	AddPanel<Inspector>(m_engineContext, m_editorContext);
+	AddPanel<HierarchyPanel>(m_engineContext, m_editorContext);
+	AddPanel<GamePlayer>(m_engineContext, m_editorContext);
 }
 
 void EditorApplication::OnUpdate() {

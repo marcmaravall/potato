@@ -19,7 +19,7 @@ namespace PotatoEngine::Editor {
 		float m_width = 0, m_height = 0;
 
 	public:
-		Viewport(Core::EngineContext& ctx);
+		Viewport(Core::EngineContext& ctx, EditorContext& ectx);
 
 	protected:
 		void OnBegin() override;

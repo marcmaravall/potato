@@ -15,7 +15,7 @@ namespace PotatoEngine::Editor {
 
 	class Console : public EditorPanel {
 	public:
-		Console(Core::EngineContext& ctx) : EditorPanel("Console", ctx) {}
+		Console(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Console", ctx, ectx) {}
 
 	protected:
 		void OnBegin() override;

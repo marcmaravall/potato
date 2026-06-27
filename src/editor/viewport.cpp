@@ -4,7 +4,7 @@ using namespace PotatoEngine::Core::Rendering;
 
 namespace PotatoEngine::Editor {
 
-    Viewport::Viewport(Core::EngineContext& ctx) : EditorPanel("Viewport", ctx) {
+    Viewport::Viewport(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Viewport", ctx, ectx) {
         ctx.Renderer.Init();
     }
 

@@ -19,7 +19,7 @@ namespace PotatoEngine::Editor {
 
 	class HierarchyPanel : public EditorPanel {
 	public:
-		HierarchyPanel(Core::EngineContext& ctx) : EditorPanel("Hierarchy", ctx) {}
+		HierarchyPanel(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Hierarchy", ctx, ectx) {}
 
 	protected:
 		void OnBegin() override;

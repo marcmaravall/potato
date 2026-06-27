@@ -32,6 +32,8 @@
 #include <vector>
 #include <memory>
 
+#include "editor_context.h"
+
 #ifdef _WIN32
 #include "platform/windows/win32.h"
 #elif __linux__
@@ -48,7 +50,8 @@ namespace PotatoEngine::Editor {
 		GLFWwindow  *m_glfwWindow = nullptr;
 		Platform::PlatformAPI *m_platform = nullptr;
 
-		Core::EngineContext m_context;
+		EditorContext m_editorContext;
+		Core::EngineContext m_engineContext;
 		std::vector<std::unique_ptr<EditorPanel>> m_panels;
 
 	public:
