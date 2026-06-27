@@ -6,13 +6,13 @@
 
 namespace PotatoEngine::Core::ECS::Components {
 
-	class CameraData : public ECS::Component {
+	class Camera : public ECS::Component {
 	public:
 		glm::vec3 ClearColor = glm::vec3(0.2f, 0.3f, 0.6f);
 
 	public:
-		CameraData() : Component("Camera") {}
-		~CameraData() = default;
+		Camera() : Component("Camera") {}
+		~Camera() = default;
 
 		void nothing() override {}
 	};

@@ -3,12 +3,11 @@
 
 namespace PotatoEngine::Core::ECS::Systems {
 	void CameraSystem::OnStart() {
-		// example
-		m_context.Renderer.SetClearColor(glm::vec3(1.0, 0.0, 0.0));
 	}
-
+	
 	void CameraSystem::OnUpdate() {
-
+		glm::vec3 color = m_context.Registry.GetComponent<ECS::Components::Camera>(m_context.GetMainCamera()).ClearColor;
+		m_context.Renderer.SetClearColor(color);
 	}
 
 	void CameraSystem::OnDestroy() {

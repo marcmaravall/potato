@@ -6,20 +6,23 @@
 
 #include <glm/glm.hpp>
 
-namespace PotatoEngine::Core::Components {
-	class SpriteRendererData : public ECS::Component {
+namespace PotatoEngine::Core::ECS::Components {
+	class SpriteRenderer : public ECS::Component {
 	public:
-		Core::Rendering::Texture2D* Texture = nullptr;
 		glm::vec4 Color = glm::vec4(1.0f);
 		glm::vec2 Pivot = glm::vec2(0.5f);
 		
 		int Layer = 0;
 		bool FlipX = false, FlipY = false;
+	
+	public:
+		// Graphics API data: 
+		Core::Rendering::Texture2D* Texture = nullptr;
 
 	public:
-		SpriteRendererData() : ECS::Component("Sprite Renderer") {}
+		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
 		
-		~SpriteRendererData() = default;
+		~SpriteRenderer() = default;
 
 		void nothing() override {}
 	};

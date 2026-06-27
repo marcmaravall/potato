@@ -14,7 +14,7 @@ namespace PotatoEngine::Editor {
                 name.Value = buffer;
         });
 
-        Registry.Add<Core::Components::SpriteRendererData>([](Core::Components::SpriteRendererData& sr) {
+        Registry.Add<Core::ECS::Components::SpriteRenderer>([](Core::ECS::Components::SpriteRenderer& sr) {
             if (ImGui::BeginTable("SpriteRenderer", 2)) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
@@ -69,7 +69,7 @@ namespace PotatoEngine::Editor {
             ImGui::Unindent();
         });
 
-        Registry.Add<Core::ECS::Components::CameraData>([](Core::ECS::Components::CameraData& camera) {
+        Registry.Add<Core::ECS::Components::Camera>([](Core::ECS::Components::Camera& camera) {
             ImGui::ColorEdit3("Clear Color", &camera.ClearColor[0]);
         });
     }

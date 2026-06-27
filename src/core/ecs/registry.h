@@ -41,8 +41,8 @@ namespace PotatoEngine::Core::ECS {
 		// Components:
 
 		template<typename Component, typename... Args>
-		void AddComponent(EntityID entity, Args&&... args) {
-			m_entities[entity]->Add<Component>(std::forward<Args>(args)...);
+		Component& AddComponent(EntityID entity, Args&&... args) {
+			return m_entities[entity]->Add<Component>(std::forward<Args>(args)...);
 		}
 
 		template<typename T>
@@ -107,6 +107,17 @@ namespace PotatoEngine::Core::ECS {
 			for (auto c : m_entities[id]->GetComponents()) {
 				fn(c);
 			}
+		}
+
+		template<typename T>
+		void ForEachComponentOfType(std::function<void(EntityID, T&)> fn) {
+		    for (auto& [id, entityPtr] : m_entities) {
+		        if (!entityPtr) continue;
+			
+		        if (entityPtr->template Has<T>()) {
+		            fn(id, entityPtr->template Get<T>());
+		        }
+		    }
 		}
 
 	public:

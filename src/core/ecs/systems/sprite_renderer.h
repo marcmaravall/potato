@@ -3,10 +3,11 @@
 
 #include <engine_context.h>
 #include <ecs/system.h>
+#include <ecs/components/sprite_renderer.h>
 
 #include <memory>
 
-namespace PotatoEngine::Core::Systems {
+namespace PotatoEngine::Core::ECS::Systems {
 	class SpriteRendererSystem : public ECS::System {
 	public:
 		SpriteRendererSystem(EngineContext& ctx) : ECS::System(ctx) {}

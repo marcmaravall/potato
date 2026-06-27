@@ -22,18 +22,20 @@ namespace PotatoEngine::Core {
 	}
 
 	class EngineContext {
+	private:
+		ECS::EntityID m_mainCamera = 0;
+	
 	public:
 		bool IsRunning = false;
 
 		ECS::Registry Registry;
-		// Components::CameraData* MainCameraData;
-		// Systems::CameraSystem*  MainCameraSystem;
-		
 		Core::AssetsManager AssetsManager;
 		Logging::Debug Debug;
 		Rendering::Renderer Renderer;
 
+
 	public:
+		ECS::EntityID GetMainCamera() { return m_mainCamera; }
 	
 	public:
 		EngineContext();
