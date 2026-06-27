@@ -5,7 +5,7 @@
 #include <vector>
 
 #include <assets_manager/assets_manager.h>
-#include <logging/debug_system.h>
+#include <logging/debug.h>
 #include <rendering/renderer.h>
 
 #include <ecs/entity.h>
@@ -30,7 +30,7 @@ namespace PotatoEngine::Core {
 		// Systems::CameraSystem*  MainCameraSystem;
 		
 		Core::AssetsManager AssetsManager;
-		Logging::DebugSystem DebugSystem;
+		Logging::Debug Debug;
 		Rendering::Renderer Renderer;
 
 		// TODO: move to editor context

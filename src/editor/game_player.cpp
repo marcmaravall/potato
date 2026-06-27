@@ -11,7 +11,7 @@ namespace PotatoEngine::Editor {
 			m_engineContext.IsRunning = true;
 			m_application->OnStart();
 
-			m_engineContext.DebugSystem.Log("Game started");
+			m_engineContext.Debug.Log("Game started");
 		}
 
 		if (m_engineContext.IsRunning) {
@@ -26,7 +26,7 @@ namespace PotatoEngine::Editor {
 		
 		if (ImGui::Button("Stop") && m_engineContext.IsRunning) {
 			m_engineContext.IsRunning = false;
-			m_engineContext.DebugSystem.Log("Game finished");
+			m_engineContext.Debug.Log("Game finished");
 		}
 
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);

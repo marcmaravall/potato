@@ -119,7 +119,7 @@ namespace PotatoEngine::Editor {
         
             for (const auto& name : components) {
                 if (ImGui::MenuItem(name.c_str())) {
-                    m_engineContext.DebugSystem.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_engineContext.SelectedEntity));
+                    m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_engineContext.SelectedEntity));
                     ImGui::CloseCurrentPopup();
                 }
             }

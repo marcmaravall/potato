@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "core/logging/debug_system.h"
+#include "core/logging/debug.h"
 #include <platform/api.h>
 
 #include "panel.h"

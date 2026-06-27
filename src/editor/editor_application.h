@@ -23,7 +23,7 @@
 #include "hierarchy.h"
 #include "game_player.h"
 
-#include "core/logging/debug_system.h"
+#include "core/logging/debug.h"
 #include "theme.h"
 
 #include <core/engine_context.h>

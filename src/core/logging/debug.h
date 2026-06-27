@@ -8,7 +8,7 @@
 
 namespace PotatoEngine::Core::Logging {
 
-	class DebugSystem {
+	class Debug {
 	public:
 		class Message {
 		public:
@@ -30,8 +30,8 @@ namespace PotatoEngine::Core::Logging {
 		std::vector<Message> m_messages;
 	
 	public:
-		DebugSystem();
-		~DebugSystem();
+		Debug();
+		~Debug();
 
 	public:
 		void Log(const Message& message);

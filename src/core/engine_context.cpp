@@ -21,6 +21,6 @@ namespace PotatoEngine::Core {
 	}
 	
 	EngineContext::~EngineContext() {
-		DebugSystem.Log("Engine context destroyed.");
+		Debug.Log("Engine context destroyed.");
 	}
 }

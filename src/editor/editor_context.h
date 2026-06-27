@@ -1,7 +1,7 @@
 #ifndef POTATO_EDITOR_CONTEXT_H
 #define POTATO_EDITOR_CONTEXT_H
 
-#include <core/logging/debug_system.h>
+#include <core/logging/debug.h>
 
 #include <core/assets_manager/assets_manager.h>
 
