@@ -6,6 +6,7 @@
 #include "entity_id.h"
 
 #include <queue>
+#include <iostream>
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -55,18 +56,29 @@ namespace PotatoEngine::Core::ECS {
 		}
 
 		template<typename T>
-		bool HasComponent(EntityID e) const {
-			return m_entities[e]->Has<T>();
+		bool HasComponent(EntityID e) const
+		{
+    		auto it = m_entities.find(e);
+    		if (it == m_entities.end())
+        		return false;
+
+    		return it->second->Has<T>();
 		}
 
 		// Systems:
 		// TODO: implement systems and iterators:
 		template<typename T, typename... Args>
 		T& AddSystem(Args&&... args) {
-
+		    auto system = std::make_unique<T>(std::forward<Args>(args)...);
+		    T& ref = *system;
+		    m_systems.push_back(std::move(system));
+		
+		    return ref;
 		}
 
+		void Start();
 		void Update();
+		void Destroy();
 
 		// Iterators:
 		template<typename... T>

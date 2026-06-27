@@ -32,7 +32,7 @@ namespace PotatoEngine::Editor {
         float width = ImGui::CalcTextSize(std::to_string(entity).c_str()).x;
 
         ImGui::SameLine(right - width - 10);
-        ImGui::TextDisabled("%llu", static_cast<uint64_t>(entity));
+        ImGui::TextDisabled("%llu", static_cast<long long unsigned>(entity));
 
         auto* children = reg.TryGetComponent<Components::Children>(entity);
         

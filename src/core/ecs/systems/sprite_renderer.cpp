@@ -3,15 +3,15 @@
 namespace PotatoEngine::Core::Systems {
 	using namespace ECS;
 
-	void SpriteRendererSystem::OnStart(std::unique_ptr<Component> c) {
+	void SpriteRendererSystem::OnStart() {
 
 	}
 
-	void SpriteRendererSystem::OnUpdate(std::unique_ptr<Component> c) {
+	void SpriteRendererSystem::OnUpdate() {
 		
 	}
 
-	void SpriteRendererSystem::OnDestroy(std::unique_ptr<Component> c) {
+	void SpriteRendererSystem::OnDestroy() {
 
 	}
 }

@@ -37,8 +37,8 @@ target_link_libraries(imgui_lib PUBLIC glfw)
 file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" 
     "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" 
     # TODO: compile to current platform
-    #"src/platform/linux/*.cpp"
-    "src/platform/windows/*.cpp"
+    "src/platform/linux/*.cpp"
+    #"src/platform/windows/*.cpp"
     
     "src/platform/*.cpp"
     "src/core/assets_manager/*.cpp"

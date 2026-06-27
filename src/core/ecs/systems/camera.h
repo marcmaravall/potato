@@ -3,17 +3,17 @@
 
 #include <ecs/system.h>
 
-namespace PotatoEngine::Core::Systems {
+namespace PotatoEngine::Core::ECS::Systems {
 
-	class CameraSystem : public ECS::System {
+	class CameraSystem : public System {
 	public:
-		CameraSystem(EngineContext& ctx) : ECS::System(ctx, "Camera System") {}
+		CameraSystem(EngineContext& ctx) : System(ctx) {}
 		~CameraSystem() = default;
 
 	protected:
-		void OnStart(std::unique_ptr<ECS::Component> c) override;
-		void OnUpdate(std::unique_ptr<ECS::Component> c) override;
-		void OnDestroy(std::unique_ptr<ECS::Component> c) override;
+		void OnStart() override;
+		void OnUpdate() override;
+		void OnDestroy() override;
 	};
 }
 

@@ -8,7 +8,7 @@ namespace PotatoEngine::Editor {
     Inspector::Inspector(Core::EngineContext& ctx) : EditorPanel("Inspector", ctx) {
         Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
             char buffer[256]{};
-            strcpy_s(buffer, name.Value.c_str());
+            strcpy(buffer, name.Value.c_str());
 
             if (ImGui::InputText("##Name", buffer, sizeof(buffer)))
                 name.Value = buffer;
@@ -47,7 +47,7 @@ namespace PotatoEngine::Editor {
         Registry.Add<Core::ECS::Components::Parent>([](Core::ECS::Components::Parent& parent) {
             ImGui::TextDisabled("Parent Entity");
             ImGui::SameLine();
-            ImGui::Text("%llu", static_cast<uint64_t>(parent.Value));
+            ImGui::Text("%llu", static_cast<long long unsigned>(parent.Value));
         });
 
         Registry.Add<Core::ECS::Components::Children>([](Core::ECS::Components::Children& children) {
@@ -63,7 +63,7 @@ namespace PotatoEngine::Editor {
             for (auto child : children.Value) {
                 ImGui::BulletText(
                     "%llu",
-                    static_cast<uint64_t>(child));
+                    static_cast<long long unsigned>(child));
             }
 
             ImGui::Unindent();
@@ -110,8 +110,21 @@ namespace PotatoEngine::Editor {
     
         ImGui::Spacing();
     
-        if (ImGui::Button("+ Add Component", ImVec2(-1, 32))) {
-    
+        if (ImGui::Button("+ Add Component")) {
+            ImGui::OpenPopup("AddComponentPopup");
+        }
+
+        if (ImGui::BeginPopup("AddComponentPopup")) {
+            const auto& components = Registry.GetComponentNames();
+        
+            for (const auto& name : components) {
+                if (ImGui::MenuItem(name.c_str())) {
+                    m_engineContext.DebugSystem.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_engineContext.SelectedEntity));
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+        
+            ImGui::EndPopup();
         }
     
         ImGui::Spacing();

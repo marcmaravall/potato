@@ -14,8 +14,9 @@ namespace PotatoEngine::Editor {
 			m_engineContext.DebugSystem.Log("Game started");
 		}
 
-		if (m_engineContext.IsRunning)
+		if (m_engineContext.IsRunning) {
 			m_application->OnUpdate();
+		}
 
 		ImGui::SameLine();
 		if (ImGui::Button("Next Frame")) {

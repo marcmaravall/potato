@@ -14,11 +14,10 @@ namespace PotatoEngine::Core {
 		EntityID e = Registry.CreateEntity();
 		Registry.AddComponent<ECS::Components::Name>(e, "Paco");
 
-		DebugSystem.Log(std::to_string(e));
-		DebugSystem.Log(Registry.GetComponent<ECS::Components::Name>(e).Value);
-
 		EntityID child0 = Registry.CreateEntity("Hola", e);
 		EntityID child1 = Registry.CreateEntity("Otro hijo de Paco", e);
+
+		Registry.AddSystem<ECS::Systems::ExampleSystem>(*this);
 	}
 	
 	EngineContext::~EngineContext() {

@@ -43,4 +43,22 @@ namespace PotatoEngine::Core::ECS {
 
         return e;
     }
+
+    void Registry::Update() {
+        for (auto& system : m_systems) {
+            system->OnUpdate();
+        }
+    }
+
+    void Registry::Start() {
+        for (auto& system : m_systems) {
+            system->OnStart();
+        }
+    }
+
+    void Registry::Destroy() {
+        for (auto& system : m_systems) {
+            system->OnDestroy();
+        }
+    }
 }

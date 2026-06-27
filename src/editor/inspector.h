@@ -6,9 +6,11 @@
 #include "panel.h"
 #include <core/engine_context.h>
 
+#include <format>
 #include <typeindex>
 #include <functional>
 #include <unordered_map>
+#include <string>
 
 #include <ecs/components/name.h>
 #include <ecs/components/parent.h>
@@ -19,6 +21,7 @@
 namespace PotatoEngine::Editor {
 	class ComponentInspectorRegistry {
 	private:
+		std::vector<std::string> m_componentNames;
 		std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
 
 	public:
@@ -27,6 +30,7 @@ namespace PotatoEngine::Editor {
 			m_renderers[typeid(ComponentType)] = [inspectorFunction](void* component) {
 				inspectorFunction(*static_cast<ComponentType*>(component));
 			};
+			m_componentNames.push_back(typeid(ComponentType).name());
 		}
 
 		void Render(void* component, std::type_index type) {
@@ -46,6 +50,9 @@ namespace PotatoEngine::Editor {
 			else
 				ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
 		}
+
+		// TODO: transform Itanium C++ ABI to something like the msvc implementation
+		const std::vector<std::string>& GetComponentNames() const { return m_componentNames; }
 
 		ComponentInspectorRegistry() {
 			m_renderers.reserve(10);
