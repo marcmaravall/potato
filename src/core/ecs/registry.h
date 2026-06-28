@@ -26,8 +26,8 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		// Entities
 		EntityID CreateEntity();
-		EntityID CreateEntity(const std::string& name, bool hasChildren = true);
-		EntityID CreateEntity(const std::string& name, EntityID parent, bool hasChildren = true);
+		EntityID CreateEntity(const std::string& name, bool hasChildren = true, bool hasTransform = true);
+		EntityID CreateEntity(const std::string& name, EntityID parent, bool hasChildren = true, bool hasTransform = true);
 		
 		void RemoveEntity(EntityID entity);
 

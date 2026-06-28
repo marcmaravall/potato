@@ -12,7 +12,7 @@ namespace PotatoEngine::Core::ECS::Components {
         glm::vec3 Scale = glm::vec3(1, 1, 1);
 
 	public:
-		Transform() : ECS::Component("Sprite Renderer") {}
+		Transform() : ECS::Component("Transform") {}
 		
 		~Transform() = default;
 

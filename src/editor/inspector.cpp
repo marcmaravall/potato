@@ -14,6 +14,12 @@ namespace PotatoEngine::Editor {
                 name.Value = buffer;
         });
 
+        Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {
+            ImGui::InputFloat3("Position", &transform.Position[0]);
+            ImGui::InputFloat3("Rotation", &transform.Rotation[0]);
+            ImGui::InputFloat3("Scale", &transform.Scale[0]);
+        });
+
         Registry.Add<Core::ECS::Components::SpriteRenderer>([](Core::ECS::Components::SpriteRenderer& sr) {
             if (ImGui::BeginTable("SpriteRenderer", 2)) {
                 ImGui::TableNextRow();

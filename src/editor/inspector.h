@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <string>
 
+#include <ecs/components/transform.h>
 #include <ecs/components/name.h>
 #include <ecs/components/parent.h>
 #include <ecs/components/children.h>

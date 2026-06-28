@@ -1,4 +1,5 @@
 #include "registry.h"
+#include <ecs/components/transform.h>
 
 namespace PotatoEngine::Core::ECS {
     void Registry::RemoveEntity(EntityID e) {
@@ -23,16 +24,18 @@ namespace PotatoEngine::Core::ECS {
         return id;
     }
 
-    EntityID Registry::CreateEntity(const std::string& name, bool hasChildren) {
+    EntityID Registry::CreateEntity(const std::string& name, bool hasChildren, bool hasTransform) {
         EntityID e = CreateEntity();
         m_entities[e]->Add<Components::Name>(name);
         if (hasChildren)
             m_entities[e]->Add<Components::Children>();
+        if (hasTransform)
+            m_entities[e]->Add<Components::Transform>();
         return e;
     }
 
-    EntityID Registry::CreateEntity(const std::string& name, EntityID parent, bool hasChildren) {
-        EntityID e = CreateEntity(name, hasChildren);
+    EntityID Registry::CreateEntity(const std::string& name, EntityID parent, bool hasChildren, bool hasTransform) {
+        EntityID e = CreateEntity(name, hasChildren, hasTransform);
         m_entities[e]->Add<Components::Parent>(parent);
 
         auto* parentChildren = m_entities[parent]->TryGet<Components::Children>();

@@ -6,7 +6,7 @@
 
 #include <assets_manager/assets_manager.h>
 #include <logging/debug.h>
-#include <rendering/renderer.h>
+#include <rendering/renderer2d.h>
 
 #include <ecs/entity.h>
 #include <ecs/component.h>
@@ -31,7 +31,7 @@ namespace PotatoEngine::Core {
 		ECS::Registry Registry;
 		Core::AssetsManager AssetsManager;
 		Logging::Debug Debug;
-		Rendering::Renderer Renderer;
+		Rendering::Renderer2D Renderer;
 
 
 	public:

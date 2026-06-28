@@ -1,10 +1,10 @@
-#include "renderer.h"
+#include "renderer2d.h"
 
 #include <core/engine_context.h>
 
 namespace PotatoEngine::Core::Rendering {
 	
-	void Renderer::Init() {
+	void Renderer2D::Init() {
         m_rendererAPI = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         FramebufferSpec spec;
         spec.Width = 120;
@@ -112,21 +112,21 @@ namespace PotatoEngine::Core::Rendering {
             return;
         }
 
-        MEB_LOG_INFO("Renderer initialized successfully");
+        MEB_LOG_INFO("Renderer2D initialized successfully");
     }
 
-	void Renderer::RenderScene() {
+	void Renderer2D::RenderScene() {
 
         m_framebuffer->Bind();
         m_rendererAPI->SetViewport(0, 0, m_width, m_height);
         m_rendererAPI->Clear();
 
-        
+        // TODO: draw (and implement) command buffers:
 
         m_framebuffer->Unbind();
 	}
 
-	void Renderer::RenderSprite(const ECS::Components::Transform& transform, const ECS::Components::SpriteRenderer& sr) {
+	void Renderer2D::RenderSprite(const ECS::Components::Transform& transform, const ECS::Components::SpriteRenderer& sr) {
         m_shaderProgram->Use();
         m_shaderProgram->UniformMatrix4fv("u_ViewProjection", transform.GetMatrix());
         m_shaderProgram->Uniform4f("u_Color", sr.Color);

@@ -24,7 +24,8 @@ namespace PotatoEngine::Core {
 }
 
 namespace PotatoEngine::Core::Rendering {
-	class Renderer {
+
+	class Renderer2D {
 	private:
 		std::unique_ptr<RendererAPI> m_rendererAPI;
 		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
@@ -58,8 +59,8 @@ namespace PotatoEngine::Core::Rendering {
 
 		const Framebuffer& GetFramebuffer() { return *m_framebuffer; }
 
-		Renderer(EngineContext& engineContext) : m_engineContext(engineContext) {}
-		~Renderer() = default;
+		Renderer2D(EngineContext& engineContext) : m_engineContext(engineContext) {}
+		~Renderer2D() = default;
 	};
 };
 

@@ -19,7 +19,7 @@ namespace PotatoEngine::Core::ECS::Components {
 		Core::Rendering::Texture2D* Texture = nullptr;
 
 	public:
-		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
+		SpriteRenderer() : ECS::Component("Sprite Renderer2D") {}
 		
 		~SpriteRenderer() = default;
 
