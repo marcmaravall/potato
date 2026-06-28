@@ -16,7 +16,6 @@ namespace PotatoEngine::Core::ECS::Components {
 		bool FlipX = false, FlipY = false;
 	
 	public:
-		// Graphics API data: 
 		Core::Rendering::Texture2D* Texture = nullptr;
 
 	public:

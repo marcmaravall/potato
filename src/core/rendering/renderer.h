@@ -10,6 +10,9 @@
 #include <core/rendering/vertex_buffer.h>
 #include <core/rendering/texture2d.h>
 
+#include <ecs/components/transform.h>
+#include <ecs/components/sprite_renderer.h>
+
 #include "renderer_api.h"
 #include <memory>
 
@@ -24,11 +27,9 @@ namespace PotatoEngine::Core::Rendering {
 	class Renderer {
 	private:
 		std::unique_ptr<RendererAPI> m_rendererAPI;
-
 		std::unique_ptr<Core::Rendering::Framebuffer> m_framebuffer;
 
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
-		std::unique_ptr<Core::Rendering::Texture2D> m_texture;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		
 		Core::EngineContext& m_engineContext;
@@ -44,6 +45,7 @@ namespace PotatoEngine::Core::Rendering {
 		}
 
 		void RenderScene();
+		void RenderSprite(const ECS::Components::Transform&, const ECS::Components::SpriteRenderer&);
 
 		void Resize(uint32_t width, uint32_t height) {
 			if (m_framebuffer) {

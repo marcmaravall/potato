@@ -6,6 +6,9 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <rendering/opengl/opengl_shader.h>
 
 namespace PotatoEngine::Core::Rendering {
@@ -66,6 +69,10 @@ namespace PotatoEngine::Core::Rendering {
 		void Uniform1f(const std::string& name, float value) override { glUniform1f(glGetUniformLocation(m_id, name.c_str()), value); }
 		void Uniform1u(const std::string& name, uint32_t value) override { glUniform1ui(glGetUniformLocation(m_id, name.c_str()), value); }
 		void Uniform1b(const std::string& name, bool value) override { glUniform1i(glGetUniformLocation(m_id, name.c_str()), static_cast<int>(value)); }
+		void UniformMatrix4fv(const std::string& name, glm::mat4 value) override { 
+			glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value)); 
+		}
+		void Uniform4f(const std::string& name, glm::vec4 value) override { glUniform4f(glGetUniformLocation(m_id, name.c_str()), value.x, value.y, value.z, value.w); }
 	};
 }
 
