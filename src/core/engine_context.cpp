@@ -29,6 +29,12 @@ namespace PotatoEngine::Core {
 			AssetsManager.Path(AssetsManager.GetRoot()+"/assets/tests/texture.gif")
 		);
 
+		EntityID e1 = Registry.CreateEntity("Manolo");
+		Registry.AddComponent<ECS::Components::SpriteRenderer>(e1, 
+			AssetsManager.Path(AssetsManager.GetRoot()+"/assets/tests/texture.gif")
+		);
+		Registry.GetComponent<ECS::Components::Transform>(e1).Position.x = 1;
+
 		EntityID child0 = Registry.CreateEntity("B", e);
 		EntityID child1 = Registry.CreateEntity("C", e);
 

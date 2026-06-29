@@ -22,7 +22,7 @@ namespace PotatoEngine::Core::ECS::Systems {
 		SpriteRendererSystem(EngineContext& ctx) : ECS::System(ctx) {}
 		~SpriteRendererSystem() = default;
 	
-	protected:
+	public:
 		void OnStart() override;
 		void OnUpdate() override;
 		void OnDestroy() override;

@@ -6,6 +6,7 @@
 
 #include <core/assets_manager/assets_manager.h>
 #include <core/engine_context.h>
+#include <core/ecs/systems/sprite_renderer.h>
 
 #include "panel.h"
 

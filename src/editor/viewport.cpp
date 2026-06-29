@@ -23,6 +23,10 @@ namespace PotatoEngine::Editor {
 			m_engineContext.Renderer.Resize(m_width, m_height);
         }
 
+        // TODO: render to viewport in a cleaner way: 
+        if (!m_engineContext.IsRunning)
+            m_engineContext.Registry.GetSystem<Core::ECS::Systems::SpriteRendererSystem>().OnUpdate();
+            
         m_engineContext.Renderer.BeginScene();
         m_engineContext.Renderer.EndScene();
 
