@@ -7,8 +7,6 @@ namespace PotatoEngine::Core::Rendering {
 	void Renderer2D::Init() {
         m_rendererAPI = RendererAPI::Create(RendererAPI::Backend::OpenGL);
         FramebufferSpec spec;
-        spec.Width = 120;
-        spec.Height = 120;
 
         FramebufferTextureSpec colorAttachment;
         colorAttachment.Format = FramebufferTextureFormat::RGBA8;
@@ -51,6 +49,11 @@ namespace PotatoEngine::Core::Rendering {
             { ShaderDataType::Float2, "a_TexCoord" }
         });
 
+        MEB_LOG_INFOF("Stride: %d", vbo->GetLayout().GetStride());
+        for (const auto& element : vbo->GetLayout().GetElements()) {
+            MEB_LOG_INFOF("Element: %s offset:%d size:%d components:%d", element.Name.c_str(), element.Offset, element.Size, element.GetComponentCount());
+        }
+
         auto ibo = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
         m_vao->AddVertexBuffer(vbo);
@@ -70,7 +73,7 @@ namespace PotatoEngine::Core::Rendering {
             void main()
             {
                 v_TexCoord = a_TexCoord;
-                gl_Position = u_ViewProjection * u_Model * vec4(a_Position, 1.0);
+                gl_Position = vec4(a_Position, 1.0); // u_Model * vec4(a_Position, 1.0);
             }
         )";
 
@@ -82,11 +85,11 @@ namespace PotatoEngine::Core::Rendering {
             uniform sampler2D u_Texture;
             uniform vec4 u_Color;
 
-            layout(location = 0) out vec4 FragColor;
+            out vec4 FragColor;
 
             void main()
             {
-                FragColor = texture(u_Texture, v_TexCoord) * u_Color;
+                FragColor = u_Color; // texture(u_Texture, v_TexCoord) * u_Color;
             }
         )";
 
@@ -115,25 +118,35 @@ namespace PotatoEngine::Core::Rendering {
         MEB_LOG_INFO("Renderer2D initialized successfully");
     }
 
-	void Renderer2D::RenderScene() {
-
+	void Renderer2D::BeginScene() {
         m_framebuffer->Bind();
         m_rendererAPI->SetViewport(0, 0, m_width, m_height);
         m_rendererAPI->Clear();
 
-        // TODO: draw (and implement) command buffers:
+        m_shaderProgram->Use();
+        for (auto& command : m_srCommandBuffers) {
 
+            m_shaderProgram->UniformMatrix4fv("u_Model", command.T.GetMatrix());
+            m_shaderProgram->Uniform4f("u_Color", command.S.Color);
+            
+            m_shaderProgram->Uniform1i("u_Texture", 0);
+            if (command.S.Texture) {
+                command.S.Texture->Bind(0);
+            }
+
+            m_vao->Bind();
+            m_rendererAPI->DrawIndexed(m_vao->GetIndexBuffer()->GetCount());
+            m_vao->Unbind();
+        }
+        m_shaderProgram->Unuse();
+    }
+
+	void Renderer2D::EndScene() {
         m_framebuffer->Unbind();
-	}
+        m_srCommandBuffers.clear();
+    }
 
 	void Renderer2D::RenderSprite(const ECS::Components::Transform& transform, const ECS::Components::SpriteRenderer& sr) {
-        m_shaderProgram->Use();
-        m_shaderProgram->UniformMatrix4fv("u_ViewProjection", transform.GetMatrix());
-        m_shaderProgram->Uniform4f("u_Color", sr.Color);
-
-        if (sr.Texture)
-            sr.Texture->Bind();
-
-        m_shaderProgram->Unuse();
+        m_srCommandBuffers.push_back(SpriteRendererCommandBuffer(transform, sr));
     }
 }

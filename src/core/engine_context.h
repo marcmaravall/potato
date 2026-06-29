@@ -40,6 +40,8 @@ namespace PotatoEngine::Core {
 	public:
 		EngineContext();
 		~EngineContext();
+
+		void Start();
 	};
 }
 

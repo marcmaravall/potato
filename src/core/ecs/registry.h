@@ -11,6 +11,7 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
+#include <exception>
 
 // TODO: test behavior
 namespace PotatoEngine::Core::ECS {
@@ -76,6 +77,17 @@ namespace PotatoEngine::Core::ECS {
 		    return ref;
 		}
 
+		template<typename T>
+		T& GetSystem() {
+		    for (auto& system : m_systems) {
+		        if (auto ptr = dynamic_cast<T*>(system.get())) {
+		            return *ptr;
+		        }
+		    }
+		
+		    throw std::runtime_error("Requested system is not registered.");
+		}
+
 		void Start();
 		void Update();
 		void Destroy();
@@ -116,6 +128,18 @@ namespace PotatoEngine::Core::ECS {
 			
 		        if (entityPtr->template Has<T>()) {
 		            fn(id, entityPtr->template Get<T>());
+		        }
+		    }
+		}
+
+		template<typename... Components, typename Func>
+		void Each(Func&& fn) {
+		    for (auto& [id, entityPtr] : m_entities) {
+		        if (!entityPtr) 
+					continue;
+			
+		        if ((entityPtr->template Has<Components>() && ...)) {
+		            fn(entityPtr->template Get<Components>()...);
 		        }
 		    }
 		}

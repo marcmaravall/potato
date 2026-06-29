@@ -38,6 +38,7 @@ namespace PotatoEngine::Core::Rendering {
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 				glGenerateMipmap(GL_TEXTURE_2D);
 			} else {
+				MEB_LOG_ERRORF("Cannot load texture from file: %s", filepath.c_str());
 				MEB_ASSERT(0 && "Failed to load texture!");
 			}
 			stbi_image_free(data);
@@ -48,8 +49,10 @@ namespace PotatoEngine::Core::Rendering {
 		}
 
 	public:
-		void Bind() override {
-			glBindTexture(GL_TEXTURE_2D, m_id);
+
+		void Bind(uint32_t slot = 0) override {
+    		glActiveTexture(GL_TEXTURE0 + slot);
+    		glBindTexture(GL_TEXTURE_2D, m_id);
 		}
 
 		void Unbind() override {

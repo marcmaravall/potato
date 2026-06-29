@@ -23,7 +23,8 @@ namespace PotatoEngine::Editor {
 			m_engineContext.Renderer.Resize(m_width, m_height);
         }
 
-        m_engineContext.Renderer.RenderScene();
+        m_engineContext.Renderer.BeginScene();
+        m_engineContext.Renderer.EndScene();
 
         ImTextureID texId = (ImTextureID)(uintptr_t)m_engineContext.Renderer.GetFramebuffer().GetColorAttachmentID(0);
         ImGui::Image(texId, avail, ImVec2(0, 1), ImVec2(1, 0));

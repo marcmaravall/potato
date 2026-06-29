@@ -3,6 +3,7 @@
 using namespace PotatoEngine::Core;
 
 int main(int argc, char** argv) {
+	MEB_INIT(nullptr);
 	Application* application = new PotatoEngine::Editor::EditorApplication();
 	application->Run();
 

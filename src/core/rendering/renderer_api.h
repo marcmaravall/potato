@@ -20,7 +20,8 @@ namespace PotatoEngine::Core::Rendering {
 		virtual void Shutdown() = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
-		virtual void DrawIndexed(const Ref<VertexArray>& va, const uint32_t count) = 0;
+		virtual void DrawIndexed(const Scope<VertexArray>& va, const uint32_t count) = 0;
+		virtual void DrawIndexed(const uint32_t count) = 0;
 		virtual void DrawArrays(const uint32_t count) = 0;
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 

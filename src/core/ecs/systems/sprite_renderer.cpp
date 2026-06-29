@@ -8,8 +8,8 @@ namespace PotatoEngine::Core::ECS::Systems {
 	}
 
 	void SpriteRendererSystem::OnUpdate() {
-		m_context.Registry.ForEachComponentOfType<Components::SpriteRenderer>([](EntityID id, Components::SpriteRenderer& sr) {
-			
+		m_context.Registry.Each<Components::SpriteRenderer, Components::Transform>([&](auto& sr, auto& transform) {
+			m_context.Renderer.RenderSprite(transform, sr);
 		});
 	}
 

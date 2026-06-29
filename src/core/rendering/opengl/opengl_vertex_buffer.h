@@ -18,11 +18,13 @@ namespace PotatoEngine::Core::Rendering {
     public:
         OpenGL_VertexBuffer(uint32_t size) {
 			glGenBuffers(1, &m_id);
-            
         }
 
         OpenGL_VertexBuffer(float* vertices, uint32_t size) {
 			glGenBuffers(1, &m_id);
+            
+            glBindBuffer(GL_ARRAY_BUFFER, m_id);
+			glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
         }
 
         ~OpenGL_VertexBuffer() {

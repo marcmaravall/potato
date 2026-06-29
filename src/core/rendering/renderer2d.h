@@ -25,6 +25,16 @@ namespace PotatoEngine::Core {
 
 namespace PotatoEngine::Core::Rendering {
 
+	// TODO: abstract command buffer if this scales
+	struct SpriteRendererCommandBuffer {
+		const ECS::Components::Transform& T;
+		const ECS::Components::SpriteRenderer& S;
+
+		SpriteRendererCommandBuffer(const ECS::Components::Transform& t, const ECS::Components::SpriteRenderer& s) 
+			: T(t), S(s) {}
+		~SpriteRendererCommandBuffer() = default;
+	};
+
 	class Renderer2D {
 	private:
 		std::unique_ptr<RendererAPI> m_rendererAPI;
@@ -33,11 +43,13 @@ namespace PotatoEngine::Core::Rendering {
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		
+		std::vector<SpriteRendererCommandBuffer> m_srCommandBuffers;
+
 		Core::EngineContext& m_engineContext;
 
 		int m_width = 0;
 		int m_height = 0;
-	
+
 	public:
 		void Init();
 
@@ -45,7 +57,9 @@ namespace PotatoEngine::Core::Rendering {
 			m_rendererAPI->SetClearColor(glm::vec4(color, 1.0));
 		}
 
-		void RenderScene();
+		void BeginScene();
+		void EndScene();
+
 		void RenderSprite(const ECS::Components::Transform&, const ECS::Components::SpriteRenderer&);
 
 		void Resize(uint32_t width, uint32_t height) {

@@ -22,9 +22,14 @@ void OpenGL_RendererAPI::Clear() {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void OpenGL_RendererAPI::DrawIndexed(const Ref<VertexArray>& va, const uint32_t count = 0) {
-	// TODO: implement:
+void OpenGL_RendererAPI::DrawIndexed(const Scope<VertexArray>& va, uint32_t count) {
+    va->Bind();
+    uint32_t indexCount = count ? count : va->GetIndexBuffer()->GetCount();
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+}
 
+void OpenGL_RendererAPI::DrawIndexed(uint32_t indexCount) {
+    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
 }
 
 void OpenGL_RendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) {

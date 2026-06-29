@@ -81,7 +81,7 @@ namespace PotatoEngine::Editor {
     }
 
     void Inspector::OnBegin() {
-    
+        
     }
     
     void Inspector::OnRender() {

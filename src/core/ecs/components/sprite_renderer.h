@@ -5,6 +5,7 @@
 #include <core/rendering/texture2d.h>
 
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace PotatoEngine::Core::ECS::Components {
 	class SpriteRenderer : public ECS::Component {
@@ -16,10 +17,11 @@ namespace PotatoEngine::Core::ECS::Components {
 		bool FlipX = false, FlipY = false;
 	
 	public:
-		Core::Rendering::Texture2D* Texture = nullptr;
+		std::unique_ptr<Core::Rendering::Texture2D> Texture = nullptr;
 
 	public:
-		SpriteRenderer() : ECS::Component("Sprite Renderer2D") {}
+		SpriteRenderer(const std::string& path);
+		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
 		
 		~SpriteRenderer() = default;
 

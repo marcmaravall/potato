@@ -22,7 +22,8 @@ namespace PotatoEngine::Core::Rendering {
 		void Shutdown() override;
 		void SetClearColor(const glm::vec4& color) override;
 		void Clear() override;
-		void DrawIndexed(const Ref<VertexArray>& va, const uint32_t count) override;
+		void DrawIndexed(const Scope<VertexArray>& va, const uint32_t count) override;
+		void DrawIndexed(const uint32_t count) override;
 		void DrawArrays(const uint32_t count) override { glDrawArrays(GL_TRIANGLES, 0, (GLsizei)count); }
 		void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) override;
 

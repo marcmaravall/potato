@@ -56,6 +56,8 @@ void EditorApplication::OnStart() {
 	AddPanel<Inspector>(m_engineContext, m_editorContext);
 	AddPanel<HierarchyPanel>(m_engineContext, m_editorContext);
 	AddPanel<GamePlayer>(m_engineContext, m_editorContext);
+
+	m_engineContext.Start();
 }
 
 void EditorApplication::OnUpdate() {

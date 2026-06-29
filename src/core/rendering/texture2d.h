@@ -14,7 +14,7 @@ namespace PotatoEngine::Core::Rendering {
 
 	public:
 		Texture2D() = default;
-		virtual void Bind() = 0;
+		virtual void Bind(uint32_t slot) = 0;
 		virtual void Unbind() = 0;
 
 		virtual int GetWidth()  const = 0;
