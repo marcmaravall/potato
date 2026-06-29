@@ -70,10 +70,11 @@ namespace PotatoEngine::Core::Rendering {
 
             out vec2 v_TexCoord;
 
+            // TODO: use viewprojection matrix
             void main()
             {
                 v_TexCoord = a_TexCoord;
-                gl_Position = vec4(a_Position, 1.0); // u_Model * vec4(a_Position, 1.0);
+                gl_Position = u_Model * vec4(a_Position, 1.0);
             }
         )";
 
@@ -89,7 +90,7 @@ namespace PotatoEngine::Core::Rendering {
 
             void main()
             {
-                FragColor = u_Color; // texture(u_Texture, v_TexCoord) * u_Color;
+                FragColor = texture(u_Texture, v_TexCoord) * u_Color;
             }
         )";
 
