@@ -14,7 +14,7 @@ namespace PotatoEngine::Core::ECS::Components {
 	public:
 		Transform() : ECS::Component("Transform") {}
 		
-		~Transform() = default;
+		~Transform() override = default;
 
         glm::mat4 GetMatrix() const;
 

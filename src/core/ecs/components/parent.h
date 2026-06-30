@@ -11,7 +11,7 @@ namespace PotatoEngine::Core::ECS::Components {
 
 	public:
 		Parent(EntityID parent) : Component("Parent"), Value(parent) {}
-		~Parent() = default;
+		~Parent() override = default;
 
 		void nothing() override {}
 	};

@@ -20,7 +20,7 @@ namespace PotatoEngine::Editor {
 
 	class HierarchyPanel : public EditorPanel {
 	private:
-		void RenderEntityNode(Core::ECS::EntityID entity);
+		void RenderEntityNode(Core::ECS::EntityID entity, Core::ECS::EntityID&);
 
 	public:
 		HierarchyPanel(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Hierarchy", ctx, ectx) {}

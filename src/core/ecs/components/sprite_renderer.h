@@ -23,7 +23,7 @@ namespace PotatoEngine::Core::ECS::Components {
 		SpriteRenderer(const std::string& path);
 		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
 		
-		~SpriteRenderer() = default;
+		~SpriteRenderer() override = default;
 
 		void nothing() override {}
 	};

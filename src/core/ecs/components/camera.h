@@ -12,7 +12,7 @@ namespace PotatoEngine::Core::ECS::Components {
 
 	public:
 		Camera() : Component("Camera") {}
-		~Camera() = default;
+		~Camera() override = default;
 
 		void nothing() override {}
 	};

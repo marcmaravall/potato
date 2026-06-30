@@ -6,7 +6,23 @@ namespace PotatoEngine::Core::ECS {
         auto it = m_entities.find(e);
         if (it == m_entities.end() || it->second == nullptr)
             return;
-        it->second.reset();
+        
+        EntityID id = it->first;
+        // Delete from parent children vector: 
+        auto* parentComponent = TryGetComponent<Components::Parent>(id);
+        if (parentComponent) {
+            auto* children = TryGetComponent<Components::Children>(parentComponent->Value);
+            children->Remove(id);
+        }
+
+        // Delete children:
+        auto* children = TryGetComponent<Components::Children>(id);
+        if (children) {
+            for (auto& entity : children->Value)
+                RemoveEntity(entity);
+        }
+
+        m_entities.erase(it);
         m_emptyStack.push(e);
     }
 

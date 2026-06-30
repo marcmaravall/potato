@@ -7,7 +7,7 @@ namespace PotatoEngine::Editor {
 
 	}
 
-    void HierarchyPanel::RenderEntityNode(EntityID entity) {
+    void HierarchyPanel::RenderEntityNode(EntityID entity, EntityID& toDelete) {
         auto& selectedEntity = m_editorContext.SelectedEntity;
         auto& isEntitySelected = m_editorContext.IsEntitySelected;
         auto& reg = m_engineContext.Registry;
@@ -45,14 +45,7 @@ namespace PotatoEngine::Editor {
             }
             
             if (ImGui::MenuItem("Delete")) {
-                // TODO: delete without segfault
-                ctx.Registry.RemoveEntity(selectedEntity);
-            }
-        
-            ImGui::Separator();
-        
-            if (ImGui::MenuItem("Rename")) {
-                
+                toDelete = entity;
             }
         
             ImGui::EndPopup();
@@ -69,17 +62,23 @@ namespace PotatoEngine::Editor {
         if (opened) {
             if (children)
                 for (EntityID child : children->Value)
-                    RenderEntityNode(child);
+                    RenderEntityNode(child, toDelete);
 
             ImGui::TreePop();
         }
     }
 
 	void HierarchyPanel::OnRender() {
+        EntityID toDelete = NULL_ENTITY;
 		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
-            RenderEntityNode(id);
+            RenderEntityNode(id, toDelete);
 		});
-	}
+
+        if (toDelete != NULL_ENTITY) {
+            m_editorContext.IsEntitySelected = false;
+            m_engineContext.Registry.RemoveEntity(toDelete);
+        }        
+    }
 
 	void HierarchyPanel::OnEnd() {
 

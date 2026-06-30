@@ -12,9 +12,8 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		Component() = default;
 		Component(const std::string& name) : Name(name) {}
-		~Component() = default;
+		virtual ~Component() = default;
 
-		// to make this class abstract
 		virtual void nothing() = 0;
 	};
 }

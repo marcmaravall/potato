@@ -48,6 +48,11 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp"
     "src/core/ecs/components/*.cpp"
 )
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_compile_options(-fsanitize=address -g -O0)
+    add_link_options(-fsanitize=address)
+endif()
+
 include_directories(potato PUBLIC "src/core" "src/"
     "thirdparty/meb"
 )
