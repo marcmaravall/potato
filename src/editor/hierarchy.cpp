@@ -7,7 +7,12 @@ namespace PotatoEngine::Editor {
 
 	}
 
-    static void RenderEntityNode(Registry& reg, EntityID entity, EntityID& selectedEntity, bool& isEntitySelected) {
+    void HierarchyPanel::RenderEntityNode(EntityID entity) {
+        auto& selectedEntity = m_editorContext.SelectedEntity;
+        auto& isEntitySelected = m_editorContext.IsEntitySelected;
+        auto& reg = m_engineContext.Registry;
+        auto& ctx = m_engineContext;
+
         ImGuiTreeNodeFlags flags = (selectedEntity == entity ? 
             ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -28,6 +33,31 @@ namespace PotatoEngine::Editor {
             isEntitySelected = true;
         }
 
+        if (ImGui::BeginPopupContextItem()) {
+            if (ImGui::MenuItem("New")) {
+                EntityID child = ctx.Registry.CreateEntity("New entity");
+                ctx.Registry.AddComponent<Components::Parent>(child, selectedEntity);
+
+                auto* children = ctx.Registry.TryGetComponent<Components::Children>(selectedEntity);
+                if (!children)
+                    children = &ctx.Registry.AddComponent<Components::Children>(selectedEntity);
+                children->Value.push_back(child);
+            }
+            
+            if (ImGui::MenuItem("Delete")) {
+                // TODO: delete without segfault
+                ctx.Registry.RemoveEntity(selectedEntity);
+            }
+        
+            ImGui::Separator();
+        
+            if (ImGui::MenuItem("Rename")) {
+                
+            }
+        
+            ImGui::EndPopup();
+        }
+
         float right = ImGui::GetWindowContentRegionMax().x;
         float width = ImGui::CalcTextSize(std::to_string(entity).c_str()).x;
 
@@ -39,7 +69,7 @@ namespace PotatoEngine::Editor {
         if (opened) {
             if (children)
                 for (EntityID child : children->Value)
-                    RenderEntityNode(reg, child, selectedEntity, isEntitySelected);
+                    RenderEntityNode(child);
 
             ImGui::TreePop();
         }
@@ -47,7 +77,7 @@ namespace PotatoEngine::Editor {
 
 	void HierarchyPanel::OnRender() {
 		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
-            RenderEntityNode(m_engineContext.Registry, id, m_editorContext.SelectedEntity, m_editorContext.IsEntitySelected);
+            RenderEntityNode(id);
 		});
 	}
 

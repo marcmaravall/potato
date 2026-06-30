@@ -11,6 +11,7 @@
 #include <core/ecs/components/camera.h>
 #include <core/ecs/components/sprite_renderer.h>
 #include <core/ecs/systems/sprite_renderer.h>
+#include <core/ecs/entity_id.h>
 
 #include <format>
 #include <stack>
@@ -18,6 +19,9 @@
 namespace PotatoEngine::Editor {
 
 	class HierarchyPanel : public EditorPanel {
+	private:
+		void RenderEntityNode(Core::ECS::EntityID entity);
+
 	public:
 		HierarchyPanel(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Hierarchy", ctx, ectx) {}
 

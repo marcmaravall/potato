@@ -22,7 +22,7 @@ namespace PotatoEngine::Editor {
 		bool IsEntitySelected = false;
 
 	public:
-		// static EditorContext* s_Instance;
+	
 	};
 }
 
