@@ -7,6 +7,9 @@ void OpenGL_RendererAPI::Init() {
 		MEB_LOG_ERROR("OpenGL_Renderer::Init: error loading glad!");
 		exit(1);
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void OpenGL_RendererAPI::Shutdown() {

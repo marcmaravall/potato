@@ -90,6 +90,9 @@ namespace PotatoEngine::Core::Rendering {
 
             void main()
             {
+                if (u_Color.a < 0.1) {
+                    discard;
+                }
                 FragColor = texture(u_Texture, v_TexCoord) * u_Color;
             }
         )";
@@ -124,15 +127,19 @@ namespace PotatoEngine::Core::Rendering {
         m_rendererAPI->SetViewport(0, 0, m_width, m_height);
         m_rendererAPI->Clear();
 
-        m_shaderProgram->Use();
-        for (auto& command : m_srCommandBuffers) {
+        std::sort(m_srCommandBuffers.begin(), m_srCommandBuffers.end(), [](auto* a, auto* b) {
+            return a->S.Layer < b->S.Layer;
+        });
 
-            m_shaderProgram->UniformMatrix4fv("u_Model", command.T.GetMatrix());
-            m_shaderProgram->Uniform4f("u_Color", command.S.Color);
+        m_shaderProgram->Use();
+        for (auto* command : m_srCommandBuffers) {
+
+            m_shaderProgram->UniformMatrix4fv("u_Model", command->T.GetMatrix());
+            m_shaderProgram->Uniform4f("u_Color", command->S.Color);
             
             m_shaderProgram->Uniform1i("u_Texture", 0);
-            if (command.S.Texture) {
-                command.S.Texture->Bind(0);
+            if (command->S.Texture) {
+                command->S.Texture->Bind(0);
             }
 
             m_vao->Bind();
@@ -144,10 +151,12 @@ namespace PotatoEngine::Core::Rendering {
 
 	void Renderer2D::EndScene() {
         m_framebuffer->Unbind();
+        for (auto* c : m_srCommandBuffers)
+            delete c;
         m_srCommandBuffers.clear();
     }
 
 	void Renderer2D::RenderSprite(const ECS::Components::Transform& transform, const ECS::Components::SpriteRenderer& sr) {
-        m_srCommandBuffers.push_back(SpriteRendererCommandBuffer(transform, sr));
+        m_srCommandBuffers.push_back(new SpriteRendererCommandBuffer(transform, sr));
     }
 }

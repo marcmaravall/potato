@@ -44,6 +44,12 @@ namespace PotatoEngine::Editor {
 
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
+                ImGui::TextUnformatted("Layer");
+                ImGui::TableSetColumnIndex(1);
+                ImGui::InputInt("##Layer", &sr.Layer);
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
                 static std::string path = sr.GetTexturePath();
 
                 // TODO: improve so it wont crash if cannot load the texture

@@ -15,6 +15,8 @@
 
 #include "renderer_api.h"
 #include <memory>
+#include <algorithm>
+#include <vector>
 
 #include <cstdint>
 #include <queue>
@@ -43,7 +45,7 @@ namespace PotatoEngine::Core::Rendering {
 		std::unique_ptr<Core::Rendering::VertexArray> m_vao;
 		std::unique_ptr<Core::Rendering::ShaderProgram> m_shaderProgram;
 		
-		std::vector<SpriteRendererCommandBuffer> m_srCommandBuffers;
+		std::vector<SpriteRendererCommandBuffer*> m_srCommandBuffers;
 
 		Core::EngineContext& m_engineContext;
 
