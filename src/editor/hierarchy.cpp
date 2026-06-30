@@ -56,7 +56,7 @@ namespace PotatoEngine::Editor {
 
         ImGui::SameLine(right - width - 10);
         ImGui::TextDisabled("%llu", static_cast<long long unsigned>(entity));
-
+        
         auto* children = reg.TryGetComponent<Components::Children>(entity);
         
         if (opened) {
@@ -69,6 +69,15 @@ namespace PotatoEngine::Editor {
     }
 
 	void HierarchyPanel::OnRender() {
+        if (ImGui::Button("+")) {
+            m_engineContext.Registry.CreateEntity("New entity");
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Clear")) {
+            m_editorContext.IsEntitySelected = false;
+            m_engineContext.Registry.RemoveAllEntities();
+        }
+
         EntityID toDelete = NULL_ENTITY;
 		m_engineContext.Registry.Each_Not <Core::ECS::Components::Parent>([&](Core::ECS::EntityID id) {
             RenderEntityNode(id, toDelete);

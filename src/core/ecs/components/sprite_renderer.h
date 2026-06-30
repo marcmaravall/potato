@@ -9,6 +9,9 @@
 
 namespace PotatoEngine::Core::ECS::Components {
 	class SpriteRenderer : public ECS::Component {
+	private:
+		std::string m_texturePath = "";
+
 	public:
 		glm::vec4 Color = glm::vec4(1.0f);
 		glm::vec2 Pivot = glm::vec2(0.5f);
@@ -22,6 +25,9 @@ namespace PotatoEngine::Core::ECS::Components {
 	public:
 		SpriteRenderer(const std::string& path);
 		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
+
+		void Load(const std::string& path);
+		const std::string& GetTexturePath() const { return m_texturePath; }
 		
 		~SpriteRenderer() override = default;
 

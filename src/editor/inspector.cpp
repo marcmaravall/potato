@@ -7,11 +7,7 @@ namespace PotatoEngine::Editor {
     
     Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
         Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
-            char buffer[256]{};
-            strcpy(buffer, name.Value.c_str());
-
-            if (ImGui::InputText("##Name", buffer, sizeof(buffer)))
-                name.Value = buffer;
+            if (ImGui::InputText("##Name", &name.Value)) {}
         });
 
         Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {
@@ -45,6 +41,17 @@ namespace PotatoEngine::Editor {
                 ImGui::TextUnformatted("Flip Y");
                 ImGui::TableSetColumnIndex(1);
                 ImGui::Checkbox("##FlipY", &sr.FlipY);
+
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                static std::string path = sr.GetTexturePath();
+
+                // TODO: improve so it wont crash if cannot load the texture
+                ImGui::InputText("", &path);
+                ImGui::TableSetColumnIndex(1);
+                if (ImGui::Button("Load")) {
+                    sr.Load(path);
+                }
 
                 ImGui::EndTable();
             }

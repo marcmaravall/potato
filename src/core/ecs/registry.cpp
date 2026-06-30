@@ -21,9 +21,14 @@ namespace PotatoEngine::Core::ECS {
             for (auto& entity : children->Value)
                 RemoveEntity(entity);
         }
-
+        
         m_entities.erase(it);
         m_emptyStack.push(e);
+    }
+
+    // This only clears the entities hashmap, the empty stack is not modified
+    void Registry::RemoveAllEntities() {
+        m_entities.clear();
     }
 
     EntityID Registry::CreateEntity() {

@@ -31,6 +31,7 @@ namespace PotatoEngine::Core::ECS {
 		EntityID CreateEntity(const std::string& name, EntityID parent, bool hasChildren = true, bool hasTransform = true);
 		
 		void RemoveEntity(EntityID entity);
+		void RemoveAllEntities();
 
 		bool IsEmpty(EntityID entity) const {
 			auto it = m_entities.find(entity);
