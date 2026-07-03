@@ -18,6 +18,7 @@
 #include <ecs/components/children.h>
 #include <ecs/components/sprite_renderer.h>
 #include <ecs/components/camera.h>
+#include <ecs/components/lua_script.h>
 
 namespace PotatoEngine::Editor {
 	class ComponentInspectorRegistry {

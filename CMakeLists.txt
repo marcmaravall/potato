@@ -71,6 +71,7 @@ target_include_directories(potato PRIVATE
     "src/core"
     "src/"
     "thirdparty/meb"
+    "thirdparty/sol2/include"
 )
 
 target_link_libraries(potato PRIVATE

@@ -10,6 +10,20 @@ namespace PotatoEngine::Editor {
             if (ImGui::InputText("##Name", &name.Value)) {}
         });
 
+        Registry.Add<Core::ECS::Components::LuaScript>([](Core::ECS::Components::LuaScript& script) {
+            ImGui::TextDisabled("Lua Script");
+            ImGui::SameLine();
+            if (ImGui::Button("Reload")) {
+
+            }
+			
+            ImGui::InputTextMultiline(
+                "##LuaScript", &script.Source, 
+                ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), 
+                ImGuiInputTextFlags_AllowTabInput
+            );
+        });
+
         Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {
             ImGui::InputFloat3("Position", &transform.Position[0]);
             ImGui::InputFloat3("Rotation", &transform.Rotation[0]);

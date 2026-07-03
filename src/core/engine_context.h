@@ -15,10 +15,16 @@
 
 #include <ecs/components/camera.h>
 
+#include <scripting/scripting_module.h>
+
 namespace PotatoEngine::Core {
 
 	namespace Systems {
 		class CameraSystem;
+	}
+
+	namespace Scripting {
+		class ScriptingModule;
 	}
 
 	class EngineContext {
@@ -32,7 +38,7 @@ namespace PotatoEngine::Core {
 		Core::AssetsManager AssetsManager;
 		Logging::Debug Debug;
 		Rendering::Renderer2D Renderer;
-
+		Scripting::ScriptingModule Scripting;
 
 	public:
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }
