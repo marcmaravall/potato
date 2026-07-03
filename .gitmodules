@@ -18,3 +18,10 @@
     path = thirdparty/stb
     url = https://github.com/nothings/stb.git
 
+[submodule "sol2"]
+    path = thirdparty/sol2
+    url = https://github.com/ThePhD/sol2.git
+
+[submodule "thirdparty/lua"]
+	path = thirdparty/lua
+	url = https://github.com/walterschell/Lua
