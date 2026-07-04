@@ -14,7 +14,7 @@
 namespace PotatoEngine::Core {
 	using namespace ECS;
 	EngineContext::EngineContext()
-		: Renderer(*this), Scripting(*this)
+		: Renderer(*this)
 	{
 	}
 	

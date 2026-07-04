@@ -2,7 +2,6 @@
 
 #include <string>
 #include <ecs/component.h>
-#include <scripting/scripting_module.h>
 
 namespace PotatoEngine::Core::ECS::Components {
 	class LuaScript : public Component {

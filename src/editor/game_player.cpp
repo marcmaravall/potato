@@ -9,9 +9,9 @@ namespace PotatoEngine::Editor {
 	void GamePlayer::OnRender() {
 		if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
 			m_engineContext.IsRunning = true;
-			m_application->OnStart();
-
 			m_engineContext.Debug.Log("Game started");
+
+			m_application->OnStart();
 		}
 
 		if (m_engineContext.IsRunning) {

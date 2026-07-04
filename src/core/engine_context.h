@@ -15,8 +15,6 @@
 
 #include <ecs/components/camera.h>
 
-#include <scripting/scripting_module.h>
-
 namespace PotatoEngine::Core {
 
 	namespace Systems {
@@ -38,7 +36,6 @@ namespace PotatoEngine::Core {
 		Core::AssetsManager AssetsManager;
 		Logging::Debug Debug;
 		Rendering::Renderer2D Renderer;
-		Scripting::ScriptingModule Scripting;
 
 	public:
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }
