@@ -9,7 +9,6 @@
 #include <ecs/systems/sprite_renderer.h>
 #include <ecs/systems/example.h>
 #include <ecs/systems/camera.h>
-#include <ecs/systems/lua_script_system.h>
 
 namespace PotatoEngine::Core {
 	using namespace ECS;
@@ -38,11 +37,9 @@ namespace PotatoEngine::Core {
 		Registry.GetComponent<ECS::Components::Transform>(e1).Position.x = 1;
 
 		Registry.AddComponent<ECS::Components::LuaScript>(e1).Source =
-			"return {\n"
-			"	_start = function()\n"
-			"		debug.log('Hello, World!')\n"
-			"	end\n"
-			"}\n";
+			"_start = function()\n"
+			"	debug.log('Hello, World!')\n"
+			"end\n";
 		EntityID child0 = Registry.CreateEntity("B", e);
 		EntityID child1 = Registry.CreateEntity("C", e);
 

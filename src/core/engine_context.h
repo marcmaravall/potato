@@ -14,15 +14,14 @@
 #include <ecs/registry.h>
 
 #include <ecs/components/camera.h>
+#include <ecs/systems/lua_script_system.h>
+
+#include <sol/sol.hpp>
 
 namespace PotatoEngine::Core {
 
 	namespace Systems {
 		class CameraSystem;
-	}
-
-	namespace Scripting {
-		class ScriptingModule;
 	}
 
 	class EngineContext {
@@ -41,6 +40,8 @@ namespace PotatoEngine::Core {
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }
 	
 	public:
+		sol::state& GetLuaState() { return Registry.GetSystem<ECS::Systems::LuaScriptSystem>().GetLuaState(); }
+
 		EngineContext();
 		~EngineContext();
 

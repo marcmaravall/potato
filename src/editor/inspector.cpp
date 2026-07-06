@@ -10,11 +10,11 @@ namespace PotatoEngine::Editor {
             if (ImGui::InputText("##Name", &name.Value)) {}
         });
 
-        Registry.Add<Core::ECS::Components::LuaScript>([](Core::ECS::Components::LuaScript& script) {
+        Registry.Add<Core::ECS::Components::LuaScript>([&](Core::ECS::Components::LuaScript& script) {
             ImGui::TextDisabled("Lua Script");
             ImGui::SameLine();
             if (ImGui::Button("Reload")) {
-
+                script.Compile(m_engineContext.GetLuaState());
             }
 			
             ImGui::InputTextMultiline(

@@ -1,4 +1,5 @@
 #include "lua_script_system.h"
+#include <engine_context.h>
 
 namespace PotatoEngine::Core::ECS::Systems {
 	LuaScriptSystem::LuaScriptSystem(EngineContext& ctx) : ECS::System(ctx) {
@@ -41,60 +42,38 @@ namespace PotatoEngine::Core::ECS::Systems {
 			return false;
 		}
 
-		sol::protected_function_result r = func();
-
-		if (!r.valid()) {
-			sol::error err = r;
+		try {
+			sol::protected_function_result r = func();
+			if (!r.valid()) {
+				sol::error err = r;
+				MEB_LOG_ERRORF("Lua runtime error (%s): %s", name, err.what());
+				return false;
+			}
+		}
+		catch (const sol::error& err) {
 			MEB_LOG_ERRORF("Lua runtime error (%s): %s", name, err.what());
 			return false;
 		}
+
 
 		return true;
 	}
 
     void LuaScriptSystem::OnStart() {
         m_context.Registry.Each<Components::LuaScript>([&](auto& script) {
-			sol::load_result chunk = m_lua.load(script.Source);
-
-			if (!chunk.valid()) {
-				sol::error err = chunk;
-				MEB_LOG_ERROR(err.what());
-				return;
-			}
-
-			sol::protected_function_result exec = chunk();
-
-			if (!exec.valid()) {
-				sol::error err = exec;
-				MEB_LOG_ERROR(err.what());
-				return;
-			}
-
-			if (exec.get_type() != sol::type::table) {
-				MEB_LOG_WARNING("Lua script must return a table.");
-				return;
-			}
-
-			sol::table result = exec;
-			sol::function startFunc = result[LUA_START_FUNC_NAME];
-			CallLuaFunction(startFunc, LUA_START_FUNC_NAME);
+			script.CallFunction(LUA_START_FUNC_NAME);
         });
     }
 
-	// TODO: implement update and destroy functions for Lua scripts
 	void LuaScriptSystem::OnUpdate() {
 		m_context.Registry.Each<Components::LuaScript>([&](auto& script) {
-			sol::function updateFunc = m_lua[LUA_UPDATE_FUNC_NAME];
-			if (updateFunc.valid())
-				updateFunc();
+			script.CallFunction(LUA_UPDATE_FUNC_NAME);
 		});
 	}
 
 	void LuaScriptSystem::OnDestroy() {
 		m_context.Registry.Each<Components::LuaScript>([&](auto& script) {
-			sol::function destroyFunc = m_lua["_destroy"];
-			if (destroyFunc.valid())
-				destroyFunc();
+			script.CallFunction(LUA_DESTROY_FUNC_NAME);
 		});
 	}
 }
