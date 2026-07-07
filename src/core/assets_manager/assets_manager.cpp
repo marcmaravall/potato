@@ -1,6 +1,30 @@
 #include "assets_manager.h"
 
 namespace PotatoEngine::Core {
+	Asset& AssetsManager::GetAsset(AssetID id) {
+		if (m_map.contains(id)) {
+			return *m_map[id];
+		} else {
+			throw std::runtime_error("Asset with ID " + std::to_string(id) + " not found.");
+		}
+	}
+
+	Asset* AssetsManager::TryGetAsset(AssetID id) {
+		if (m_map.contains(id)) {
+			return m_map[id].get();
+		} else {
+			return nullptr;
+		}
+	}
+
+	AssetID AssetsManager::CreateAsset(std::unique_ptr<Asset> asset) {
+		AssetID id = m_nextID++;
+
+		m_map.emplace(id, std::move(asset));
+
+		return id;
+	}
+
 	AssetsManager::AssetsManager() {
 		std::filesystem::path currentPath = std::filesystem::current_path();
 		
@@ -9,10 +33,10 @@ namespace PotatoEngine::Core {
 		}
 
 		if (currentPath.filename() == "potato") {
-			root = currentPath.string();
+			m_root = currentPath.string();
 		} else {
 			assert(0 && "Could not find potato directory in path hierarchy.");
-			root = "";
+			m_root = "";
 		}
 	}
 
