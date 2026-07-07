@@ -11,15 +11,15 @@
 #include "asset.h"
 
 namespace PotatoEngine::Core {
-	class AssetsManager {
+	class AssetManager {
 	private:
 		std::string m_root = "";
 		std::unordered_map<AssetID, std::unique_ptr<Asset>> m_map;
 		AssetID m_nextID = 0;
 
 	public:
-		AssetsManager();
-		~AssetsManager() = default;
+		AssetManager();
+		~AssetManager() = default;
 
 		Asset& GetAsset(AssetID id);
 		Asset* TryGetAsset(AssetID id);

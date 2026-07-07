@@ -36,7 +36,7 @@ void EditorApplication::OnStart() {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	std::string imguiPath = m_engineContext.AssetsManager.Path(m_engineContext.AssetsManager.GetRoot() + "/tests/imgui.ini");
+	std::string imguiPath = m_engineContext.AssetManager.Path(m_engineContext.AssetManager.GetRoot() + "/tests/imgui.ini");
 	m_engineContext.Debug.Log("Loaded ImGui from: " + imguiPath);
 	ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
 

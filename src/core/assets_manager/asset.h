@@ -22,16 +22,15 @@ namespace PotatoEngine::Core {
 	
 	class Asset {
 	protected:
-		std::filesystem::path m_relPath = "";
+		std::filesystem::path m_absPath = "";
 		AssetType m_type = AssetType::TEXT;
 
 	public:
 		Asset() = default;
 		Asset(const std::string& relPath, AssetType type);
 		virtual ~Asset() = default;
-		virtual void Load() = 0;
 
-		const std::filesystem::path& GetRelativePath() const noexcept { return m_relPath; }
+		const std::filesystem::path& GetAbsolutePath() const noexcept { return m_absPath; }
 		AssetType GetType() const noexcept { return m_type; }
 	};
 };

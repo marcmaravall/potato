@@ -10,6 +10,8 @@
 #include <ecs/systems/example.h>
 #include <ecs/systems/camera.h>
 
+#include <assets_manager/assets/lua_script_asset.h>
+
 namespace PotatoEngine::Core {
 	using namespace ECS;
 	EngineContext::EngineContext()
@@ -27,19 +29,15 @@ namespace PotatoEngine::Core {
 
 		EntityID e = Registry.CreateEntity("A");
 		Registry.AddComponent<ECS::Components::SpriteRenderer>(e, 
-			AssetsManager.Path(AssetsManager.GetRoot()+"/assets/tests/texture.gif")
+			AssetManager.Path(AssetManager.GetRoot()+"/assets/tests/texture.gif")
 		);
 
 		EntityID e1 = Registry.CreateEntity("Manolo");
 		Registry.AddComponent<ECS::Components::SpriteRenderer>(e1, 
-			AssetsManager.Path(AssetsManager.GetRoot()+"/assets/tests/texture.gif")
+			AssetManager.Path(AssetManager.GetRoot()+"/assets/tests/texture.gif")
 		);
 		Registry.GetComponent<ECS::Components::Transform>(e1).Position.x = 1;
 
-		Registry.AddComponent<ECS::Components::LuaScript>(e1).Source =
-			"_start = function()\n"
-			"	debug.log('Hello, World!')\n"
-			"end\n";
 		EntityID child0 = Registry.CreateEntity("B", e);
 		EntityID child1 = Registry.CreateEntity("C", e);
 
@@ -47,5 +45,17 @@ namespace PotatoEngine::Core {
 		Registry.AddSystem<ECS::Systems::CameraSystem>(*this);
 		Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
 		Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
+
+		//
+		AssetManager.CreateAsset(
+			std::make_unique<LuaScriptAsset>(AssetManager.Path(AssetManager.GetRoot() + "/assets/tests/script.lua"),
+				GetLuaState()
+			));
+
+		Registry.AddComponent<ECS::Components::LuaScript>(e1); /*
+			"_start = function()\n"
+			"	debug.log('Hello, World!')\n"
+			"end\n";
+		*/
 	}
 }

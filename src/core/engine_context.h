@@ -32,7 +32,7 @@ namespace PotatoEngine::Core {
 		bool IsRunning = false;
 
 		ECS::Registry Registry;
-		Assets::AssetsManager AssetsManager;
+		AssetManager AssetManager;
 		Logging::Debug Debug;
 		Rendering::Renderer2D Renderer;
 

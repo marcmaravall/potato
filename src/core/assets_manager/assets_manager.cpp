@@ -1,7 +1,7 @@
 #include "assets_manager.h"
 
 namespace PotatoEngine::Core {
-	Asset& AssetsManager::GetAsset(AssetID id) {
+	Asset& AssetManager::GetAsset(AssetID id) {
 		if (m_map.contains(id)) {
 			return *m_map[id];
 		} else {
@@ -9,7 +9,7 @@ namespace PotatoEngine::Core {
 		}
 	}
 
-	Asset* AssetsManager::TryGetAsset(AssetID id) {
+	Asset* AssetManager::TryGetAsset(AssetID id) {
 		if (m_map.contains(id)) {
 			return m_map[id].get();
 		} else {
@@ -17,7 +17,7 @@ namespace PotatoEngine::Core {
 		}
 	}
 
-	AssetID AssetsManager::CreateAsset(std::unique_ptr<Asset> asset) {
+	AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
 		AssetID id = m_nextID++;
 
 		m_map.emplace(id, std::move(asset));
@@ -25,7 +25,7 @@ namespace PotatoEngine::Core {
 		return id;
 	}
 
-	AssetsManager::AssetsManager() {
+	AssetManager::AssetManager() {
 		std::filesystem::path currentPath = std::filesystem::current_path();
 		
 		while (currentPath.has_parent_path() && currentPath.filename() != "potato") {
@@ -40,7 +40,7 @@ namespace PotatoEngine::Core {
 		}
 	}
 
-	std::string AssetsManager::Path(const std::string& str) {
+	std::string AssetManager::Path(const std::string& str) {
 		std::string out = str;
 #ifdef _WIN32
 		for (char& c : out) {

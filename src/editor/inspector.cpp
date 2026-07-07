@@ -1,9 +1,23 @@
 #include "inspector.h"
 #include <misc/cpp/imgui_stdlib.h>
 
+#include <assets_manager/asset.h>
+
 namespace PotatoEngine::Editor {
     
     using namespace PotatoEngine::Core::ECS;
+
+    // TODO: put this in a better place
+    static void RenderFileInput(const char* label, const auto* asset) {
+		if (asset == nullptr) {
+            ImGui::TextDisabled("No asset");
+            return;
+        }
+
+		std::string path = asset->GetAbsolutePath().string();
+		ImGui::TextUnformatted(label);
+		ImGui::TextUnformatted(path.c_str());
+    }
     
     Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
         Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
@@ -14,14 +28,16 @@ namespace PotatoEngine::Editor {
             ImGui::TextDisabled("Lua Script");
             ImGui::SameLine();
             if (ImGui::Button("Reload")) {
-                script.Compile(m_engineContext.GetLuaState());
+                script.Compile(m_engineContext.GetLuaState(), m_engineContext.AssetManager);
             }
+
+			RenderFileInput("Script Asset", m_engineContext.AssetManager.TryGetAsset(script.GetScriptAssetID()));
 			
-            ImGui::InputTextMultiline(
+            /*ImGui::InputTextMultiline(
                 "##LuaScript", &script.Source, 
                 ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), 
                 ImGuiInputTextFlags_AllowTabInput
-            );
+            );*/
         });
 
         Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {

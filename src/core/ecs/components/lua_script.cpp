@@ -2,31 +2,20 @@
 #include <ecs/systems/lua_script_system.h>
 
 namespace PotatoEngine::Core::ECS::Components {
-	bool LuaScript::Compile(sol::state& lua) {
-		try {
-			m_env = sol::environment(lua, sol::create, lua.globals());
-			if (m_env == sol::nil) {
-				MEB_LOG_ERROR("Failed to create Lua environment");
-				return false;
-			}
-
-			m_chunk = lua.load(Source);
-
-			sol::protected_function_result result = m_chunk(m_env);
-
-			if (!result.valid()) {
-				sol::error err = result;
-				MEB_LOG_ERRORF("Lua Script Error: %s", err.what());
-				return false;
-			}
-
-		} catch (const sol::error& err) {
-			MEB_LOG_ERRORF("Lua Script Error: %s", err.what());
+	bool LuaScript::Compile(sol::state& lua, AssetManager& am) {
+		auto* scriptAsset = am.TryGetAsset(m_scriptAssetID);
+		if (!scriptAsset) {
+			MEB_LOG_ERRORF("Lua script asset with ID %lld not found", m_scriptAssetID);
 			return false;
 		}
 
-		MEB_LOG_INFO("Lua script compiled successfully");
+		LuaScriptAsset* luaScriptAsset = dynamic_cast<LuaScriptAsset*>(scriptAsset);
+		if (!luaScriptAsset) {
+			MEB_LOG_ERRORF("Asset with ID %lld is not a Lua script asset", m_scriptAssetID);
+			return false;
+		}
 
+		luaScriptAsset->Compile(lua, m_env);
 		return true;
 	}
 

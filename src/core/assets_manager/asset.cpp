@@ -2,11 +2,11 @@
 #include "assets_manager.h"
 
 namespace PotatoEngine::Core {
-	Asset::Asset(const std::string& relPath, AssetType type)
-		: m_relPath(relPath), m_type(type) {
+	Asset::Asset(const std::string& absPath, AssetType type)
+		: m_absPath(absPath), m_type(type) {
 		
-		if (!std::filesystem::exists(relPath)) {
-			MEB_LOG_WARNINGF("Asset path does not exist: %s", relPath.c_str());
+		if (!std::filesystem::exists(absPath)) {
+			MEB_LOG_WARNINGF("Asset path does not exist: %s", absPath.c_str());
 		}
 	}
 }
