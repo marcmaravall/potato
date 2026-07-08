@@ -10,6 +10,7 @@ namespace PotatoEngine::Core::ECS::Components {
 		std::string Value = "";
 
 	public:
+		Name() : Component("Name") { }
 		Name(std::string str) : Component("Name"), Value(std::move(str)) {}
 		~Name() override = default;
 

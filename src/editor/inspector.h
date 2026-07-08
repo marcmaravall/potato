@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <string>
 
+#include <ecs/component.h>
 #include <ecs/components/transform.h>
 #include <ecs/components/name.h>
 #include <ecs/components/parent.h>
@@ -21,10 +22,13 @@
 #include <ecs/components/lua_script.h>
 
 namespace PotatoEngine::Editor {
+	using AddComponent = std::function<std::unique_ptr<Core::ECS::Component>()>;
+
 	class ComponentInspectorRegistry {
 	private:
 		std::vector<std::string> m_componentNames;
 		std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
+		std::unordered_map<std::string, AddComponent> m_addComponentFunctions;
 
 	public:
 		template<typename ComponentType>
@@ -32,7 +36,16 @@ namespace PotatoEngine::Editor {
 			m_renderers[typeid(ComponentType)] = [inspectorFunction](void* component) {
 				inspectorFunction(*static_cast<ComponentType*>(component));
 			};
-			m_componentNames.push_back(typeid(ComponentType).name());
+
+			std::type_index type = typeid(ComponentType);
+			m_componentNames.push_back(type.name());
+			m_addComponentFunctions[type.name()] = []() {
+				return std::make_unique<ComponentType>();
+			};
+		}
+
+		std::unique_ptr<Core::ECS::Component> AddComponent(const std::string& name) {
+			return m_addComponentFunctions[name]();
 		}
 
 		void Render(void* component, std::type_index type) {
@@ -58,6 +71,8 @@ namespace PotatoEngine::Editor {
 
 		ComponentInspectorRegistry() {
 			m_renderers.reserve(10);
+			m_addComponentFunctions.reserve(20);
+			m_componentNames.reserve(20);
 		}
 
 		~ComponentInspectorRegistry() = default;

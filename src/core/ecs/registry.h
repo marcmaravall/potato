@@ -47,6 +47,19 @@ namespace PotatoEngine::Core::ECS {
 			return m_entities[entity]->Add<Component>(std::forward<Args>(args)...);
 		}
 
+		Component& AddComponent(EntityID entity, std::unique_ptr<Component> component) {
+			return m_entities[entity]->Add(std::move(component));
+		}
+
+		template<typename T>
+		void RemoveComponent(EntityID entity) {
+			m_entities[entity]->Remove<T>();
+		}
+
+		void RemoveComponent(EntityID entity, std::type_index type) {
+			m_entities[entity]->Remove(type);
+		}
+
 		template<typename T>
 		T& GetComponent(EntityID e) {
 			return m_entities[e]->Get<T>();

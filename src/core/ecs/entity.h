@@ -37,12 +37,23 @@ namespace PotatoEngine::Core::ECS {
             return ref;
         }
 
+        Component& Add(std::unique_ptr<Component> component) {
+            std::type_index type = typeid(*component);
+            Component& ref = *component;
+            m_components[type] = std::move(component);
+            return ref;
+		}
+
         template<typename T>
         void Remove() {
             static_assert(std::is_base_of<Component, T>::value, "T must derive from Component");
 
             m_components.erase(typeid(T));
         }
+
+        void Remove(std::type_index type) {
+            m_components.erase(type);
+		}
 
         template<typename T>
         T& Get() {

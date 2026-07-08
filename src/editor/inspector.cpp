@@ -145,7 +145,8 @@ namespace PotatoEngine::Editor {
         m_engineContext.Registry.ForEachComponent(entity, [&](Component* component) {
             ImGui::PushID(component);
             
-            if (ImGui::CollapsingHeader(component->Name.c_str(), ImGuiTreeNodeFlags_DefaultOpen)) {
+            bool visible = true;
+            if (ImGui::CollapsingHeader(component->Name.c_str(), &visible, ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Indent(8.0f);
 
                 Registry.Render(component);
@@ -153,7 +154,27 @@ namespace PotatoEngine::Editor {
                 ImGui::Unindent(8.0f);
                 ImGui::Spacing();
             }
-    
+
+            if (!visible) {
+				ImGui::OpenPopup("RemoveComponentPopup");
+            }
+
+            if (ImGui::BeginPopupModal("RemoveComponentPopup", nullptr, 0)) {
+                ImGui::SeparatorText("Do you want to remove this component?");
+                if (ImGui::Button("Yes")) {
+                    m_engineContext.Registry.RemoveComponent(entity, typeid(*component));
+                }
+
+                ImGui::SameLine();
+                
+                if (ImGui::Button("No")) {
+                    ImGui::CloseCurrentPopup();
+                }
+                // TODO: add a "don't show again" checkbox
+
+                ImGui::EndPopup();
+            }
+
             ImGui::PopID();
         });
     
@@ -169,6 +190,11 @@ namespace PotatoEngine::Editor {
             for (const auto& name : components) {
                 if (ImGui::MenuItem(name.c_str())) {
                     m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_editorContext.SelectedEntity));
+                    
+                    // FIXME: if the camera is destroyed and then added again, the main camera will be pointing to a null reference
+                    std::unique_ptr<Component> newComponent = Registry.AddComponent(name);
+					m_engineContext.Registry.AddComponent(entity, std::move(newComponent));
+
                     ImGui::CloseCurrentPopup();
                 }
             }
