@@ -185,15 +185,16 @@ namespace PotatoEngine::Editor {
         }
 
         if (ImGui::BeginPopup("AddComponentPopup")) {
-            const auto& components = Registry.GetComponentNames();
+            const auto& components = m_engineContext.Registry.GetComponentNames();
         
             for (const auto& name : components) {
                 if (ImGui::MenuItem(name.c_str())) {
                     m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_editorContext.SelectedEntity));
                     
                     // FIXME: if the camera is destroyed and then added again, the main camera will be pointing to a null reference
-                    std::unique_ptr<Component> newComponent = Registry.AddComponent(name);
-					m_engineContext.Registry.AddComponent(entity, std::move(newComponent));
+                    /*std::unique_ptr<Component> newComponent = Registry.AddComponent(name);
+					m_engineContext.Registry.AddComponent(entity, std::move(newComponent));*/
+                    m_engineContext.Registry.AddComponentByName(entity, name);
 
                     ImGui::CloseCurrentPopup();
                 }

@@ -45,6 +45,8 @@ namespace PotatoEngine::Core {
 		EngineContext();
 		~EngineContext();
 
+		void RegisterComponents();
+
 		void Start();
 	};
 }

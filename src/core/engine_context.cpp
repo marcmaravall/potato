@@ -24,6 +24,8 @@ namespace PotatoEngine::Core {
 	}
 
 	void EngineContext::Start() {
+		RegisterComponents();
+
 		m_mainCamera = Registry.CreateEntity("Camera");
 		Registry.AddComponent<ECS::Components::Camera>(m_mainCamera);
 
@@ -57,5 +59,17 @@ namespace PotatoEngine::Core {
 			"	debug.log('Hello, World!')\n"
 			"end\n";
 		*/
+	}
+
+	void EngineContext::RegisterComponents() {
+		using namespace ECS::Components;
+
+		Registry.RegisterComponent<Camera>();
+		Registry.RegisterComponent<Children>();
+		Registry.RegisterComponent<LuaScript>();
+		Registry.RegisterComponent<Name>();
+		Registry.RegisterComponent<Parent>();
+		Registry.RegisterComponent<SpriteRenderer>();
+		Registry.RegisterComponent<Transform>();
 	}
 }

@@ -6,6 +6,8 @@
 #include <sol/sol.hpp>
 #include <ecs/components/lua_script.h>
 
+#include <ecs/components/name.h>
+
 namespace PotatoEngine::Core {
 	class EngineContext;
 }

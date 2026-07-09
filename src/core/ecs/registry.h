@@ -15,6 +15,8 @@
 
 // TODO: test behavior
 namespace PotatoEngine::Core::ECS {
+	using AddComponent = std::function<Core::ECS::Component*(EntityID)>;
+	using GetComponent = AddComponent;
 
 	class Registry {
 	private:
@@ -23,6 +25,11 @@ namespace PotatoEngine::Core::ECS {
 		std::unordered_map<EntityID, std::unique_ptr<Entity>> m_entities;
 
 		std::vector<std::unique_ptr<System>> m_systems;
+
+		// Template functions created by RegisterComponent
+		std::vector<std::string> m_componentNames;
+		std::unordered_map<std::string, AddComponent> m_addComponentFunctions;
+		std::unordered_map<std::string, GetComponent> m_getComponentFunctions;
 
 	public:
 		// Entities
@@ -41,6 +48,34 @@ namespace PotatoEngine::Core::ECS {
 		bool IsValid(EntityID entity) { return !IsEmpty(entity); }
 
 		// Components:
+
+	public:
+		template<typename Component>
+		void RegisterComponent() {
+			const std::string& name = typeid(Component).name();
+			m_componentNames.push_back(name);
+
+			m_addComponentFunctions[name] = [&](EntityID e) -> Core::ECS::Component* {
+				return &AddComponent<Component>(e);
+			};
+
+			m_getComponentFunctions[name] = [&](EntityID e) -> Core::ECS::Component* {
+				return TryGetComponent<Component>(e);
+			};
+		}
+
+		Component* GetComponentByName(EntityID e, const std::string& name) {
+			return m_getComponentFunctions[name](e);
+		}
+
+		Component* AddComponentByName(EntityID e, const std::string& name) {
+			return m_addComponentFunctions[name](e);
+		}
+
+		// TODO: transform Itanium C++ ABI to something like the msvc implementation
+		const std::vector<std::string>& GetComponentNames() const { return m_componentNames; }
+
+	public:
 
 		template<typename Component, typename... Args>
 		Component& AddComponent(EntityID entity, Args&&... args) {

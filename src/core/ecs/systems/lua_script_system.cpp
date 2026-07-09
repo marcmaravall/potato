@@ -2,6 +2,8 @@
 #include <engine_context.h>
 
 namespace PotatoEngine::Core::ECS::Systems {
+	using namespace ECS::Components;
+
 	LuaScriptSystem::LuaScriptSystem(EngineContext& ctx) : ECS::System(ctx) {
 		m_lua.open_libraries(
 			sol::lib::base,
@@ -16,6 +18,33 @@ namespace PotatoEngine::Core::ECS::Systems {
 		debug.set_function("log", [&ctx](const std::string& message) {
 			ctx.Debug.Log(message);
 		});
+
+		sol::table reg = m_lua.create_named_table("registry");
+		reg.set_function("create", [&ctx](const std::string& name) -> EntityID {
+			return ctx.Registry.CreateEntity(name);
+		});
+
+
+		reg.set_function("get_component", [&ctx](sol::this_state ts, EntityID e, const std::string& name) -> sol::object {
+			sol::state_view lua(ts);
+			if (name == "Name") {
+				Name* component = ctx.Registry.TryGetComponent<Name>(e);
+				if (component)
+					return sol::make_object(lua, component);
+			}
+
+			return sol::nil;
+		});
+
+		// usertypes:
+
+		// example
+
+		m_lua.new_usertype<Name>("Name",
+			sol::constructors<Name(const std::string& name)>(),
+			"value", &Name::Value,
+			sol::base_classes, sol::bases<Component>()
+		);
 	}
 
 	bool LuaScriptSystem::RunLuaSafe(sol::load_result& chunk, const char* stage) {
