@@ -13,10 +13,16 @@
 #include <vector>
 #include <exception>
 
+#include <sol/sol.hpp>
+
+#include "components/all_components.h"
+
 // TODO: test behavior
 namespace PotatoEngine::Core::ECS {
 	using AddComponent = std::function<Core::ECS::Component*(EntityID)>;
 	using GetComponent = AddComponent;
+
+	using LuaComponentBinder = std::function<sol::object(sol::state_view, Component*)>;
 
 	class Registry {
 	private:
@@ -30,6 +36,7 @@ namespace PotatoEngine::Core::ECS {
 		std::vector<std::string> m_componentNames;
 		std::unordered_map<std::string, AddComponent> m_addComponentFunctions;
 		std::unordered_map<std::string, GetComponent> m_getComponentFunctions;
+		std::unordered_map<std::string, LuaComponentBinder> m_bindLuaComponent;
 
 	public:
 		// Entities
@@ -50,17 +57,22 @@ namespace PotatoEngine::Core::ECS {
 		// Components:
 
 	public:
-		template<typename Component>
+		template<typename T>
 		void RegisterComponent() {
-			const std::string& name = typeid(Component).name();
+			std::string name = GetReadableComponentName<T>();
+
 			m_componentNames.push_back(name);
 
 			m_addComponentFunctions[name] = [&](EntityID e) -> Core::ECS::Component* {
-				return &AddComponent<Component>(e);
+				return &AddComponent<T>(e);
 			};
 
 			m_getComponentFunctions[name] = [&](EntityID e) -> Core::ECS::Component* {
-				return TryGetComponent<Component>(e);
+				return TryGetComponent<T>(e);
+			};
+
+			m_bindLuaComponent[name] = [](sol::state_view lua, Component* component) -> sol::object {
+				return sol::make_object(lua, dynamic_cast<T*>(component));
 			};
 		}
 
@@ -72,8 +84,37 @@ namespace PotatoEngine::Core::ECS {
 			return m_addComponentFunctions[name](e);
 		}
 
-		// TODO: transform Itanium C++ ABI to something like the msvc implementation
+		sol::object BindComponentToLua(sol::state_view s, Component* c, const std::string& name) {
+			try {
+				return m_bindLuaComponent[name](s, c);
+			}
+			catch(std::exception& ex) {
+				MEB_LOG_ERROR(ex.what());
+				return sol::nil;
+			}
+		}
+
 		const std::vector<std::string>& GetComponentNames() const { return m_componentNames; }
+
+		template<typename Component>
+		std::string GetReadableComponentName() {
+			if constexpr (std::is_same_v<Component, ECS::Components::Camera>)
+				return "Camera";
+			else if constexpr (std::is_same_v<Component, ECS::Components::Children>)
+				return "Children";
+			else if constexpr (std::is_same_v<Component, ECS::Components::LuaScript>)
+				return "LuaScript";
+			else if constexpr (std::is_same_v<Component, ECS::Components::Name>)
+				return "Name";
+			else if constexpr (std::is_same_v<Component, ECS::Components::Parent>)
+				return "Parent";
+			else if constexpr (std::is_same_v<Component, ECS::Components::SpriteRenderer>)
+				return "SpriteRenderer";
+			else if constexpr (std::is_same_v<Component, ECS::Components::Transform>)
+				return "Transform";
+			else
+				return "Unknown";
+		}
 
 	public:
 

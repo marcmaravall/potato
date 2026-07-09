@@ -4,5 +4,9 @@ function _start()
 	local e = registry.create("puta madre")
 	
 	local name = registry.get_component(e, "Name")
-	print(name.value)
+	if name ~= nil then
+		print(name.value)
+	else
+		print("name is null!")
+	end
 end

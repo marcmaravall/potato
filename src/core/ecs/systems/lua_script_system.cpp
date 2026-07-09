@@ -24,13 +24,16 @@ namespace PotatoEngine::Core::ECS::Systems {
 			return ctx.Registry.CreateEntity(name);
 		});
 
-
 		reg.set_function("get_component", [&ctx](sol::this_state ts, EntityID e, const std::string& name) -> sol::object {
 			sol::state_view lua(ts);
-			if (name == "Name") {
-				Name* component = ctx.Registry.TryGetComponent<Name>(e);
-				if (component)
-					return sol::make_object(lua, component);
+
+			for (const auto& comp : ctx.Registry.GetComponentNames()) {
+				if (name == comp) {
+					Component* c = ctx.Registry.GetComponentByName(e, name);
+					MEB_ASSERT(c);
+
+					return ctx.Registry.BindComponentToLua(lua, c, name);
+				}
 			}
 
 			return sol::nil;
@@ -39,6 +42,7 @@ namespace PotatoEngine::Core::ECS::Systems {
 		// usertypes:
 
 		// example
+		m_lua.new_usertype<Component>("Component");
 
 		m_lua.new_usertype<Name>("Name",
 			sol::constructors<Name(const std::string& name)>(),
