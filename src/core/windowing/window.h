@@ -1,5 +1,4 @@
-#ifndef POTATO_WINDOW_H
-#define POTATO_WINDOW_H
+#pragma once
 
 // Agnostic window class:
 // TODO: implement this and glfw backend
@@ -8,8 +7,8 @@ namespace PotatoEngine::Core::Windowing {
 	class Window {
 
 	public:
+		virtual bool ShouldClose() = 0;
+
 		virtual ~Window = default;
 	};
 }
-
-#endif // POTATO_WINDOW_H

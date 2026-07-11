@@ -2,9 +2,11 @@
 
 local transform
 local sr
+local t = 0.0
 
 function _start()
 	local e = 2
+	t = 0.0
 
 	transform = registry.get_component(e, "Transform")
 	sr = registry.get_component(e, "SpriteRenderer")
@@ -21,6 +23,7 @@ function _start()
 end
 
 function _update()
-	transform.position.y = math.sin(time.time())
-	transform.position.x = math.cos(time.time())
+	t = t + time.delta_time()
+	transform.position.y = math.sin(t)
+	transform.position.x = math.cos(t)
 end
