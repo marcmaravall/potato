@@ -3,11 +3,12 @@
 #ifndef POTATO_EDITOR_H
 #define POTATO_EDITOR_H
 
+#include <glad/glad.h>
+#include <core/windowing/window.h>
+
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <core/rendering/vertex_array.h>
 #include <ref_scope.h>
@@ -47,7 +48,8 @@ namespace PotatoEngine::Editor {
 
 	class EditorApplication : public Core::Application {
 	private:
-		GLFWwindow  *m_glfwWindow = nullptr;
+		std::unique_ptr<Core::Windowing::Window> m_window;
+
 		Platform::PlatformAPI *m_platform = nullptr;
 
 		EditorContext m_editorContext;

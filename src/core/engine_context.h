@@ -13,6 +13,8 @@
 #include <ecs/system.h>
 #include <ecs/registry.h>
 
+#include <input/input_state.h>
+
 #include <ecs/components/camera.h>
 #include <ecs/systems/lua_script_system.h>
 
@@ -38,6 +40,7 @@ namespace PotatoEngine::Core {
 		AssetManager AssetManager;
 		Logging::Debug Debug;
 		Rendering::Renderer2D Renderer;
+		// Input::InputState InputState;
 
 	public:
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }

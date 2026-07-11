@@ -51,6 +51,8 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp"
     "src/core/ecs/components/*.cpp"
     "src/core/scripting/*.cpp"
     "src/core/input/*.cpp"
+    "src/core/windowing/*.cpp"
+    "src/core/windowing/glfw/*.cpp"
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

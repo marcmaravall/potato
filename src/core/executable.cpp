@@ -2,8 +2,11 @@
 
 namespace PotatoEngine::Core {
 
+	Executable::Executable(EngineContext& context) : m_context(context) {
+
+	}
+
 	void Executable::OnStart() {
-		
 		m_context.Registry.Start();
 	}
 

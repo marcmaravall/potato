@@ -5,6 +5,8 @@
 #include <array>
 #include <vector>
 
+#include <meb.h>
+
 namespace PotatoEngine::Core::Input {
 	enum class Key {
 		Q, W,
@@ -52,7 +54,7 @@ namespace PotatoEngine::Core::Input {
 		GLFWwindow* m_window = nullptr;
 
 	public:
-		InputState();
+		InputState(GLFWwindow* window);
 		~InputState() = default;
 
 	public:

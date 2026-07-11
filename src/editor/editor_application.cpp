@@ -12,27 +12,20 @@ EditorApplication::EditorApplication() {
 }
 
 EditorApplication::~EditorApplication() {
-
+	glfwTerminate();
 }
 
 void EditorApplication::OnStart() {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	
-	// glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	Core::Windowing::WindowBackend winBackend = Core::Windowing::WindowBackend::GLFW;
 
-	m_glfwWindow = glfwCreateWindow(1920, 1080, "Potato Engine", nullptr, nullptr);
-	glfwMakeContextCurrent(m_glfwWindow);
-
-	glfwSwapInterval(1);
+	Core::Windowing::Window::Init(winBackend);
+	m_window = Core::Windowing::Window::Create(winBackend, "PotatoEngine", 1920, 1080);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		MEB_LOG_ERROR("Failed to initialize GLAD");
 		exit(1);
 	}
-
+	
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
@@ -45,7 +38,7 @@ void EditorApplication::OnStart() {
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(m_glfwWindow, true);
+	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)m_window->GetData(), true);
 	ImGui_ImplOpenGL3_Init("#version 450");
 
 	// m_platform->SetConsoleVisibility(false);
@@ -61,7 +54,7 @@ void EditorApplication::OnStart() {
 }
 
 void EditorApplication::OnUpdate() {
-	m_running = !glfwWindowShouldClose(m_glfwWindow);
+	m_running = !m_window->ShouldClose();
 	
 	glfwPollEvents();
 
@@ -80,16 +73,14 @@ void EditorApplication::OnUpdate() {
 
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	
-	glfwSwapBuffers(m_glfwWindow);
+	m_window->SwapBuffers();
 }
 
 void EditorApplication::OnDestroy() {
-	glfwDestroyWindow(m_glfwWindow);
-	glfwTerminate();
 }
 
 bool EditorApplication::ShouldClose() const {
-	return m_running;
+	return !m_running;
 }
 
 void EditorApplication::menuBar() const {

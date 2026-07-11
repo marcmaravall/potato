@@ -5,6 +5,8 @@
 #include "application.h"
 #include "ecs/entity.h"
 
+#include <GLFW/glfw3.h>
+
 #include <stack>
 
 // TODO: add delta time calculations
@@ -14,7 +16,7 @@ namespace PotatoEngine::Core {
 		EngineContext& m_context;
 
 	public:
-		Executable(EngineContext& context) : m_context(context) {}
+		Executable(EngineContext& context);
 		~Executable() = default;
 
 	public:
