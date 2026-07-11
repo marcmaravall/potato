@@ -14,10 +14,12 @@ namespace PotatoEngine::Core::Windowing {
 		GLFWwindow* m_glfwWindow = nullptr;
 
 	public:
-		GLFW_WindowBackend(const std::string& title, size_t width, size_t height);
+		GLFW_WindowBackend(const std::string& title, size_t width, size_t height, void* share = nullptr);
 		~GLFW_WindowBackend();
 
 	public:
+		virtual void MakeContextCurrent() override { glfwMakeContextCurrent(m_glfwWindow); }
+		virtual void PollEvents() override { glfwPollEvents(); }
 		virtual bool ShouldClose() override { return glfwWindowShouldClose(m_glfwWindow); }
 		void SwapBuffers() override;
 

@@ -14,13 +14,17 @@ namespace PotatoEngine::Core::Windowing {
 		size_t m_width = 1920;
 		size_t m_height = 1080;
 
+		static WindowBackend m_backend;
+
 	public:
 		const std::string& GetTitle() const { return m_title; }
 		const size_t GetWidth() const { return m_width; }
 		const size_t GetHeight() const { return m_height; }
 
 	public:
-		
+		virtual void MakeContextCurrent() = 0;
+		virtual void PollEvents() = 0;
+
 		virtual bool ShouldClose() = 0;
 		virtual void SwapBuffers() = 0;
 
@@ -32,7 +36,7 @@ namespace PotatoEngine::Core::Windowing {
 	public:
 		static void Init(WindowBackend backend);
 
-		static std::unique_ptr<Window> Create(WindowBackend backend, 
-			const std::string& title, size_t width, size_t height);
+		static std::unique_ptr<Window> Create(const std::string& title, size_t width, size_t height);
+		static std::unique_ptr<Window> Create(const std::string& title, size_t width, size_t height, void* share);
 	};
 }

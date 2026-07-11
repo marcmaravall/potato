@@ -1,6 +1,8 @@
 #ifndef POTATO_EDITOR_GAME_PLAYER_H
 #define POTATO_EDITOR_GAME_PLAYER_H
 
+#include <thread>
+
 #include <core/engine_context.h>
 #include <core/application.h>
 #include <core/executable.h>

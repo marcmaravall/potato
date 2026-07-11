@@ -19,7 +19,7 @@ void EditorApplication::OnStart() {
 	Core::Windowing::WindowBackend winBackend = Core::Windowing::WindowBackend::GLFW;
 
 	Core::Windowing::Window::Init(winBackend);
-	m_window = Core::Windowing::Window::Create(winBackend, "PotatoEngine", 1920, 1080);
+	m_window = Core::Windowing::Window::Create("PotatoEngine", 1920, 1080);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		MEB_LOG_ERROR("Failed to initialize GLAD");
@@ -41,7 +41,6 @@ void EditorApplication::OnStart() {
 	ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)m_window->GetData(), true);
 	ImGui_ImplOpenGL3_Init("#version 450");
 
-	// m_platform->SetConsoleVisibility(false);
 	Theme::SetCapMotchaTheme();
 
 	AddPanel<Viewport>(m_engineContext, m_editorContext);
@@ -56,7 +55,8 @@ void EditorApplication::OnStart() {
 void EditorApplication::OnUpdate() {
 	m_running = !m_window->ShouldClose();
 	
-	glfwPollEvents();
+	m_window->MakeContextCurrent();
+	m_window->PollEvents();
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();

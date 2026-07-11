@@ -12,10 +12,10 @@ namespace PotatoEngine::Core::Windowing {
 		glfwSwapBuffers(m_glfwWindow);
 	}
 
-	GLFW_WindowBackend::GLFW_WindowBackend(const std::string& title, size_t width, size_t height) :
+	GLFW_WindowBackend::GLFW_WindowBackend(const std::string& title, size_t width, size_t height, void* share) :
 		Window(title, width, height) {
 
-		m_glfwWindow = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
+		m_glfwWindow = glfwCreateWindow(width, height, title.c_str(), NULL, (GLFWwindow*)share);
 		glfwMakeContextCurrent(m_glfwWindow);
 		glfwSwapInterval(1);
 	}

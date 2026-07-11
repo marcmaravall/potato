@@ -5,8 +5,6 @@
 #include "application.h"
 #include "ecs/entity.h"
 
-#include <GLFW/glfw3.h>
-
 #include <stack>
 
 // TODO: add delta time calculations

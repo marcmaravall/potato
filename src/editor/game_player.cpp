@@ -21,7 +21,7 @@ namespace PotatoEngine::Editor {
 
 		ImGui::SameLine();
 		if (ImGui::Button("Next Frame")) {
-			
+			m_application->OnUpdate();
 		}
 		ImGui::SameLine();
 		
