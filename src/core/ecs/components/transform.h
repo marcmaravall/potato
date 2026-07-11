@@ -13,6 +13,8 @@ namespace PotatoEngine::Core::ECS::Components {
 
 	public:
 		Transform() : ECS::Component("Transform") {}
+		Transform(glm::vec3 pos, glm::vec3 r, glm::vec3 s) : ECS::Component("Transform"), 
+			Position(pos), Rotation(r), Scale(s) {}
 		
 		~Transform() override = default;
 

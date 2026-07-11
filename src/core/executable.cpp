@@ -3,6 +3,7 @@
 namespace PotatoEngine::Core {
 
 	void Executable::OnStart() {
+		
 		m_context.Registry.Start();
 	}
 

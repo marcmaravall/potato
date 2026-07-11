@@ -26,6 +26,9 @@ namespace PotatoEngine::Core {
 
 	class EngineContext {
 	private:
+		double m_dt = 1.0/60.0;
+		double m_time = 0.0;
+
 		ECS::EntityID m_mainCamera = 0;
 	
 	public:
@@ -39,6 +42,12 @@ namespace PotatoEngine::Core {
 	public:
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }
 	
+	public:
+		// This should be assigned once per frame
+		void SetDeltaTime(double dt) { m_dt = dt; m_time += dt; }
+		double GetDeltaTime() { return m_dt; }
+		double GetTime() { return m_time; }
+
 	public:
 		sol::state& GetLuaState() { return Registry.GetSystem<ECS::Systems::LuaScriptSystem>().GetLuaState(); }
 

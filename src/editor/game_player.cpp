@@ -16,6 +16,7 @@ namespace PotatoEngine::Editor {
 
 		if (m_engineContext.IsRunning) {
 			m_application->OnUpdate();
+			m_engineContext.SetDeltaTime(1.0 / ImGui::GetIO().Framerate);
 		}
 
 		ImGui::SameLine();
