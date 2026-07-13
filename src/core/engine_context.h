@@ -40,7 +40,7 @@ namespace PotatoEngine::Core {
 		AssetManager AssetManager;
 		Logging::Debug Debug;
 		Rendering::Renderer2D Renderer;
-		// Input::InputState InputState;
+		Input::InputState InputState;
 
 	public:
 		ECS::EntityID GetMainCamera() { return m_mainCamera; }

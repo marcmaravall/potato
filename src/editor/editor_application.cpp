@@ -56,7 +56,9 @@ void EditorApplication::OnUpdate() {
 	m_running = !m_window->ShouldClose();
 	
 	m_window->MakeContextCurrent();
-	m_window->PollEvents();
+
+	m_engineContext.InputState.Update();
+	m_window->PollEvents(m_engineContext.InputState);
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();

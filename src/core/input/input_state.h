@@ -1,7 +1,5 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-
 #include <array>
 #include <vector>
 
@@ -9,6 +7,8 @@
 
 namespace PotatoEngine::Core::Input {
 	enum class Key {
+		NONE,
+
 		Q, W,
 		E, R, T,
 		Y, U, I,
@@ -18,9 +18,10 @@ namespace PotatoEngine::Core::Input {
 		K, L, Z,
 		X, C, V,
 		B, N, M,
-		CTRL,
-		SHIFT,
-		MAYUS,
+		LEFT_CTRL,  RIGHT_CTRL,
+		LEFT_SHIFT, RIGHT_SHIFT,
+		LEFT_MAYUS, RIGHT_MAYUS,
+		LEFT_ALT,   RIGHT_ALT, 
 		TAB, 
 		ESC,
 		NUM1, NUM2,
@@ -35,30 +36,34 @@ namespace PotatoEngine::Core::Input {
 		F9,  F10,
 		F11, F12,
 		SPACE,
-		ALT, ENTER
+		ENTER,
+
+		_COUNT // NUMBER OF ELEMENTS IN KEY
 	};
 
 	enum class MouseButton {
 		LEFT, RIGHT,
 		MIDDLE,
+
+		_COUNT // NUMBER OF ELEMENTS IN MOUSE BUTTON
 	};
 
-	// This can be converted to an abstract class in the future so it wont use glfw directly
 	class InputState {
 	private:
-		std::array<bool, 3> m_mouseCurrent;
-		std::array<bool, 3> m_mouseLast;
-		std::array<bool, 128> m_keyboardCurrent;
-		std::array<bool, 128> m_keyboardLast;
-
-		GLFWwindow* m_window = nullptr;
+		std::array<bool, (size_t)MouseButton::_COUNT> m_mouseCurrent{};
+		std::array<bool, (size_t)MouseButton::_COUNT> m_mouseLast{};
+		std::array<bool, (size_t)Key::_COUNT> m_keyboardCurrent{};
+		std::array<bool, (size_t)Key::_COUNT> m_keyboardLast{};
 
 	public:
-		InputState(GLFWwindow* window);
+		InputState();
 		~InputState() = default;
-
+		
 	public:
 		void Update();
+
+		void OnKey(Key key, bool pressed);
+		void OnMouseButton(MouseButton button, bool pressed);
 
 	public:
 		bool IsKey(Key key);

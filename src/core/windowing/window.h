@@ -1,5 +1,7 @@
 #pragma once
 
+#include <core/input/input_state.h>
+
 #include <string>
 #include <memory>
 
@@ -23,7 +25,7 @@ namespace PotatoEngine::Core::Windowing {
 
 	public:
 		virtual void MakeContextCurrent() = 0;
-		virtual void PollEvents() = 0;
+		virtual void PollEvents(Input::InputState& state) = 0;
 
 		virtual bool ShouldClose() = 0;
 		virtual void SwapBuffers() = 0;

@@ -17,7 +17,6 @@
 
 #include "components/all_components.h"
 
-// TODO: test behavior
 namespace PotatoEngine::Core::ECS {
 	using AddComponent = std::function<Core::ECS::Component*(EntityID)>;
 	using GetComponent = AddComponent;
@@ -157,7 +156,6 @@ namespace PotatoEngine::Core::ECS {
 		}
 
 		// Systems:
-		// TODO: implement systems and iterators:
 		template<typename T, typename... Args>
 		T& AddSystem(Args&&... args) {
 		    auto system = std::make_unique<T>(std::forward<Args>(args)...);
