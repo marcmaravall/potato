@@ -91,6 +91,11 @@ namespace PotatoEngine::Core::Windowing {
         case GLFW_KEY_F10: return Input::Key::F10;
         case GLFW_KEY_F11: return Input::Key::F11;
         case GLFW_KEY_F12: return Input::Key::F12;
+        
+        case GLFW_KEY_LEFT: return Input::Key::LEFT;
+        case GLFW_KEY_RIGHT: return Input::Key::RIGHT;
+        case GLFW_KEY_UP: return Input::Key::UP;
+        case GLFW_KEY_DOWN: return Input::Key::DOWN;
 
         default:
             return Input::Key::NONE;
@@ -98,28 +103,18 @@ namespace PotatoEngine::Core::Windowing {
     }
 
     void GLFW_WindowBackend::PollEvents(Input::InputState& state) {
-        glfwSetWindowUserPointer(m_glfwWindow, this);
-        m_inputStatePtr = &state;
-
-        static bool s_callbackSet = false;
-        if (!s_callbackSet) {
-            glfwSetKeyCallback(m_glfwWindow,
-            [](GLFWwindow* window, int key, int scancode, int action, int mods) {
-                auto* backend = static_cast<GLFW_WindowBackend*>(glfwGetWindowUserPointer(window));
-
-                if (!backend) {
-                    MEB_LOG_ERROR("glfw user pointer was null!");
-                    return;
-                }
-
-                Input::Key inputKey = backend->ToInputKey(key);
-                backend->m_inputStatePtr->OnKey(inputKey, action != GLFW_RELEASE);
-            });
-
-            s_callbackSet = true;
-        }
-
         glfwPollEvents();
+
+        for (int glfwKey : k_trackedGlfwKeys) {
+            Input::Key key = ToInputKey(glfwKey);
+            if (key == Input::Key::NONE)
+                continue;
+
+            int glfwState = glfwGetKey(m_glfwWindow, glfwKey);
+            bool pressed = (glfwState == GLFW_PRESS);
+
+            state.OnKey(key, pressed);
+        }
     }
 
 	GLFW_WindowBackend::~GLFW_WindowBackend() {

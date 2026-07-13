@@ -8,6 +8,8 @@ namespace PotatoEngine::Editor {
 	
 	void GamePlayer::OnRender() {
 		if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
+			ImGui::SetWindowFocus("Viewport");
+			
 			m_engineContext.IsRunning = true;
 			m_engineContext.Debug.Log("Game started");
 

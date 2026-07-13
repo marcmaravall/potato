@@ -43,6 +43,90 @@ namespace PotatoEngine::Core::ECS::Systems {
 		time.set_function("delta_time", [&ctx] { return ctx.GetDeltaTime(); });
 		time.set_function("time", [&ctx] { return ctx.GetTime(); });
 
+		// input:
+		sol::table input = m_lua.create_named_table("input");
+		input.set_function("is_key", [&ctx](Input::Key key) -> bool { return ctx.InputState.IsKey(key); });
+		input.set_function("is_key_down", [&ctx](Input::Key key) -> bool { return ctx.InputState.IsKeyDown(key); });
+		input.set_function("is_key_up", [&ctx](Input::Key key) -> bool { return ctx.InputState.IsKeyUp(key); });
+
+		// enums:
+		m_lua.new_enum<Input::Key>("Key", {
+			{ "NONE", Input::Key::NONE },
+
+			{ "Q", Input::Key::Q },
+			{ "W", Input::Key::W },
+			{ "E", Input::Key::E },
+			{ "R", Input::Key::R },
+			{ "T", Input::Key::T },
+			{ "Y", Input::Key::Y },
+			{ "U", Input::Key::U },
+			{ "I", Input::Key::I },
+			{ "O", Input::Key::O },
+			{ "P", Input::Key::P },
+
+			{ "A", Input::Key::A },
+			{ "S", Input::Key::S },
+			{ "D", Input::Key::D },
+			{ "F", Input::Key::F },
+			{ "G", Input::Key::G },
+			{ "H", Input::Key::H },
+			{ "J", Input::Key::J },
+			{ "K", Input::Key::K },
+			{ "L", Input::Key::L },
+
+			{ "Z", Input::Key::Z },
+			{ "X", Input::Key::X },
+			{ "C", Input::Key::C },
+			{ "V", Input::Key::V },
+			{ "B", Input::Key::B },
+			{ "N", Input::Key::N },
+			{ "M", Input::Key::M },
+
+			{ "LEFT_CTRL", Input::Key::LEFT_CTRL },
+			{ "RIGHT_CTRL", Input::Key::RIGHT_CTRL },
+			{ "LEFT_SHIFT", Input::Key::LEFT_SHIFT },
+			{ "RIGHT_SHIFT", Input::Key::RIGHT_SHIFT },
+			{ "LEFT_MAYUS", Input::Key::LEFT_MAYUS },
+			{ "RIGHT_MAYUS", Input::Key::RIGHT_MAYUS },
+			{ "LEFT_ALT", Input::Key::LEFT_ALT },
+			{ "RIGHT_ALT", Input::Key::RIGHT_ALT },
+
+			{ "TAB", Input::Key::TAB },
+			{ "ESC", Input::Key::ESC },
+
+			{ "NUM1", Input::Key::NUM1 },
+			{ "NUM2", Input::Key::NUM2 },
+			{ "NUM3", Input::Key::NUM3 },
+			{ "NUM4", Input::Key::NUM4 },
+			{ "NUM5", Input::Key::NUM5 },
+			{ "NUM6", Input::Key::NUM6 },
+			{ "NUM7", Input::Key::NUM7 },
+			{ "NUM8", Input::Key::NUM8 },
+			{ "NUM9", Input::Key::NUM9 },
+			{ "NUM0", Input::Key::NUM0 },
+
+			{ "F1", Input::Key::F1 },
+			{ "F2", Input::Key::F2 },
+			{ "F3", Input::Key::F3 },
+			{ "F4", Input::Key::F4 },
+			{ "F5", Input::Key::F5 },
+			{ "F6", Input::Key::F6 },
+			{ "F7", Input::Key::F7 },
+			{ "F8", Input::Key::F8 },
+			{ "F9", Input::Key::F9 },
+			{ "F10", Input::Key::F10 },
+			{ "F11", Input::Key::F11 },
+			{ "F12", Input::Key::F12 },
+
+			{ "SPACE", Input::Key::SPACE },
+			{ "ENTER", Input::Key::ENTER },
+
+			{ "LEFT", Input::Key::LEFT },
+			{ "DOWN", Input::Key::DOWN },
+			{ "RIGHT", Input::Key::RIGHT },
+			{ "UP", Input::Key::UP },
+		});
+
 		// TODO: organize better the structure 
 		// 
 		// usertypes:

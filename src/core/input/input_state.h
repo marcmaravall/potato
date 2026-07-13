@@ -38,6 +38,8 @@ namespace PotatoEngine::Core::Input {
 		SPACE,
 		ENTER,
 
+		LEFT, DOWN, RIGHT, UP,
+
 		_COUNT // NUMBER OF ELEMENTS IN KEY
 	};
 
