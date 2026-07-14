@@ -1,4 +1,4 @@
--- file: test_script.lua
+-- test script
 
 local entity = 2
 

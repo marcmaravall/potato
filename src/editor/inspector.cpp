@@ -7,16 +7,35 @@ namespace PotatoEngine::Editor {
     
     using namespace PotatoEngine::Core::ECS;
 
-    // TODO: put this in a better place
-    static void RenderFileInput(const char* label, const auto* asset) {
-		if (asset == nullptr) {
-            ImGui::TextDisabled("No asset");
-            return;
+    void Inspector::RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type) {
+        auto p_asset = m_engineContext.AssetManager.TryGetAsset(asset);
+        if (p_asset) {
+            std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
+            ImGui::Text(scriptPath.filename().string().c_str());
+        }
+        else {
+            ImGui::TextDisabled("No file selected");
+        }
+        
+        if (ImGui::Button("Select Asset")) {
+            ImGui::OpenPopup("AssetSelection");
         }
 
-		std::string path = asset->GetAbsolutePath().string();
-		ImGui::TextUnformatted(label);
-		ImGui::TextUnformatted(path.c_str());
+        if (ImGui::BeginPopup("AssetSelection")) {
+            const auto& assetsIds = m_engineContext.AssetManager.GetAssets(type);
+            for (Core::AssetID id : assetsIds) {
+
+                auto p_currentAsset = m_engineContext.AssetManager.TryGetAsset(id);
+                std::filesystem::path path(p_currentAsset->GetAbsolutePath());
+
+                if (ImGui::MenuItem(path.filename().string().c_str())) {
+                    asset = id;
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::EndPopup();
+        }
     }
     
     Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
@@ -31,13 +50,9 @@ namespace PotatoEngine::Editor {
                 script.Compile(m_engineContext.GetLuaState(), m_engineContext.AssetManager);
             }
 
-			RenderFileInput("Script Asset", m_engineContext.AssetManager.TryGetAsset(script.GetScriptAssetID()));
-			
-            /*ImGui::InputTextMultiline(
-                "##LuaScript", &script.Source, 
-                ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), 
-                ImGuiInputTextFlags_AllowTabInput
-            );*/
+            Core::AssetID s = script.GetScriptAssetID();
+			RenderFileInput("Script Asset", s, Core::AssetType::LUA_SCRIPT);
+            script.SetScriptAssetID(s);
         });
 
         Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {

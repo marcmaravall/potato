@@ -7,6 +7,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <memory>
+#include <vector>
 
 #include "asset.h"
 
@@ -25,9 +26,17 @@ namespace PotatoEngine::Core {
 		Asset* TryGetAsset(AssetID id);
 		AssetID CreateAsset(std::unique_ptr<Asset> asset);
 
+		AssetType GetAssetType(const std::filesystem::path& path);
+
+		void ScanAssets();
+
 		const std::string& GetRoot() const { return m_root; }
 
 		static std::string Path(const std::string& str);
+
+	public:
+		// TODO: optimize to save result so then will be O(1)
+		const std::vector<AssetID> GetAssets(AssetType type);
 	};
 }
 

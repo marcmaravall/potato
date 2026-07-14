@@ -273,6 +273,7 @@ namespace PotatoEngine::Core::ECS::Systems {
 
     void LuaScriptSystem::OnStart() {
         m_context.Registry.Each<Components::LuaScript>([&](auto& script) {
+			MEB_LOG_INFOF("Calling lua start to script with assetid: %d", script.GetScriptAssetID());
 			script.CallFunction(LUA_START_FUNC_NAME);
         });
     }

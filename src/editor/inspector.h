@@ -63,6 +63,7 @@ namespace PotatoEngine::Editor {
 
 	class Inspector : public EditorPanel {
 	private:
+		void RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type);
 
 	public:
 		ComponentInspectorRegistry Registry;

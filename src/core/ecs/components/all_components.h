@@ -7,3 +7,4 @@
 #include "parent.h"
 #include "sprite_renderer.h"
 #include "transform.h"
+#include "box_collider_2d.h"

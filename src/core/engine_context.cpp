@@ -43,22 +43,13 @@ namespace PotatoEngine::Core {
 		EntityID child0 = Registry.CreateEntity("B", e);
 		EntityID child1 = Registry.CreateEntity("C", e);
 
-		// Registry.AddSystem<ECS::Systems::ExampleSystem>(*this);
 		Registry.AddSystem<ECS::Systems::CameraSystem>(*this);
 		Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
 		Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
 
-		//
-		AssetManager.CreateAsset(
-			std::make_unique<LuaScriptAsset>(AssetManager.Path(AssetManager.GetRoot() + "/assets/tests/script.lua"),
-				GetLuaState()
-			));
+		AssetManager.ScanAssets();
 
-		Registry.AddComponent<ECS::Components::LuaScript>(e1); /*
-			"_start = function()\n"
-			"	debug.log('Hello, World!')\n"
-			"end\n";
-		*/
+		Registry.AddComponent<ECS::Components::LuaScript>(e1, 0);
 	}
 
 	void EngineContext::RegisterComponents() {

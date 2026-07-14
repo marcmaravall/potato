@@ -18,11 +18,13 @@
 
 #include "panel.h"
 #include "editor_context.h"
+
 #include "viewport.h"
 #include "console.h"
 #include "inspector.h"
 #include "hierarchy.h"
 #include "game_player.h"
+#include "project_window.h"
 
 #include "core/logging/debug.h"
 #include "theme.h"

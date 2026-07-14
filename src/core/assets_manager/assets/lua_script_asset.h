@@ -8,13 +8,13 @@
 namespace PotatoEngine::Core {
 	class LuaScriptAsset : public Asset {
 	private:
-		sol::load_result m_chunk;
+		sol::protected_function m_chunk;
 
 	public:
-		LuaScriptAsset(const std::string& relPath, sol::state& lua);
+		LuaScriptAsset(const std::string& relPath);
 		~LuaScriptAsset() override = default;
 	
 		bool Compile(sol::state& lua, sol::environment& env);
-		const sol::load_result& GetChunk() const noexcept { return m_chunk; }
+		const sol::protected_function& GetChunk() const noexcept { return m_chunk; }
 	};
 };

@@ -27,7 +27,7 @@ namespace PotatoEngine::Core {
 
 	public:
 		Asset() = default;
-		Asset(const std::string& relPath, AssetType type);
+		Asset(const std::string& absPath, AssetType type);
 		virtual ~Asset() = default;
 
 		const std::filesystem::path& GetAbsolutePath() const noexcept { return m_absPath; }

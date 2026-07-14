@@ -1,5 +1,7 @@
 #include "assets_manager.h"
 
+#include "assets/lua_script_asset.h"
+
 namespace PotatoEngine::Core {
 	Asset& AssetManager::GetAsset(AssetID id) {
 		if (m_map.contains(id)) {
@@ -38,6 +40,83 @@ namespace PotatoEngine::Core {
 			assert(0 && "Could not find potato directory in path hierarchy.");
 			m_root = "";
 		}
+	}
+
+	// TODO: complete:
+	AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
+		const auto& ext = path.extension().string();
+
+		if (ext == ".lua")
+			return AssetType::LUA_SCRIPT;
+
+		if (ext == ".png" || ext == ".jpg")
+			return AssetType::TEXTURE;
+
+		if (ext == ".glsl")
+			return AssetType::SHADER;
+
+		if (ext == ".obj" || ext == ".fbx")
+			return AssetType::MODEL;
+
+		if (ext == ".wav" || ext == ".ogg")
+			return AssetType::SOUND;
+
+		return AssetType::OTHER;
+	}
+
+	void AssetManager::ScanAssets() {
+		m_map.clear();
+
+		MEB_LOG_INFOF("Scanning Assets; Root: %s", m_root.c_str());
+
+		for (auto& entry : std::filesystem::recursive_directory_iterator(Path(m_root + "/assets"))) {
+			if (!entry.is_regular_file())
+				continue;
+
+			AssetType type = GetAssetType(entry.path());
+			std::unique_ptr<Asset> asset;
+
+			// TODO: put this in a separate function
+			switch (type)
+			{
+			case PotatoEngine::Core::AssetType::SHADER:
+				break;
+			case PotatoEngine::Core::AssetType::TEXTURE:
+				break;
+			case PotatoEngine::Core::AssetType::MODEL:
+				break;
+			case PotatoEngine::Core::AssetType::SOUND:
+				break;
+			case PotatoEngine::Core::AssetType::ANIMATION:
+				break;
+			case PotatoEngine::Core::AssetType::TEXT:
+				break;
+			case PotatoEngine::Core::AssetType::LUA_SCRIPT:
+				asset = std::make_unique<LuaScriptAsset>(entry.path().string());
+				break;
+			case PotatoEngine::Core::AssetType::OTHER:
+				break;
+			default:
+				break;
+			}
+
+			AssetID id = CreateAsset(std::move(asset));
+
+			MEB_LOG_INFOF("Create asset '%s' with id %d", entry.path().generic_string().c_str(), id);
+		}
+	}
+
+	const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
+		std::vector<AssetID> res{};
+		for (auto& [id, assetPtr] : m_map) {
+			if (assetPtr == nullptr) {
+				continue;
+			}
+			if (assetPtr->GetType() == type) {
+				res.push_back(id);
+			}
+		}
+		return res;
 	}
 
 	std::string AssetManager::Path(const std::string& str) {

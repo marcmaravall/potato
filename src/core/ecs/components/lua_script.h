@@ -19,13 +19,14 @@ namespace PotatoEngine::Core::ECS::Components {
 	public:
 
 	public:
-		LuaScript() : Component("Lua Script") {}
+		LuaScript(AssetID script = 0) : Component("Lua Script"), m_scriptAssetID(script) {}
 		~LuaScript() = default;
 
 		bool Compile(sol::state& lua, AssetManager& am);
 		bool CallFunction(const char* name);
 
 		sol::environment& GetEnvironment() { return m_env; }
+		AssetID SetScriptAssetID(AssetID asset) noexcept { m_scriptAssetID = asset; return m_scriptAssetID; }
 		AssetID GetScriptAssetID() const noexcept { return m_scriptAssetID; }
 		
 		void nothing() override {}
