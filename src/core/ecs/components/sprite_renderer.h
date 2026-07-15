@@ -1,6 +1,10 @@
 #ifndef POTATO_COMPONENTS_SPRITE_RENDERER_H
 #define POTATO_COMPONENTS_SPRITE_RENDERER_H
 
+#include <assets_manager/asset.h>
+#include <assets_manager/assets_manager.h>
+#include <assets_manager/assets/texture_asset.h>
+
 #include <ecs/component.h>
 #include <core/rendering/texture2d.h>
 
@@ -10,7 +14,7 @@
 namespace PotatoEngine::Core::ECS::Components {
 	class SpriteRenderer : public ECS::Component {
 	private:
-		std::string m_texturePath = "";
+		AssetID m_textureAsset = 0;
 
 	public:
 		glm::vec4 Color = glm::vec4(1.0f);
@@ -18,16 +22,15 @@ namespace PotatoEngine::Core::ECS::Components {
 		
 		int Layer = 0;
 		bool FlipX = false, FlipY = false;
-	
-	public:
-		std::unique_ptr<Core::Rendering::Texture2D> Texture = nullptr;
 
 	public:
-		SpriteRenderer(const std::string& path);
+		Rendering::Texture2D* GetTexture(AssetManager& am);
+		AssetID GetTextureAssetID() { return m_textureAsset; }
+		void SetTextureAssetID(AssetID asset) { m_textureAsset = asset; }
+
+	public:
+		SpriteRenderer(AssetID asset);
 		SpriteRenderer() : ECS::Component("Sprite Renderer") {}
-
-		void Load(const std::string& path);
-		const std::string& GetTexturePath() const { return m_texturePath; }
 		
 		~SpriteRenderer() override = default;
 

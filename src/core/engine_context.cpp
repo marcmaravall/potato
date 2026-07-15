@@ -30,14 +30,10 @@ namespace PotatoEngine::Core {
 		Registry.AddComponent<ECS::Components::Camera>(m_mainCamera);
 
 		EntityID e = Registry.CreateEntity("A");
-		Registry.AddComponent<ECS::Components::SpriteRenderer>(e, 
-			AssetManager.Path(AssetManager.GetRoot()+"/assets/tests/texture.gif")
-		);
+		Registry.AddComponent<ECS::Components::SpriteRenderer>(e, 0);
 
 		EntityID e1 = Registry.CreateEntity("Manolo");
-		Registry.AddComponent<ECS::Components::SpriteRenderer>(e1, 
-			AssetManager.Path(AssetManager.GetRoot()+"/assets/tests/texture.gif")
-		);
+		Registry.AddComponent<ECS::Components::SpriteRenderer>(e1, 0);
 		Registry.GetComponent<ECS::Components::Transform>(e1).Position.x = 1;
 
 		EntityID child0 = Registry.CreateEntity("B", e);

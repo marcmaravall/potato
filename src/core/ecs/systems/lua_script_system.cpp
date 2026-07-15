@@ -152,8 +152,8 @@ namespace PotatoEngine::Core::ECS::Systems {
 
 		m_lua.new_usertype<SpriteRenderer>("SpriteRenderer",
 			sol::constructors<
-				SpriteRenderer(),
-				SpriteRenderer(const std::string& path)
+				SpriteRenderer()//,
+				// SpriteRenderer(const std::string& path)
 			>(),
 
 			"color", &SpriteRenderer::Color,

@@ -9,6 +9,7 @@ namespace PotatoEngine::Editor {
 
     void Inspector::RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type) {
         auto p_asset = m_engineContext.AssetManager.TryGetAsset(asset);
+        
         if (p_asset) {
             std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
             ImGui::Text(scriptPath.filename().string().c_str());
@@ -63,7 +64,7 @@ namespace PotatoEngine::Editor {
             ImGui::InputFloat3("Scale", &transform.Scale[0]);
         });
 
-        Registry.Add<Core::ECS::Components::SpriteRenderer>([](Core::ECS::Components::SpriteRenderer& sr) {
+        Registry.Add<Core::ECS::Components::SpriteRenderer>([&](Core::ECS::Components::SpriteRenderer& sr) {
             if (ImGui::BeginTable("SpriteRenderer", 2)) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
@@ -97,14 +98,10 @@ namespace PotatoEngine::Editor {
 
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
-                static std::string path = sr.GetTexturePath();
 
-                // TODO: improve so it wont crash if cannot load the texture
-                ImGui::InputText("", &path);
-                ImGui::TableSetColumnIndex(1);
-                if (ImGui::Button("Load")) {
-                    sr.Load(path);
-                }
+                Core::AssetID t = sr.GetTextureAssetID();
+                RenderFileInput("Texture Asset", t, Core::AssetType::TEXTURE);
+                sr.SetTextureAssetID(t);
 
                 ImGui::EndTable();
             }

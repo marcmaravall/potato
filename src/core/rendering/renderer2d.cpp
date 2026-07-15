@@ -138,8 +138,11 @@ namespace PotatoEngine::Core::Rendering {
             m_shaderProgram->Uniform4f("u_Color", command->S.Color);
             
             m_shaderProgram->Uniform1i("u_Texture", 0);
-            if (command->S.Texture) {
-                command->S.Texture->Bind(0);
+
+            auto sr = command->S; 
+            auto* texture = sr.GetTexture(m_engineContext.AssetManager);
+            if (texture) {
+                texture->Bind(0);
             }
 
             m_vao->Bind();

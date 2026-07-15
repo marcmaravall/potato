@@ -1,6 +1,7 @@
 #include "assets_manager.h"
 
 #include "assets/lua_script_asset.h"
+#include "assets/texture_asset.h"
 
 namespace PotatoEngine::Core {
 	Asset& AssetManager::GetAsset(AssetID id) {
@@ -49,7 +50,7 @@ namespace PotatoEngine::Core {
 		if (ext == ".lua")
 			return AssetType::LUA_SCRIPT;
 
-		if (ext == ".png" || ext == ".jpg")
+		if (ext == ".png" || ext == ".jpg" || ext == ".gif")
 			return AssetType::TEXTURE;
 
 		if (ext == ".glsl")
@@ -82,6 +83,7 @@ namespace PotatoEngine::Core {
 			case PotatoEngine::Core::AssetType::SHADER:
 				break;
 			case PotatoEngine::Core::AssetType::TEXTURE:
+				asset = std::make_unique<TextureAsset>(entry.path().string());
 				break;
 			case PotatoEngine::Core::AssetType::MODEL:
 				break;
