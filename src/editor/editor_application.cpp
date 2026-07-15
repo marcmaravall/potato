@@ -65,6 +65,15 @@ namespace PotatoEngine::Editor {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		if (ImGui::IsKeyPressed(ImGuiKey_Z) && ImGui::GetIO().KeyCtrl) {
+			MEB_LOG_INFO("UNDO");
+			m_editorContext.CManager.Undo(); // UNDO
+		}
+		else if (ImGui::IsKeyPressed(ImGuiKey_Y) && ImGui::GetIO().KeyCtrl) {
+			MEB_LOG_INFO("REDO");
+			m_editorContext.CManager.Redo(); // REDO
+		}
+
 		menuBar();
 
 		ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());

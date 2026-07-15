@@ -39,6 +39,8 @@ namespace PotatoEngine::Editor {
     }
     
     Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
+        // TODO: add undo and redo:
+        
         Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
             if (ImGui::InputText("##Name", &name.Value)) {}
         });

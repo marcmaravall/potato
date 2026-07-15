@@ -6,6 +6,8 @@
 #include <core/ecs/entity_id.h>
 #include <core/assets_manager/assets_manager.h>
 
+#include "commands/command_manager.h"
+
 namespace PotatoEngine::Editor {
 
 	class EditorContext {
@@ -20,6 +22,8 @@ namespace PotatoEngine::Editor {
 	public:
 		Core::ECS::EntityID SelectedEntity;
 		bool IsEntitySelected = false;
+
+		CommandManager CManager;
 
 	public:
 	

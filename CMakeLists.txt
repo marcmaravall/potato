@@ -41,7 +41,9 @@ add_library(sol2 INTERFACE)
 target_include_directories(sol2 INTERFACE thirdparty/sol2/include)
 target_link_libraries(sol2 INTERFACE lua_static)
 
-file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp" 
+file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" 
+    "src/editor/commands/*.cpp"
+    "src/editor/*.cpp" 
     "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" 
     "src/platform/*.cpp"
     "src/core/assets_manager/*.cpp"
@@ -53,6 +55,7 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" "src/editor/*.cpp"
     "src/core/input/*.cpp"
     "src/core/windowing/*.cpp"
     "src/core/windowing/glfw/*.cpp"
+
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
