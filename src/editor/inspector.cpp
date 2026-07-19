@@ -8,11 +8,11 @@ namespace PotatoEngine::Editor {
     using namespace PotatoEngine::Core::ECS;
 
     void Inspector::RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type) {
-        auto p_asset = m_engineContext.AssetManager.TryGetAsset(asset);
+        auto p_asset = m_engineContext._AssetManager.TryGetAsset(asset);
         
         if (p_asset) {
             std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
-            ImGui::Text(scriptPath.filename().string().c_str());
+            ImGui::Text("%s", scriptPath.filename().string().c_str());
         }
         else {
             ImGui::TextDisabled("No file selected");
@@ -23,10 +23,10 @@ namespace PotatoEngine::Editor {
         }
 
         if (ImGui::BeginPopup("AssetSelection")) {
-            const auto& assetsIds = m_engineContext.AssetManager.GetAssets(type);
+            const auto& assetsIds = m_engineContext._AssetManager.GetAssets(type);
             for (Core::AssetID id : assetsIds) {
 
-                auto p_currentAsset = m_engineContext.AssetManager.TryGetAsset(id);
+                auto p_currentAsset = m_engineContext._AssetManager.TryGetAsset(id);
                 std::filesystem::path path(p_currentAsset->GetAbsolutePath());
 
                 if (ImGui::MenuItem(path.filename().string().c_str())) {
@@ -50,7 +50,7 @@ namespace PotatoEngine::Editor {
             ImGui::TextDisabled("Lua Script");
             ImGui::SameLine();
             if (ImGui::Button("Reload")) {
-                script.Compile(m_engineContext.GetLuaState(), m_engineContext.AssetManager);
+                script.Compile(m_engineContext.GetLuaState(), m_engineContext._AssetManager);
             }
 
             Core::AssetID s = script.GetScriptAssetID();

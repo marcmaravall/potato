@@ -18,8 +18,8 @@
 #include "components/all_components.h"
 
 namespace PotatoEngine::Core::ECS {
-	using AddComponent = std::function<Core::ECS::Component*(EntityID)>;
-	using GetComponent = AddComponent;
+	using AddComponentFn = std::function<Core::ECS::Component*(EntityID)>;
+	using GetComponentFn = std::function<Core::ECS::Component*(EntityID)>;
 
 	using LuaComponentBinder = std::function<sol::object(sol::state_view, Component*)>;
 
@@ -33,8 +33,8 @@ namespace PotatoEngine::Core::ECS {
 
 		// Template functions created by RegisterComponent
 		std::vector<std::string> m_componentNames;
-		std::unordered_map<std::string, AddComponent> m_addComponentFunctions;
-		std::unordered_map<std::string, GetComponent> m_getComponentFunctions;
+		std::unordered_map<std::string, AddComponentFn> m_addComponentFunctions;
+		std::unordered_map<std::string, GetComponentFn> m_getComponentFunctions;
 		std::unordered_map<std::string, LuaComponentBinder> m_bindLuaComponent;
 
 	public:

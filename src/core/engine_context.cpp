@@ -43,7 +43,7 @@ namespace PotatoEngine::Core {
 		Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
 		Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
 
-		AssetManager.ScanAssets();
+		_AssetManager.ScanAssets();
 
 		Registry.AddComponent<ECS::Components::LuaScript>(e1, 0);
 	}

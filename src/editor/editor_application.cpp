@@ -29,7 +29,7 @@ namespace PotatoEngine::Editor {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
-		std::string imguiPath = m_engineContext.AssetManager.Path(m_engineContext.AssetManager.GetRoot() + "/tests/imgui.ini");
+		std::string imguiPath = m_engineContext._AssetManager.Path(m_engineContext._AssetManager.GetRoot() + "/tests/imgui.ini");
 		m_engineContext.Debug.Log("Loaded ImGui from: " + imguiPath);
 		ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
 

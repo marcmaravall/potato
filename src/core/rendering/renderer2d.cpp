@@ -140,7 +140,7 @@ namespace PotatoEngine::Core::Rendering {
             m_shaderProgram->Uniform1i("u_Texture", 0);
 
             auto sr = command->S; 
-            auto* texture = sr.GetTexture(m_engineContext.AssetManager);
+            auto* texture = sr.GetTexture(m_engineContext._AssetManager);
             if (texture) {
                 texture->Bind(0);
             }

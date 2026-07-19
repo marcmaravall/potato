@@ -8,18 +8,18 @@ namespace PotatoEngine::Core::ECS::Components {
     Rendering::Texture2D* SpriteRenderer::GetTexture(AssetManager& am) {
         auto* ptr = am.TryGetAsset(m_textureAsset);
         if (!ptr) {
-            MEB_LOG_ERRORF("Asset (texture) with id %d not found", m_textureAsset);
+            MEB_LOG_ERRORF("Asset (texture) with id %lld not found", m_textureAsset);
             return nullptr;
         }
 
         TextureAsset* texture = dynamic_cast<TextureAsset*>(ptr);
         if (!texture) {
-            MEB_LOG_ERRORF("Cannot convert asset with id %d to a valid texture", m_textureAsset);
+            MEB_LOG_ERRORF("Cannot convert asset with id %lld to a valid texture", m_textureAsset);
             return nullptr;
         }
 
         if (!texture->GetTexture()) {
-            MEB_LOG_ERRORF("texture with assetid %d has null pointer", m_textureAsset);
+            MEB_LOG_ERRORF("texture with assetid %lld has null pointer", m_textureAsset);
             return nullptr;
         }
 
