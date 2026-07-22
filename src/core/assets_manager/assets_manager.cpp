@@ -104,7 +104,7 @@ namespace PotatoEngine::Core {
 
 			AssetID id = CreateAsset(std::move(asset));
 
-			MEB_LOG_INFOF("Create asset '%s' with id %d", entry.path().generic_string().c_str(), id);
+			MEB_LOG_INFOF("Create asset '%s' with id %lld", entry.path().generic_string().c_str(), id);
 		}
 	}
 
