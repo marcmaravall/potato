@@ -25,3 +25,7 @@
 [submodule "thirdparty/lua"]
 	path = thirdparty/lua
 	url = https://github.com/walterschell/Lua
+
+[submodule "nlohmann-json"]
+    path = thirdparty/nlohmann_json
+    url = https://github.com/nlohmann/json
