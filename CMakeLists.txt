@@ -5,6 +5,8 @@ project(potato C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -44,6 +46,7 @@ target_link_libraries(sol2 INTERFACE lua_static)
 file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" 
     "src/editor/commands/*.cpp"
     "src/editor/*.cpp" 
+    "src/editor/serialize/*.cpp"
     "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" 
     "src/platform/*.cpp"
     "src/core/assets_manager/*.cpp"
@@ -55,7 +58,6 @@ file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp"
     "src/core/input/*.cpp"
     "src/core/windowing/*.cpp"
     "src/core/windowing/glfw/*.cpp"
-
 )
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

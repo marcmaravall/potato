@@ -73,8 +73,8 @@ function _update()
     if timer >= 1.0 then
         timer = 0.0
 
-        print("Position: ".. tostring(transform.position))
-        print("Rotation: ".. tostring(transform.rotation))
-		print("Scale:    ".. tostring(transform.scale))
+    --    print("Position: ".. tostring(transform.position))
+    --    print("Rotation: ".. tostring(transform.rotation))
+	--	print("Scale:    ".. tostring(transform.scale))
     end
 end

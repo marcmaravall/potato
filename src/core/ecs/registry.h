@@ -13,6 +13,8 @@
 #include <vector>
 #include <exception>
 
+#include <nlohmann/json.hpp>
+
 #include <sol/sol.hpp>
 
 #include "components/all_components.h"
@@ -235,5 +237,8 @@ namespace PotatoEngine::Core::ECS {
 	public:
 		Registry() = default;
 		~Registry() = default;
+
+	public:
+    	NLOHMANN_DEFINE_TYPE_INTRUSIVE(Registry, m_currentID, m_emptyStack, m_entities)
 	};
 }

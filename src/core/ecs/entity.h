@@ -14,6 +14,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include <nlohmann/json.hpp>
+
 namespace PotatoEngine::Core::ECS {
 
     class Entity {
@@ -77,6 +79,7 @@ namespace PotatoEngine::Core::ECS {
             return static_cast<T*>(it->second.get());
         }
 
+        // FIXME: dont do this...
         std::vector<Component*> GetComponents() const {
             std::vector<Component*> result;
             result.reserve(m_components.size());

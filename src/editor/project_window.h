@@ -1,7 +1,10 @@
 #pragma once
 
+
+#include <imgui.h>
 #include <core/engine_context.h>
 
+#include "serialize/serializer.hpp"
 #include "panel.h"
 
 namespace PotatoEngine::Editor {

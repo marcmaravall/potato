@@ -9,6 +9,8 @@
 #include <memory>
 #include <vector>
 
+#include <nlohmann/json.hpp>
+
 #include "asset.h"
 
 namespace PotatoEngine::Core {
@@ -37,6 +39,9 @@ namespace PotatoEngine::Core {
 	public:
 		// TODO: optimize to save result so then will be O(1)
 		const std::vector<AssetID> GetAssets(AssetType type);
+
+	public:
+    	NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetManager, m_root)
 	};
 }
 
