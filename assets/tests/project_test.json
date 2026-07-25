@@ -1,4 +1,15 @@
 {
-    "project": "test_project",
-    "version": "0.0.1"
+    "ProjectSettings": {
+        "ProjectName": "test_project",
+        "ProjectVersion": "1.0.0",
+        "EngineVersion": "0.0.1"
+    },
+
+    "Scenes": [
+        "Scene1",
+        "Scene2",
+        "Scene3",
+        "Scene4",
+        "Scene5"
+    ]
 }

@@ -51,6 +51,10 @@ void EditorApplication::OnStart() {
     AddPanel<ProjectWindow>(m_engineContext, m_editorContext);
 
     m_engineContext.Start();
+    
+    std::string path = m_engineContext._AssetManager.Path(m_engineContext._AssetManager.GetRoot() +"/assets/tests/project_test.json");
+    std::cout << path << "\n";
+    m_editorContext.CurrentProject = Project::Load(path);
 }
 
 void EditorApplication::OnUpdate() {

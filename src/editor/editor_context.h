@@ -5,6 +5,7 @@
 #include <core/logging/debug.h>
 
 #include "commands/command_manager.h"
+#include "project.hpp"
 
 namespace PotatoEngine::Editor {
 
@@ -19,6 +20,7 @@ public:
     bool IsEntitySelected = false;
 
     CommandManager CManager;
+    std::unique_ptr<Project> CurrentProject;
 
 public:
 };
