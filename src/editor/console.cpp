@@ -1,26 +1,34 @@
 #include "console.h"
 
+#include <misc/cpp/imgui_stdlib.h>
+
 using namespace PotatoEngine::Editor;
 using namespace PotatoEngine::Core::Logging;
 
-void Console::OnBegin() {
-
-}
+void Console::OnBegin() {}
 
 void Console::OnRender() {
     static std::string s = "";
     static Debug::Message::Type t = Debug::Message::Type::_SUCCESS;
 
-    const char* types[] = { "Success", "Warning", "Error", "Info"};
+    const char* types[] = {"Success", "Warning", "Error", "Info"};
     static int selectedType = 0;
 
     ImGui::SetNextItemWidth(120);
     if (ImGui::Combo("Type", &selectedType, types, IM_ARRAYSIZE(types))) {
         switch (selectedType) {
-        case 0: t = Debug::Message::Type::_SUCCESS; break;
-        case 1: t = Debug::Message::Type::_WARNING; break;
-        case 2: t = Debug::Message::Type::_ERROR;   break;
-        case 3: t = Debug::Message::Type::_INFO;   break;
+            case 0:
+                t = Debug::Message::Type::_SUCCESS;
+                break;
+            case 1:
+                t = Debug::Message::Type::_WARNING;
+                break;
+            case 2:
+                t = Debug::Message::Type::_ERROR;
+                break;
+            case 3:
+                t = Debug::Message::Type::_INFO;
+                break;
         }
     }
 
@@ -33,7 +41,7 @@ void Console::OnRender() {
         m_engineContext.Debug.Log(Debug::Message(s, t));
         s = "";
     }
-    
+
     ImGui::SameLine();
 
     if (ImGui::Button("Clear")) {
@@ -60,16 +68,22 @@ void Console::OnRender() {
         ImColor color;
 
         switch (message._Type) {
-        case Debug::Message::Type::_SUCCESS: color = IM_COL32(0, 255, 0, 255);     break;
-        case Debug::Message::Type::_WARNING: color = IM_COL32(255, 200, 0, 255);   break;
-        case Debug::Message::Type::_ERROR:   color = IM_COL32(255, 50, 50, 255);   break;
-        default:                                   color = IM_COL32(255, 255, 255, 255); break;
+            case Debug::Message::Type::_SUCCESS:
+                color = IM_COL32(0, 255, 0, 255);
+                break;
+            case Debug::Message::Type::_WARNING:
+                color = IM_COL32(255, 200, 0, 255);
+                break;
+            case Debug::Message::Type::_ERROR:
+                color = IM_COL32(255, 50, 50, 255);
+                break;
+            default:
+                color = IM_COL32(255, 255, 255, 255);
+                break;
         }
 
         ImGui::TextColored(color, message.Text.c_str(), "");
     }
 }
 
-void Console::OnEnd() {
-
-}
+void Console::OnEnd() {}

@@ -1,24 +1,24 @@
 #pragma once
 
+#include <memory>
+#include <stack>
+
 #include "command.h"
 
-#include <stack>
-#include <memory>
-
 namespace PotatoEngine::Editor {
-	
-	class CommandManager final {
-	private:
-		std::stack<Command> m_undoStack;
-		std::stack<Command> m_redoStack;
 
-	public:
-		void Execute(Command cmd);
-		void Undo();
-		void Redo();
+class CommandManager final {
+private:
+    std::stack<Command> m_undoStack;
+    std::stack<Command> m_redoStack;
 
-	public:
-		CommandManager() = default;
-		~CommandManager() = default;
-	};
-}
+public:
+    void Execute(Command cmd);
+    void Undo();
+    void Redo();
+
+public:
+    CommandManager() = default;
+    ~CommandManager() = default;
+};
+}  // namespace PotatoEngine::Editor

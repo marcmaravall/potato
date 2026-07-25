@@ -5,10 +5,6 @@ using namespace PotatoEngine::Core::Logging;
 
 // EditorContext* EditorContext::s_Instance = nullptr;
 
-EditorContext::EditorContext() {
+EditorContext::EditorContext() {}
 
-}
-
-EditorContext::~EditorContext() {
-
-}
+EditorContext::~EditorContext() {}

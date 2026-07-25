@@ -2,40 +2,37 @@
 
 namespace PotatoEngine::Editor {
 
-	void GamePlayer::OnBegin() {
-		
-	}
-	
-	void GamePlayer::OnRender() {
-		if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
-			ImGui::SetWindowFocus("Viewport");
-			
-			m_engineContext.IsRunning = true;
-			m_engineContext.Debug.Log("Game started");
+void GamePlayer::OnBegin() {}
 
-			m_application->OnStart();
-		}
+void GamePlayer::OnRender() {
+    if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
+        ImGui::SetWindowFocus("Viewport");
 
-		if (m_engineContext.IsRunning) {
-			m_application->OnUpdate();
-			m_engineContext.SetDeltaTime(1.0 / ImGui::GetIO().Framerate);
-		}
+        m_engineContext.IsRunning = true;
+        m_engineContext.Debug.Log("Game started");
 
-		ImGui::SameLine();
-		if (ImGui::Button("Next Frame")) {
-			m_application->OnUpdate();
-		}
-		ImGui::SameLine();
-		
-		if (ImGui::Button("Stop") && m_engineContext.IsRunning) {
-			m_engineContext.IsRunning = false;
-			m_engineContext.Debug.Log("Game finished");
-		}
+        m_application->OnStart();
+    }
 
-		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-	}
-	
-	void GamePlayer::OnEnd() {
-		
-	}
+    if (m_engineContext.IsRunning) {
+        m_application->OnUpdate();
+        m_engineContext.SetDeltaTime(1.0 / ImGui::GetIO().Framerate);
+    }
+
+    ImGui::SameLine();
+    if (ImGui::Button("Next Frame")) {
+        m_application->OnUpdate();
+    }
+    ImGui::SameLine();
+
+    if (ImGui::Button("Stop") && m_engineContext.IsRunning) {
+        m_engineContext.IsRunning = false;
+        m_engineContext.Debug.Log("Game finished");
+    }
+
+    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 }
+
+void GamePlayer::OnEnd() {}
+
+}  // namespace PotatoEngine::Editor

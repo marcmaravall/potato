@@ -1,80 +1,77 @@
-#ifndef POTATO_INSPECTOR_H
-#define POTATO_INSPECTOR_H
+#pragma once
 
-#include <memory>
-
-#include "panel.h"
 #include <core/engine_context.h>
-
-#include <format>
-#include <typeindex>
-#include <functional>
-#include <unordered_map>
-#include <string>
-
 #include <ecs/component.h>
-#include <ecs/components/transform.h>
+#include <ecs/components/camera.h>
+#include <ecs/components/children.h>
+#include <ecs/components/lua_script.h>
 #include <ecs/components/name.h>
 #include <ecs/components/parent.h>
-#include <ecs/components/children.h>
 #include <ecs/components/sprite_renderer.h>
-#include <ecs/components/camera.h>
-#include <ecs/components/lua_script.h>
+#include <ecs/components/transform.h>
+
+#include <format>
+#include <functional>
+#include <memory>
+#include <string>
+#include <typeindex>
+#include <unordered_map>
+
+#include "panel.h"
 
 namespace PotatoEngine::Editor {
-	using AddComponent = std::function<std::unique_ptr<Core::ECS::Component>()>;
 
-	class ComponentInspectorRegistry {
-	private:
-		std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
+using AddComponent = std::function<std::unique_ptr<Core::ECS::Component>()>;
 
-	public:
-		template<typename ComponentType>
-		void Add(std::function<void(ComponentType&)> inspectorFunction) {
-			m_renderers[typeid(ComponentType)] = [inspectorFunction](void* component) {
-				inspectorFunction(*static_cast<ComponentType*>(component));
-			};
-		}
+class ComponentInspectorRegistry {
+private:
+    std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
 
-		void Render(void* component, std::type_index type) {
-			auto it = m_renderers.find(type);
-			if (it != m_renderers.end()) {
-				it->second(component);
-			}
-			else {
-				ImGui::TextDisabled("No inspector for: %s", type.name());
-			}
-		}
+public:
+    template <typename ComponentType>
+    void Add(std::function<void(ComponentType&)> inspectorFunction) {
+        m_renderers[typeid(ComponentType)] =
+            [inspectorFunction](void* component) {
+                inspectorFunction(*static_cast<ComponentType*>(component));
+            };
+    }
 
-		void Render(Core::ECS::Component* c) {
-			auto it = m_renderers.find(typeid(*c));
-			if (it != m_renderers.end())
-				it->second(c);
-			else
-				ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
-		}
+    void Render(void* component, std::type_index type) {
+        auto it = m_renderers.find(type);
+        if (it != m_renderers.end()) {
+            it->second(component);
+        } else {
+            ImGui::TextDisabled("No inspector for: %s", type.name());
+        }
+    }
 
-		ComponentInspectorRegistry() {
-			m_renderers.reserve(10);
-		}
+    void Render(Core::ECS::Component* c) {
+        auto it = m_renderers.find(typeid(*c));
+        if (it != m_renderers.end())
+            it->second(c);
+        else
+            ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
+    }
 
-		~ComponentInspectorRegistry() = default;
-	};
+    ComponentInspectorRegistry() { m_renderers.reserve(10); }
 
-	class Inspector : public EditorPanel {
-	private:
-		void RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type);
+    ~ComponentInspectorRegistry() = default;
+};
 
-	public:
-		ComponentInspectorRegistry Registry;
+class Inspector : public EditorPanel {
+private:
+    void RenderFileInput(const char* label, Core::AssetID& asset,
+                         Core::AssetType type);
 
-		Inspector(Core::EngineContext& ctx, EditorContext& ectx);
-	
-	protected:
-		void OnBegin() override;
-		void OnRender() override;
-		void OnEnd() override;
-	};
-}
+public:
+    ComponentInspectorRegistry Registry;
 
-#endif // POTATO_INSPECTOR_H
+    Inspector(Core::EngineContext& ctx, EditorContext& ectx);
+
+protected:
+    void OnBegin() override;
+    void OnRender() override;
+    void OnEnd() override;
+};
+}  // namespace PotatoEngine::Editor
+

@@ -1,70 +1,76 @@
 #include "inspector.h"
-#include <misc/cpp/imgui_stdlib.h>
 
 #include <assets_manager/asset.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace PotatoEngine::Editor {
-    
-    using namespace PotatoEngine::Core::ECS;
 
-    void Inspector::RenderFileInput(const char* label, Core::AssetID& asset, Core::AssetType type) {
-        auto p_asset = m_engineContext._AssetManager.TryGetAsset(asset);
-        
-        if (p_asset) {
-            std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
-            ImGui::Text("%s", scriptPath.filename().string().c_str());
-        }
-        else {
-            ImGui::TextDisabled("No file selected");
-        }
-        
-        if (ImGui::Button("Select Asset")) {
-            ImGui::OpenPopup("AssetSelection");
-        }
+using namespace PotatoEngine::Core::ECS;
 
-        if (ImGui::BeginPopup("AssetSelection")) {
-            const auto& assetsIds = m_engineContext._AssetManager.GetAssets(type);
-            for (Core::AssetID id : assetsIds) {
+void Inspector::RenderFileInput(const char* label, Core::AssetID& asset,
+                                Core::AssetType type) {
+    auto p_asset = m_engineContext._AssetManager.TryGetAsset(asset);
 
-                auto p_currentAsset = m_engineContext._AssetManager.TryGetAsset(id);
-                std::filesystem::path path(p_currentAsset->GetAbsolutePath());
-
-                if (ImGui::MenuItem(path.filename().string().c_str())) {
-                    asset = id;
-                    ImGui::CloseCurrentPopup();
-                }
-            }
-
-            ImGui::EndPopup();
-        }
+    if (p_asset) {
+        std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
+        ImGui::Text("%s", scriptPath.filename().string().c_str());
+    } else {
+        ImGui::TextDisabled("No file selected");
     }
-    
-    Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Inspector", ctx, ectx) {
-        // TODO: add undo and redo:
-        
-        Registry.Add<Core::ECS::Components::Name>([](Core::ECS::Components::Name& name) {
-            if (ImGui::InputText("##Name", &name.Value)) {}
+
+    if (ImGui::Button("Select Asset")) {
+        ImGui::OpenPopup("AssetSelection");
+    }
+
+    if (ImGui::BeginPopup("AssetSelection")) {
+        const auto& assetsIds = m_engineContext._AssetManager.GetAssets(type);
+        for (Core::AssetID id : assetsIds) {
+            auto p_currentAsset = m_engineContext._AssetManager.TryGetAsset(id);
+            std::filesystem::path path(p_currentAsset->GetAbsolutePath());
+
+            if (ImGui::MenuItem(path.filename().string().c_str())) {
+                asset = id;
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
+    : EditorPanel("Inspector", ctx, ectx) {
+    // TODO: add undo and redo:
+
+    Registry.Add<Core::ECS::Components::Name>(
+        [](Core::ECS::Components::Name& name) {
+            if (ImGui::InputText("##Name", &name.Value)) {
+            }
         });
 
-        Registry.Add<Core::ECS::Components::LuaScript>([&](Core::ECS::Components::LuaScript& script) {
+    Registry.Add<Core::ECS::Components::LuaScript>(
+        [&](Core::ECS::Components::LuaScript& script) {
             ImGui::TextDisabled("Lua Script");
             ImGui::SameLine();
             if (ImGui::Button("Reload")) {
-                script.Compile(m_engineContext.GetLuaState(), m_engineContext._AssetManager);
+                script.Compile(m_engineContext.GetLuaState(),
+                               m_engineContext._AssetManager);
             }
 
             Core::AssetID s = script.GetScriptAssetID();
-			RenderFileInput("Script Asset", s, Core::AssetType::LUA_SCRIPT);
+            RenderFileInput("Script Asset", s, Core::AssetType::LUA_SCRIPT);
             script.SetScriptAssetID(s);
         });
 
-        Registry.Add<Core::ECS::Components::Transform>([](Core::ECS::Components::Transform& transform) {
+    Registry.Add<Core::ECS::Components::Transform>(
+        [](Core::ECS::Components::Transform& transform) {
             ImGui::InputFloat3("Position", &transform.Position[0]);
             ImGui::InputFloat3("Rotation", &transform.Rotation[0]);
             ImGui::InputFloat3("Scale", &transform.Scale[0]);
         });
 
-        Registry.Add<Core::ECS::Components::SpriteRenderer>([&](Core::ECS::Components::SpriteRenderer& sr) {
+    Registry.Add<Core::ECS::Components::SpriteRenderer>(
+        [&](Core::ECS::Components::SpriteRenderer& sr) {
             if (ImGui::BeginTable("SpriteRenderer", 2)) {
                 ImGui::TableNextRow();
                 ImGui::TableSetColumnIndex(0);
@@ -107,13 +113,15 @@ namespace PotatoEngine::Editor {
             }
         });
 
-        Registry.Add<Core::ECS::Components::Parent>([](Core::ECS::Components::Parent& parent) {
+    Registry.Add<Core::ECS::Components::Parent>(
+        [](Core::ECS::Components::Parent& parent) {
             ImGui::TextDisabled("Parent Entity");
             ImGui::SameLine();
             ImGui::Text("%llu", static_cast<long long unsigned>(parent.Value));
         });
 
-        Registry.Add<Core::ECS::Components::Children>([](Core::ECS::Components::Children& children) {
+    Registry.Add<Core::ECS::Components::Children>(
+        [](Core::ECS::Components::Children& children) {
             ImGui::TextDisabled("Children");
 
             if (children.Value.empty()) {
@@ -124,43 +132,40 @@ namespace PotatoEngine::Editor {
             ImGui::Indent();
 
             for (auto child : children.Value) {
-                ImGui::BulletText(
-                    "%llu",
-                    static_cast<long long unsigned>(child));
+                ImGui::BulletText("%llu",
+                                  static_cast<long long unsigned>(child));
             }
 
             ImGui::Unindent();
         });
 
-        Registry.Add<Core::ECS::Components::Camera>([](Core::ECS::Components::Camera& camera) {
+    Registry.Add<Core::ECS::Components::Camera>(
+        [](Core::ECS::Components::Camera& camera) {
             ImGui::ColorEdit3("Clear Color", &camera.ClearColor[0]);
         });
+}
+
+void Inspector::OnBegin() {}
+
+void Inspector::OnRender() {
+    if (!m_editorContext.IsEntitySelected) {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);
+        ImGui::TextDisabled("No entity selected");
+        return;
     }
 
-    void Inspector::OnBegin() {
-        
-    }
-    
-    void Inspector::OnRender() {
-        if (!m_editorContext.IsEntitySelected) {
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);
-            ImGui::TextDisabled("No entity selected");
-            return;
-        }
-    
-        EntityID entity = m_editorContext.SelectedEntity;
-        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
-    
-        ImGui::TextColored(
-            ImVec4(0.35f, 0.75f, 1.0f, 1.0f),
-            " Entity"
-        );
-    
-        m_engineContext.Registry.ForEachComponent(entity, [&](Component* component) {
+    EntityID entity = m_editorContext.SelectedEntity;
+    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+
+    ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Entity");
+
+    m_engineContext.Registry.ForEachComponent(
+        entity, [&](Component* component) {
             ImGui::PushID(component);
-            
+
             bool visible = true;
-            if (ImGui::CollapsingHeader(component->Name.c_str(), &visible, ImGuiTreeNodeFlags_DefaultOpen)) {
+            if (ImGui::CollapsingHeader(component->Name.c_str(), &visible,
+                                        ImGuiTreeNodeFlags_DefaultOpen)) {
                 ImGui::Indent(8.0f);
 
                 Registry.Render(component);
@@ -170,17 +175,18 @@ namespace PotatoEngine::Editor {
             }
 
             if (!visible) {
-				ImGui::OpenPopup("RemoveComponentPopup");
+                ImGui::OpenPopup("RemoveComponentPopup");
             }
 
             if (ImGui::BeginPopupModal("RemoveComponentPopup", nullptr, 0)) {
                 ImGui::SeparatorText("Do you want to remove this component?");
                 if (ImGui::Button("Yes")) {
-                    m_engineContext.Registry.RemoveComponent(entity, typeid(*component));
+                    m_engineContext.Registry.RemoveComponent(
+                        entity, typeid(*component));
                 }
 
                 ImGui::SameLine();
-                
+
                 if (ImGui::Button("No")) {
                     ImGui::CloseCurrentPopup();
                 }
@@ -191,38 +197,41 @@ namespace PotatoEngine::Editor {
 
             ImGui::PopID();
         });
-    
-        ImGui::Spacing();
-    
-        if (ImGui::Button("+ Add Component")) {
-            ImGui::OpenPopup("AddComponentPopup");
-        }
 
-        if (ImGui::BeginPopup("AddComponentPopup")) {
-            const auto& components = m_engineContext.Registry.GetComponentNames();
-        
-            for (const auto& name : components) {
-                if (ImGui::MenuItem(name.c_str())) {
-                    m_engineContext.Debug.Log(std::format("Added component \"{}\" to entity with ID {}", name, m_editorContext.SelectedEntity));
-                    
-                    // FIXME: if the camera is destroyed and then added again, the main camera will be pointing to a null reference
-                    /*std::unique_ptr<Component> newComponent = Registry.AddComponent(name);
-					m_engineContext.Registry.AddComponent(entity, std::move(newComponent));*/
-                    m_engineContext.Registry.AddComponentByName(entity, name);
+    ImGui::Spacing();
 
-                    ImGui::CloseCurrentPopup();
-                }
+    if (ImGui::Button("+ Add Component")) {
+        ImGui::OpenPopup("AddComponentPopup");
+    }
+
+    if (ImGui::BeginPopup("AddComponentPopup")) {
+        const auto& components = m_engineContext.Registry.GetComponentNames();
+
+        for (const auto& name : components) {
+            if (ImGui::MenuItem(name.c_str())) {
+                m_engineContext.Debug.Log(
+                    std::format("Added component \"{}\" to entity with ID {}",
+                                name, m_editorContext.SelectedEntity));
+
+                // FIXME: if the camera is destroyed and then added again, the
+                // main camera will be pointing to a null reference
+                /*std::unique_ptr<Component> newComponent =
+                   Registry.AddComponent(name);
+                                    m_engineContext.Registry.AddComponent(entity,
+                   std::move(newComponent));*/
+                m_engineContext.Registry.AddComponentByName(entity, name);
+
+                ImGui::CloseCurrentPopup();
             }
-        
-            ImGui::EndPopup();
         }
-    
-        ImGui::Spacing();
-        ImGui::PopFont();
+
+        ImGui::EndPopup();
     }
-    
-    void Inspector::OnEnd() {
-    
-    }
-    
+
+    ImGui::Spacing();
+    ImGui::PopFont();
 }
+
+void Inspector::OnEnd() {}
+
+}  // namespace PotatoEngine::Editor

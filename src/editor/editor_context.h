@@ -1,33 +1,26 @@
-#ifndef POTATO_EDITOR_CONTEXT_H
-#define POTATO_EDITOR_CONTEXT_H
+#pragma once
 
-#include <core/logging/debug.h>
-
-#include <core/ecs/entity_id.h>
 #include <core/assets_manager/assets_manager.h>
+#include <core/ecs/entity_id.h>
+#include <core/logging/debug.h>
 
 #include "commands/command_manager.h"
 
 namespace PotatoEngine::Editor {
 
-	class EditorContext {
+class EditorContext {
+private:
+public:
+    EditorContext();
+    ~EditorContext();
 
-	private:
+public:
+    Core::ECS::EntityID SelectedEntity;
+    bool IsEntitySelected = false;
 
+    CommandManager CManager;
 
-	public:
-		EditorContext();
-		~EditorContext();
+public:
+};
+}  // namespace PotatoEngine::Editor
 
-	public:
-		Core::ECS::EntityID SelectedEntity;
-		bool IsEntitySelected = false;
-
-		CommandManager CManager;
-
-	public:
-	
-	};
-}
-
-#endif // POTATO_EDITOR_CONTEXT_H

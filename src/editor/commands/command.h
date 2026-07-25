@@ -4,15 +4,14 @@
 
 namespace PotatoEngine::Editor {
 
-	class Command {
+class Command {
+public:
+    std::function<void()> Execute;
+    std::function<void()> Undo;
 
-	public:
-		std::function<void()> Execute;
-		std::function<void()> Undo;
-
-	public:
-		Command() = default;
-		Command(auto execute, auto undo) : Execute(execute), Undo(undo) {}
-		~Command() = default;
-	};
-}
+public:
+    Command() = default;
+    Command(auto execute, auto undo) : Execute(execute), Undo(undo) {}
+    ~Command() = default;
+};
+}  // namespace PotatoEngine::Editor

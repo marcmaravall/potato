@@ -1,23 +1,22 @@
 #pragma once
 
-
-#include <imgui.h>
 #include <core/engine_context.h>
+#include <imgui.h>
 
-#include "serialize/serializer.hpp"
 #include "panel.h"
+#include "serialize/serializer.hpp"
 
 namespace PotatoEngine::Editor {
-	class ProjectWindow : public EditorPanel {
-	private:
-		
-	public:
-		ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx) : EditorPanel("Project", ctx, ectx) {}
-		~ProjectWindow() = default;
-	
-	public:
-		void OnBegin() override;
-		void OnRender() override;
-		void OnEnd() override;
-	};
+class ProjectWindow : public EditorPanel {
+private:
+public:
+    ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
+        : EditorPanel("Project", ctx, ectx) {}
+    ~ProjectWindow() = default;
+
+public:
+    void OnBegin() override;
+    void OnRender() override;
+    void OnEnd() override;
 };
+};  // namespace PotatoEngine::Editor

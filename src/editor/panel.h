@@ -1,45 +1,45 @@
-#ifndef POTATO_EDITOR_PANEL_H
-#define POTATO_EDITOR_PANEL_H
-
-#include "editor_context.h"
+#pragma once
 
 #include <core/engine_context.h>
+#include <imgui.h>
 
 #include <memory>
 #include <string>
-#include <imgui.h>
+
+#include "editor_context.h"
 
 namespace PotatoEngine::Editor {
 
-    class EditorPanel {
+class EditorPanel {
+protected:
+    virtual void OnRender() = 0;
+    virtual void OnBegin() {}
+    virtual void OnEnd() {}
 
-    protected:
-        virtual void OnRender() = 0;
-        virtual void OnBegin() {}
-        virtual void OnEnd() {}
+protected:
+    std::string m_title;
+    bool m_isOpen;
 
-    protected:
-        std::string m_title;
-        bool m_isOpen;
+    Core::EngineContext& m_engineContext;
+    EditorContext& m_editorContext;
 
-        Core::EngineContext& m_engineContext;
-        EditorContext& m_editorContext;
-        
-        ImGuiWindowFlags m_flags = 0;
+    ImGuiWindowFlags m_flags = 0;
 
-    public:
-        EditorPanel(const char* title, Core::EngineContext& ec, EditorContext& editorContext, bool defaultOpen = true)
-            : m_title(title), m_isOpen(defaultOpen), m_engineContext(ec), m_editorContext(editorContext) {
-        }
+public:
+    EditorPanel(const char* title, Core::EngineContext& ec,
+                EditorContext& editorContext, bool defaultOpen = true)
+        : m_title(title),
+          m_isOpen(defaultOpen),
+          m_engineContext(ec),
+          m_editorContext(editorContext) {}
 
-        virtual ~EditorPanel() = default;
+    virtual ~EditorPanel() = default;
 
-        void Render();
+    void Render();
 
-        void Toggle() { m_isOpen = !m_isOpen; }
-        bool IsOpen() const { return m_isOpen; }
-        const std::string& GetTitle() const { return m_title; }
-    };
-}
+    void Toggle() { m_isOpen = !m_isOpen; }
+    bool IsOpen() const { return m_isOpen; }
+    const std::string& GetTitle() const { return m_title; }
+};
+}  // namespace PotatoEngine::Editor
 
-#endif // POTATO_EDITOR_PANEL_H

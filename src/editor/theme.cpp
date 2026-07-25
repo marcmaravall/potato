@@ -11,23 +11,23 @@ void Theme::SetCapMotchaTheme() {
 
     // Catppuccin Mocha Palette
     // --------------------------------------------------------
-    const ImVec4 base = ImVec4(0.117f, 0.117f, 0.172f, 1.0f); // #1e1e2e
-    const ImVec4 mantle = ImVec4(0.109f, 0.109f, 0.156f, 1.0f); // #181825
-    const ImVec4 surface0 = ImVec4(0.200f, 0.207f, 0.286f, 1.0f); // #313244
-    const ImVec4 surface1 = ImVec4(0.247f, 0.254f, 0.337f, 1.0f); // #3f4056
-    const ImVec4 surface2 = ImVec4(0.290f, 0.301f, 0.388f, 1.0f); // #4a4d63
-    const ImVec4 overlay0 = ImVec4(0.396f, 0.403f, 0.486f, 1.0f); // #65677c
-    const ImVec4 overlay2 = ImVec4(0.576f, 0.584f, 0.654f, 1.0f); // #9399b2
-    const ImVec4 text = ImVec4(0.803f, 0.815f, 0.878f, 1.0f); // #cdd6f4
-    const ImVec4 subtext0 = ImVec4(0.639f, 0.658f, 0.764f, 1.0f); // #a3a8c3
-    const ImVec4 mauve = ImVec4(0.796f, 0.698f, 0.972f, 1.0f); // #cba6f7
-    const ImVec4 peach = ImVec4(0.980f, 0.709f, 0.572f, 1.0f); // #fab387
-    const ImVec4 yellow = ImVec4(0.980f, 0.913f, 0.596f, 1.0f); // #f9e2af
-    const ImVec4 green = ImVec4(0.650f, 0.890f, 0.631f, 1.0f); // #a6e3a1
-    const ImVec4 teal = ImVec4(0.580f, 0.886f, 0.819f, 1.0f); // #94e2d5
-    const ImVec4 sapphire = ImVec4(0.458f, 0.784f, 0.878f, 1.0f); // #74c7ec
-    const ImVec4 blue = ImVec4(0.533f, 0.698f, 0.976f, 1.0f); // #89b4fa
-    const ImVec4 lavender = ImVec4(0.709f, 0.764f, 0.980f, 1.0f); // #b4befe
+    const ImVec4 base = ImVec4(0.117f, 0.117f, 0.172f, 1.0f);      // #1e1e2e
+    const ImVec4 mantle = ImVec4(0.109f, 0.109f, 0.156f, 1.0f);    // #181825
+    const ImVec4 surface0 = ImVec4(0.200f, 0.207f, 0.286f, 1.0f);  // #313244
+    const ImVec4 surface1 = ImVec4(0.247f, 0.254f, 0.337f, 1.0f);  // #3f4056
+    const ImVec4 surface2 = ImVec4(0.290f, 0.301f, 0.388f, 1.0f);  // #4a4d63
+    const ImVec4 overlay0 = ImVec4(0.396f, 0.403f, 0.486f, 1.0f);  // #65677c
+    const ImVec4 overlay2 = ImVec4(0.576f, 0.584f, 0.654f, 1.0f);  // #9399b2
+    const ImVec4 text = ImVec4(0.803f, 0.815f, 0.878f, 1.0f);      // #cdd6f4
+    const ImVec4 subtext0 = ImVec4(0.639f, 0.658f, 0.764f, 1.0f);  // #a3a8c3
+    const ImVec4 mauve = ImVec4(0.796f, 0.698f, 0.972f, 1.0f);     // #cba6f7
+    const ImVec4 peach = ImVec4(0.980f, 0.709f, 0.572f, 1.0f);     // #fab387
+    const ImVec4 yellow = ImVec4(0.980f, 0.913f, 0.596f, 1.0f);    // #f9e2af
+    const ImVec4 green = ImVec4(0.650f, 0.890f, 0.631f, 1.0f);     // #a6e3a1
+    const ImVec4 teal = ImVec4(0.580f, 0.886f, 0.819f, 1.0f);      // #94e2d5
+    const ImVec4 sapphire = ImVec4(0.458f, 0.784f, 0.878f, 1.0f);  // #74c7ec
+    const ImVec4 blue = ImVec4(0.533f, 0.698f, 0.976f, 1.0f);      // #89b4fa
+    const ImVec4 lavender = ImVec4(0.709f, 0.764f, 0.980f, 1.0f);  // #b4befe
 
     // Main window and backgrounds
     colors[ImGuiCol_WindowBg] = base;
@@ -112,10 +112,6 @@ void Theme::SetCapMotchaTheme() {
     style.TabBorderSize = 0.0f;
 }
 
-void Theme::SetDarkTheme() {
-    ImGui::StyleColorsDark();
-}
+void Theme::SetDarkTheme() { ImGui::StyleColorsDark(); }
 
-void Theme::SetLightTheme() {
-    ImGui::StyleColorsLight();
-}
+void Theme::SetLightTheme() { ImGui::StyleColorsLight(); }
