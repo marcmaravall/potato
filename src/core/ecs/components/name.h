@@ -1,19 +1,21 @@
 #pragma once
 
-#include <string>
 #include <ecs/component.h>
+
+#include <string>
 
 namespace PotatoEngine::Core::ECS::Components {
 
-	class Name : public Component {
-	public:
-		std::string Value = "";
+class Name : public Component {
+public:
+    std::string Value = "";
 
-	public:
-		Name() : Component("Name") { }
-		Name(std::string str) : Component("Name"), Value(std::move(str)) {}
-		~Name() override = default;
+public:
+    Name() : Component("Name") {}
+    Name(std::string str) : Component("Name"), Value(std::move(str)) {}
+    ~Name() override = default;
 
-		void nothing() override {}
-	};
-}
+    static constexpr ComponentType StaticType = ComponentType::NAME;
+    ComponentType Type() const override { return StaticType; }
+};
+}  // namespace PotatoEngine::Core::ECS::Components

@@ -1,21 +1,23 @@
 #ifndef POTATO_MAIN_CAMERA_H
 #define POTATO_MAIN_CAMERA_H
 
-#include <glm/glm.hpp>
 #include <ecs/component.h>
+
+#include <glm/glm.hpp>
 
 namespace PotatoEngine::Core::ECS::Components {
 
-	class Camera : public ECS::Component {
-	public:
-		glm::vec3 ClearColor = glm::vec3(0.2f, 0.3f, 0.6f);
+class Camera : public ECS::Component {
+public:
+    glm::vec3 ClearColor = glm::vec3(0.2f, 0.3f, 0.6f);
 
-	public:
-		Camera() : Component("Camera") {}
-		~Camera() override = default;
+public:
+    Camera() : Component("Camera") {}
+    ~Camera() override = default;
 
-		void nothing() override {}
-	};
-}
+    static constexpr ComponentType StaticType = ComponentType::CAMERA;
+    ComponentType Type() const override { return StaticType; }
+};
+}  // namespace PotatoEngine::Core::ECS::Components
 
-#endif // POTATO_MAIN_CAMERA_H
+#endif  // POTATO_MAIN_CAMERA_H

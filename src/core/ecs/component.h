@@ -1,21 +1,30 @@
-#ifndef POTATO_ECS_COMPONENT_H
-#define POTATO_ECS_COMPONENT_H
+#pragma once
 
 #include <string>
 
 namespace PotatoEngine::Core::ECS {
 
-	class Component {
-	public:
-		std::string Name = "[DEFAULT_COMPONENT]";
+enum class ComponentType {
+    BOX_COLLIDER_2D,
+    CAMERA,
+    CHILDREN,
+    LUA_SCRIPT,
+    NAME,
+    PARENT,
+    SPRITE_RENDERER,
+    TRANSFORM
+};
 
-	public:
-		Component() = default;
-		Component(const std::string& name) : Name(name) {}
-		virtual ~Component() = default;
+class Component {
+public:
+    std::string Name = "[DEFAULT_COMPONENT]";
 
-		virtual void nothing() = 0;
-	};
-}
+public:
+    Component() = default;
+    Component(const std::string& name) : Name(name) {}
+    virtual ~Component() = default;
 
-#endif // POTATO_ECS_COMPONENT_H
+    [[nodiscard]]
+    virtual ComponentType Type() const = 0;
+};
+}  // namespace PotatoEngine::Core::ECS

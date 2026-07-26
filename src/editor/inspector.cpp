@@ -182,7 +182,7 @@ void Inspector::OnRender() {
                 ImGui::SeparatorText("Do you want to remove this component?");
                 if (ImGui::Button("Yes")) {
                     m_engineContext.Registry.RemoveComponent(
-                        entity, typeid(*component));
+                        entity, component->Type());
                 }
 
                 ImGui::SameLine();

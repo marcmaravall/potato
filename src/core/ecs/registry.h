@@ -133,9 +133,7 @@ namespace PotatoEngine::Core::ECS {
 			m_entities[entity]->Remove<T>();
 		}
 
-		void RemoveComponent(EntityID entity, std::type_index type) {
-			m_entities[entity]->Remove(type);
-		}
+		void RemoveComponent(EntityID entity, ComponentType type) { m_entities[entity]->Remove(type); }
 
 		template<typename T>
 		T& GetComponent(EntityID e) {
