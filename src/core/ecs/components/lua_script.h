@@ -6,6 +6,7 @@
 #include <ecs/component.h>
 #include <meb.h>
 
+#include <nlohmann/json.hpp>
 #include <sol/sol.hpp>
 #include <string>
 
@@ -33,5 +34,7 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::LUA_SCRIPT;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(LuaScript, m_scriptAssetID)
 };
 }  // namespace PotatoEngine::Core::ECS::Components

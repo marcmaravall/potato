@@ -1,5 +1,6 @@
 #pragma once
 
+#include <assets_manager/assets_manager.h>
 #include <meb.h>
 
 #include <filesystem>
@@ -8,7 +9,10 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "assets_manager/asset.h"
+#include "ecs/entity_id.h"
 #include "nlohmann/detail/macro_scope.hpp"
+#include "nlohmann/json_fwd.hpp"
 
 namespace PotatoEngine::Editor {
 
@@ -26,11 +30,34 @@ public:
                                    EngineVersion)
 };
 
-class SceneMeta {
-public:
-    std::string Name;
+// TODO: put all *Meta structs in a better place
+struct ComponentMeta {
+    std::string Type;
+    nlohmann::json Value;
 
-    SceneMeta(const std::string& name) : Name(name) {}
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(ComponentMeta, Type, Value)
+};
+
+struct EntityMeta {
+    Core::ECS::EntityID ID;
+    std::vector<ComponentMeta> Components;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityMeta, ID, Components)
+};
+
+struct SceneMeta {
+    std::string Name;
+    std::vector<EntityMeta> Entities;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SceneMeta, Name, Entities)
+};
+
+struct AssetMeta {
+    Core::AssetID ID;
+    std::string RelPath;  // assets/RelPath
+    std::string Type;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetMeta, ID, RelPath, Type)
 };
 
 class Project {
@@ -38,6 +65,7 @@ private:
     fs::path m_projectPath;
     ProjectSettings m_projectSettings;
     std::vector<SceneMeta> m_scenes;
+    std::vector<AssetMeta> m_assets;
 
 public:
     Project() = default;

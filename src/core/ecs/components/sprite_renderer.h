@@ -1,5 +1,4 @@
-#ifndef POTATO_COMPONENTS_SPRITE_RENDERER_H
-#define POTATO_COMPONENTS_SPRITE_RENDERER_H
+#pragma once
 
 #include <assets_manager/asset.h>
 #include <assets_manager/assets/texture_asset.h>
@@ -9,6 +8,9 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <nlohmann/json.hpp>
+
+#include "nlohmann/detail/macro_scope.hpp"
 
 namespace PotatoEngine::Core::ECS::Components {
 class SpriteRenderer : public ECS::Component {
@@ -35,7 +37,8 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::SPRITE_RENDERER;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SpriteRenderer, m_textureAsset, Color, Pivot,
+                                   Layer, FlipX, FlipY)
 };
 }  // namespace PotatoEngine::Core::ECS::Components
-
-#endif  // POTATO_COMPONENTS_SPRITE_RENDERER_H

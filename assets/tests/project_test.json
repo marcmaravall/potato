@@ -6,10 +6,25 @@
     },
 
     "Scenes": [
-        "Scene1",
-        "Scene2",
-        "Scene3",
-        "Scene4",
-        "Scene5"
+        {
+            "Name" : "Scene1",
+            "Entities" : []
+        },
+        {
+            "Name" : "Scene2",
+            "Entities" : []
+        },
+        {
+            "Name" : "Scene3",
+            "Entities" : []  
+        }
+    ],
+
+    "Assets" : [
+        {
+            "ID" : 0,
+            "RelPath" : "tests/script.lua",
+            "Type" : "LUA_SCRIPT"
+        }
     ]
 }

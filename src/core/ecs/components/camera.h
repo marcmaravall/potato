@@ -1,9 +1,9 @@
-#ifndef POTATO_MAIN_CAMERA_H
-#define POTATO_MAIN_CAMERA_H
+#pragma once
 
 #include <ecs/component.h>
 
 #include <glm/glm.hpp>
+#include <nlohmann/json.hpp>
 
 namespace PotatoEngine::Core::ECS::Components {
 
@@ -17,7 +17,7 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::CAMERA;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Camera, ClearColor)
 };
 }  // namespace PotatoEngine::Core::ECS::Components
-
-#endif  // POTATO_MAIN_CAMERA_H

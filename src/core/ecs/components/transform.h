@@ -4,6 +4,9 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <nlohmann/json.hpp>
+
+#include "nlohmann/detail/macro_scope.hpp"
 
 namespace PotatoEngine::Core::ECS::Components {
 class Transform : public ECS::Component {
@@ -23,5 +26,7 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::TRANSFORM;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Transform, Position, Rotation, Scale)
 };
 }  // namespace PotatoEngine::Core::ECS::Components

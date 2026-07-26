@@ -3,6 +3,10 @@
 #include <ecs/component.h>
 #include <ecs/entity_id.h>
 
+#include <nlohmann/json.hpp>
+
+#include "nlohmann/detail/macro_scope.hpp"
+
 namespace PotatoEngine::Core::ECS::Components {
 
 class Parent : public Component {
@@ -16,5 +20,7 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::PARENT;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Parent, Value)
 };
 }  // namespace PotatoEngine::Core::ECS::Components

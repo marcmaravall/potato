@@ -4,7 +4,10 @@
 #include <ecs/entity_id.h>
 
 #include <algorithm>
+#include <nlohmann/json.hpp>
 #include <vector>
+
+#include "nlohmann/detail/macro_scope.hpp"
 
 namespace PotatoEngine::Core::ECS::Components {
 
@@ -25,5 +28,7 @@ public:
 
     static constexpr ComponentType StaticType = ComponentType::CHILDREN;
     ComponentType Type() const override { return StaticType; }
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Children, Value)
 };
 }  // namespace PotatoEngine::Core::ECS::Components

@@ -1,6 +1,9 @@
 #include "project.hpp"
+
 #include <filesystem>
 #include <fstream>
+
+#include "assets_manager/asset.h"
 
 namespace PotatoEngine::Editor {
 
@@ -25,15 +28,24 @@ bool Project::LoadFromFile(const std::string &path) {
     file.close();
 
     m_projectSettings = parse["ProjectSettings"];
-    
-    MEB_LOG_INFOF("Loaded project %s\nProject Version: %s\nEngine Version: %s", 
-        m_projectSettings.ProjectName.c_str(),
-        m_projectSettings.ProjectVersion.c_str(),
-        m_projectSettings.EngineVersion.c_str());
-    
-    std::vector<std::string> scenes = parse["Scenes"];
-    for (auto& scene : scenes) {
-        MEB_LOG_INFO(scene.c_str());
+
+    MEB_LOG_INFOF("Loaded project %s\nProject Version: %s\nEngine Version: %s",
+                  m_projectSettings.ProjectName.c_str(),
+                  m_projectSettings.ProjectVersion.c_str(),
+                  m_projectSettings.EngineVersion.c_str());
+
+    m_scenes = parse["Scenes"];
+
+    MEB_LOG_INFO("SCENES");
+    for (auto &scene : m_scenes) {
+        MEB_LOG_INFO(scene.Name.c_str());
+    }
+
+    m_assets = parse["Assets"];
+    MEB_LOG_INFO("ASSETS:");
+    for (auto &asset : m_assets) {
+        MEB_LOG_INFOF("Asset with relative path '%s' with id: %lld",
+                      asset.RelPath.c_str(), asset.ID);
     }
 
     return true;
