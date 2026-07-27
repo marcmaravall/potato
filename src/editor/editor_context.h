@@ -26,5 +26,7 @@ public:
     // This should be called when loading CurrentProject to change engine/editor
     // contexts
     void LoadFromProject(Core::EngineContext& engineContext);
+
+    void SaveFromProject(const Core::EngineContext& engineContext);
 };
 }  // namespace PotatoEngine::Editor

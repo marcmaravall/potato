@@ -4,7 +4,21 @@
 
 #include <memory>
 
+#include "ecs/entity_id.h"
+
 namespace PotatoEngine::Core::ECS {
+
+void Registry::Clear() {
+    m_entities.clear();
+    m_currentID = 0;
+    while (!m_emptyQueue.empty()) m_emptyQueue.pop();
+}
+
+std::vector<std::pair<EntityID, Entity*>> Registry::GetEntities() {
+    std::vector<std::pair<EntityID, Entity*>> vec;
+    for (auto& [id, ptr] : m_entities) vec.emplace_back(id, ptr.get());
+    return vec;
+}
 
 EntityID Registry::CreateEntityWithID(EntityID id) {
     m_entities.emplace(id, std::make_unique<Entity>());
@@ -31,7 +45,7 @@ void Registry::RemoveEntity(EntityID e) {
     }
 
     m_entities.erase(it);
-    m_emptyStack.push(e);
+    m_emptyQueue.push(e);
 }
 
 // This only clears the entities hashmap, the empty stack is not modified
@@ -39,11 +53,12 @@ void Registry::RemoveAllEntities() { m_entities.clear(); }
 
 EntityID Registry::CreateEntity() {
     EntityID id;
-    if (m_emptyStack.empty()) {
+    if (m_emptyQueue.empty()) {
         id = m_currentID++;
+        MEB_LOG_INFOF("Create entity with ID: %ld", id);
     } else {
-        id = m_emptyStack.front();
-        m_emptyStack.pop();
+        id = m_emptyQueue.front();
+        m_emptyQueue.pop();
     }
 
     m_entities.emplace(id, std::make_unique<Entity>());

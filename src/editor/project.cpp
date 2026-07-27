@@ -4,6 +4,8 @@
 #include <fstream>
 
 #include "assets_manager/asset.h"
+#include "ecs/entity_id.h"
+#include "engine_context.h"
 
 namespace PotatoEngine::Editor {
 
@@ -35,6 +37,8 @@ bool Project::LoadFromFile(const std::string &path) {
                   _ProjectSettings.EngineVersion.c_str());
 
     Scenes = parse["Scenes"];
+    _ECS_Meta = parse["ECS_Meta"];
+    MEB_LOG_INFOF("ECS CurrentID: %ld", _ECS_Meta.CurrentID);
 
     MEB_LOG_INFO("SCENES");
     for (auto &scene : Scenes) {
@@ -51,14 +55,55 @@ bool Project::LoadFromFile(const std::string &path) {
     return true;
 }
 
-bool Project::SaveToFile(const std::string &path) {
+bool Project::SaveToFile(const std::string &path, Core::EngineContext &ctx) {
     json save;
+
     save.emplace("ProjectSettings", _ProjectSettings);
-    save.emplace("Scenes", Scenes);
     save.emplace("Assets", Assets);
 
-    std::ofstream stream(path.c_str());
+    ECS_Meta ecs;
+    ecs.CurrentID = ctx.Registry.GetCurrentID();
+
+    std::queue q = ctx.Registry.GetEmptyQueue();
+    ecs.EmptyQueue.clear();
+    while (!q.empty()) {
+        ecs.EmptyQueue.push_back(q.front());
+        q.pop();
+    }
+
+    save.emplace("ECS_Meta", ecs);
+
+    json scenes = json::array();
+
+    json scene;
+    scene["Name"] = "Scene1";
+    scene["Entities"] = json::array();
+
+    auto entities = ctx.Registry.GetEntities();
+
+    for (std::size_t i = 0; i < entities.size(); i++) {
+        EntityMeta entity;
+        entity.ID = entities[i].first;
+
+        auto components = entities[i].second->GetComponents();
+
+        for (auto *component : components) {
+            entity.Components.push_back(Serializer::ComponentToMeta(component));
+        }
+
+        scene["Entities"].push_back(entity);
+    }
+
+    scenes.push_back(scene);
+
+    save["Scenes"] = scenes;
+
+    std::ofstream stream(path);
+
+    if (!stream.is_open()) return false;
+
     stream << save.dump(4);
+
     return true;
 }
 

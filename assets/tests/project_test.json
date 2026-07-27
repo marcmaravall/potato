@@ -6,6 +6,12 @@
             "Type": "LUA_SCRIPT"
         }
     ],
+    "ECS_Meta": {
+        "CurrentID": 4,
+        "EmptyQueue": [
+            0
+        ]
+    },
     "ProjectSettings": {
         "EngineVersion": "0.0.1",
         "ProjectName": "test_project",
@@ -15,26 +21,118 @@
         {
             "Entities": [
                 {
-                    "ID":0,
                     "Components": [
                         {
-                            "Type": "Name", 
-                            "Value":{
-                                "Value":"Hola"
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "New entity"
                             }
                         }
-                    ]
+                    ],
+                    "ID": 3
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "manolo"
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        }
+                    ],
+                    "ID": 1
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "New entity"
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        }
+                    ],
+                    "ID": 2
                 }
             ],
             "Name": "Scene1"
-        },
-        {
-            "Entities": [],
-            "Name": "Scene2"
-        },
-        {
-            "Entities": [],
-            "Name": "Scene3"
         }
     ]
 }

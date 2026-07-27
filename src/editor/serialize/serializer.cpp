@@ -53,6 +53,40 @@ void Serializer::MetaToEntity(const EntityMeta &meta, Entity &out) {
     }
 }
 
+// TODO: do in a  better way
+ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
+    ComponentMeta res;
+
+    if (auto c = dynamic_cast<Name *>(component)) {
+        res.Type = "Name";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<Camera *>(component)) {
+        res.Type = "Camera";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<Children *>(component)) {
+        res.Type = "Children";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<LuaScript *>(component)) {
+        res.Type = "LuaScript";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<Parent *>(component)) {
+        res.Type = "Parent";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<SpriteRenderer *>(component)) {
+        res.Type = "SpriteRenderer";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<Transform *>(component)) {
+        res.Type = "Transform";
+        res.Value = *c;
+    } else {
+        res.Type = "NULL";
+        res.Value = nullptr;
+    }
+
+    return res;
+}
+
+// DEPRECATED:
 // Tests:
 void Serializer::LoadFromFile(Core::EngineContext &ctx,
                               const std::string &path) {
@@ -80,5 +114,6 @@ void Serializer::SaveToFile(const Core::EngineContext &ctx,
 
     MEB_LOG_INFOF("Saved context to %s", path.c_str());
 }
+// ----
 
 }  // namespace PotatoEngine::Editor

@@ -41,6 +41,7 @@ public:
     ProjectSettings _ProjectSettings;
     std::vector<SceneMeta> Scenes;
     std::vector<AssetMeta> Assets;
+    ECS_Meta _ECS_Meta;
 
 public:
     Project() = default;
@@ -50,7 +51,7 @@ public:
 
 public:
     bool LoadFromFile(const std::string &path);
-    bool SaveToFile(const std::string &path);
+    bool SaveToFile(const std::string &path, Core::EngineContext &ctx);
 };
 
 }  // namespace PotatoEngine::Editor

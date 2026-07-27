@@ -26,7 +26,7 @@ using LuaComponentBinder =
 class Registry {
 private:
     EntityID m_currentID = 0;
-    std::queue<EntityID> m_emptyStack;
+    std::queue<EntityID> m_emptyQueue;
     std::unordered_map<EntityID, std::unique_ptr<Entity>> m_entities;
 
     std::vector<std::unique_ptr<System>> m_systems;
@@ -36,6 +36,11 @@ private:
     std::unordered_map<std::string, AddComponentFn> m_addComponentFunctions;
     std::unordered_map<std::string, GetComponentFn> m_getComponentFunctions;
     std::unordered_map<std::string, LuaComponentBinder> m_bindLuaComponent;
+
+public:
+    void SetCurrentID(EntityID id) { m_currentID = id; }
+    EntityID GetCurrentID() const { return m_currentID; }
+    std::queue<EntityID>& GetEmptyQueue() { return m_emptyQueue; }
 
 public:
     // Entities
@@ -190,7 +195,7 @@ public:
     void Destroy();
 
     // Destroys all
-    void Clear() { m_entities.clear(); }
+    void Clear();
 
     // Iterators:
     template <typename... T>
@@ -248,7 +253,7 @@ public:
     ~Registry() = default;
 
 public:
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Registry, m_currentID, m_emptyStack,
-                                   m_entities)
+    // This is very expensive
+    std::vector<std::pair<EntityID, Entity*>> GetEntities();
 };
 }  // namespace PotatoEngine::Core::ECS

@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include "nlohmann/detail/macro_scope.hpp"
+
 namespace PotatoEngine::Editor {
 
 struct ComponentMeta {
@@ -29,6 +31,13 @@ struct EntityMeta {
     std::vector<ComponentMeta> Components;
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityMeta, ID, Components)
+};
+
+struct ECS_Meta {
+    Core::ECS::EntityID CurrentID;
+    std::vector<Core::ECS::EntityID> EmptyQueue;
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(ECS_Meta, CurrentID, EmptyQueue)
 };
 
 struct SceneMeta {
@@ -56,6 +65,8 @@ public:
     static void MetaToEntity(const EntityMeta& meta, Core::ECS::Entity& out);
     static std::unique_ptr<Core::ECS::Component> MetaToComponent(
         const ComponentMeta& meta);
+
+    static ComponentMeta ComponentToMeta(Core::ECS::Component* component);
 };
 
 }  // namespace PotatoEngine::Editor

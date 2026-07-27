@@ -20,6 +20,14 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
     }
 
     engineContext.Registry.Clear();
+
+    engineContext.Registry.SetCurrentID(CurrentProject->_ECS_Meta.CurrentID);
+    auto& queue = engineContext.Registry.GetEmptyQueue();
+    auto& vec = CurrentProject->_ECS_Meta.EmptyQueue;
+    for (ECS::EntityID id : vec) {
+        queue.push(id);
+    }
+
     std::size_t scene = 0;
     for (EntityMeta& eMeta : CurrentProject->Scenes[scene].Entities) {
         ECS::EntityID id = eMeta.ID;
@@ -35,5 +43,7 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
         }
     }
 }
+
+void EditorContext::SaveFromProject(const EngineContext& engineContext) {}
 
 }  // namespace PotatoEngine::Editor

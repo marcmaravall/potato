@@ -12,11 +12,12 @@ void ProjectWindow::OnRender() {
         "/assets/tests/project_test.json");
 
     if (ImGui::Button("Save test")) {
-        m_editorContext.CurrentProject->SaveToFile(path);
+        m_editorContext.CurrentProject->SaveToFile(path, m_engineContext);
     }
     ImGui::SameLine();
     if (ImGui::Button("Load From File")) {
         m_editorContext.CurrentProject->LoadFromFile(path);
+        m_editorContext.LoadFromProject(m_engineContext);
     }
 }
 
