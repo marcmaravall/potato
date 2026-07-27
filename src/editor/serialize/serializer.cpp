@@ -1,8 +1,57 @@
 #include "serializer.hpp"
 
+#include <memory>
+
+#include "ecs/components/all_components.h"
+
 namespace PotatoEngine::Editor {
 
+using namespace Core::ECS;
+using namespace Core::ECS::Components;
+
 using json = nlohmann::json;
+
+template <typename T>
+std::unique_ptr<Component> DeserializeComponent(const nlohmann::json &j) {
+    auto c = std::make_unique<T>();
+    j.get_to(*c);
+    return c;
+}
+
+std::unique_ptr<Component> Serializer::MetaToComponent(
+    const ComponentMeta &component) {
+    if (component.Type == "Name")
+        return DeserializeComponent<Name>(component.Value);
+
+    // if (component.Type == "BoxCollider2D")
+    //    return DeserializeComponent<BoxCollider2D>(component.Value);
+
+    if (component.Type == "Camera")
+        return DeserializeComponent<Camera>(component.Value);
+
+    if (component.Type == "Children")
+        return DeserializeComponent<Children>(component.Value);
+
+    if (component.Type == "LuaScript")
+        return DeserializeComponent<LuaScript>(component.Value);
+
+    if (component.Type == "Parent")
+        return DeserializeComponent<Parent>(component.Value);
+
+    if (component.Type == "SpriteRenderer")
+        return DeserializeComponent<SpriteRenderer>(component.Value);
+
+    if (component.Type == "Transform")
+        return DeserializeComponent<Transform>(component.Value);
+
+    return nullptr;
+}
+
+void Serializer::MetaToEntity(const EntityMeta &meta, Entity &out) {
+    for (auto &component : meta.Components) {
+        out.Add(std::move(MetaToComponent(component)));
+    }
+}
 
 // Tests:
 void Serializer::LoadFromFile(Core::EngineContext &ctx,

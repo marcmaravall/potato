@@ -12,8 +12,8 @@ namespace PotatoEngine::Editor {
 class EditorContext {
 private:
 public:
-    EditorContext();
-    ~EditorContext();
+    EditorContext() = default;
+    ~EditorContext() = default;
 
 public:
     Core::ECS::EntityID SelectedEntity;
@@ -23,6 +23,8 @@ public:
     std::unique_ptr<Project> CurrentProject;
 
 public:
+    // This should be called when loading CurrentProject to change engine/editor
+    // contexts
+    void LoadFromProject(Core::EngineContext& engineContext);
 };
 }  // namespace PotatoEngine::Editor
-

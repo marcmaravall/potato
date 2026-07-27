@@ -1,10 +1,39 @@
 #include "editor_context.h"
 
-using namespace PotatoEngine::Editor;
-using namespace PotatoEngine::Core::Logging;
+#include <core/engine_context.h>
 
-// EditorContext* EditorContext::s_Instance = nullptr;
+#include "ecs/entity.h"
+#include "serialize/serializer.hpp"
 
-EditorContext::EditorContext() {}
+namespace PotatoEngine::Editor {
 
-EditorContext::~EditorContext() {}
+using namespace Core;
+
+void EditorContext::LoadFromProject(EngineContext& engineContext) {
+    if (!CurrentProject) {
+        MEB_LOG_ERROR("CurrentProject is nullptr!");
+        return;
+    }
+    if (CurrentProject->Scenes.size() < 1) {
+        MEB_LOG_ERROR("CurrentProject has no scenes!");
+        return;
+    }
+
+    engineContext.Registry.Clear();
+    std::size_t scene = 0;
+    for (EntityMeta& eMeta : CurrentProject->Scenes[scene].Entities) {
+        ECS::EntityID id = eMeta.ID;
+        engineContext.Registry.CreateEntityWithID(id);
+        for (auto& component : eMeta.Components) {
+            auto c = Serializer::MetaToComponent(component);
+            if (!c) {
+                MEB_LOG_ERRORF("Component %s not found",
+                               component.Type.c_str());
+                continue;
+            }
+            engineContext.Registry.AddComponent(id, std::move(c));
+        }
+    }
+}
+
+}  // namespace PotatoEngine::Editor

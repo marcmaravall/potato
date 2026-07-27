@@ -18,7 +18,8 @@ private:
 
 public:
 public:
-    LuaScript(AssetID script = 0)
+    LuaScript() : Component("Lua Script"), m_scriptAssetID(0) {}
+    LuaScript(AssetID script)
         : Component("Lua Script"), m_scriptAssetID(script) {}
     ~LuaScript() = default;
 

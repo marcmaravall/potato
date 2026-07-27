@@ -98,7 +98,7 @@ public:
         static_assert(std::is_base_of_v<Component, T>,
                       "T must derive from Component");
 
-        auto it = m_components.find(T::Type);
+        auto it = m_components.find(T::StaticType);
 
         if (it == m_components.end()) return nullptr;
 

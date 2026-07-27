@@ -27,23 +27,23 @@ bool Project::LoadFromFile(const std::string &path) {
     file >> parse;
     file.close();
 
-    m_projectSettings = parse["ProjectSettings"];
+    _ProjectSettings = parse["ProjectSettings"];
 
     MEB_LOG_INFOF("Loaded project %s\nProject Version: %s\nEngine Version: %s",
-                  m_projectSettings.ProjectName.c_str(),
-                  m_projectSettings.ProjectVersion.c_str(),
-                  m_projectSettings.EngineVersion.c_str());
+                  _ProjectSettings.ProjectName.c_str(),
+                  _ProjectSettings.ProjectVersion.c_str(),
+                  _ProjectSettings.EngineVersion.c_str());
 
-    m_scenes = parse["Scenes"];
+    Scenes = parse["Scenes"];
 
     MEB_LOG_INFO("SCENES");
-    for (auto &scene : m_scenes) {
+    for (auto &scene : Scenes) {
         MEB_LOG_INFO(scene.Name.c_str());
     }
 
-    m_assets = parse["Assets"];
+    Assets = parse["Assets"];
     MEB_LOG_INFO("ASSETS:");
-    for (auto &asset : m_assets) {
+    for (auto &asset : Assets) {
         MEB_LOG_INFOF("Asset with relative path '%s' with id: %lld",
                       asset.RelPath.c_str(), asset.ID);
     }
@@ -51,6 +51,15 @@ bool Project::LoadFromFile(const std::string &path) {
     return true;
 }
 
-bool Project::SaveToFile(const std::string &path) { return true; }
+bool Project::SaveToFile(const std::string &path) {
+    json save;
+    save.emplace("ProjectSettings", _ProjectSettings);
+    save.emplace("Scenes", Scenes);
+    save.emplace("Assets", Assets);
+
+    std::ofstream stream(path.c_str());
+    stream << save.dump(4);
+    return true;
+}
 
 }  // namespace PotatoEngine::Editor
