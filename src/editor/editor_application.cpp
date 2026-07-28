@@ -1,5 +1,9 @@
 #include "editor_application.h"
 
+#include "assets_manager/asset.h"
+#include "imgui.h"
+#include "portable-file-dialogs.h"
+
 namespace PotatoEngine::Editor {
 using namespace PotatoEngine::Core::Rendering;
 
@@ -57,6 +61,11 @@ void EditorApplication::OnStart() {
         "/assets/tests/project_test.json");
     std::cout << path << "\n";
 
+    if (!pfd::settings::available()) {
+        MEB_LOG_ERROR("PFD is not available for current platform!");
+    }
+    pfd::settings::verbose(true);
+
     m_editorContext.CurrentProject = Project::Load(path);
     m_editorContext.LoadFromProject(m_engineContext);
 }
@@ -73,10 +82,25 @@ void EditorApplication::OnUpdate() {
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    if (ImGui::IsKeyPressed(ImGuiKey_Z) && ImGui::GetIO().KeyCtrl) {
+    auto io = ImGui::GetIO();
+
+    if (ImGui::IsKeyPressed(ImGuiKey_O) && io.KeyCtrl) {
+        auto dialog = pfd::open_file(
+            "Choose project to open", pfd::path::home(),
+            {"JSON Files", "*.json", "All Files", "*"}, pfd::opt::multiselect);
+
+        auto files = dialog.result();
+
+        if (!files.empty()) {
+            m_editorContext.CurrentProject->LoadFromFile(files[0].c_str());
+            m_editorContext.LoadFromProject(m_engineContext);
+        }
+    }
+
+    if (ImGui::IsKeyPressed(ImGuiKey_Z) && io.KeyCtrl) {
         MEB_LOG_INFO("UNDO");
         m_editorContext.CManager.Undo();  // UNDO
-    } else if (ImGui::IsKeyPressed(ImGuiKey_Y) && ImGui::GetIO().KeyCtrl) {
+    } else if (ImGui::IsKeyPressed(ImGuiKey_Y) && io.KeyCtrl) {
         MEB_LOG_INFO("REDO");
         m_editorContext.CManager.Redo();  // REDO
     }

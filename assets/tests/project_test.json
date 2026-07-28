@@ -9,7 +9,7 @@
     "ECS_Meta": {
         "CurrentID": 4,
         "EmptyQueue": [
-            0
+            3
         ]
     },
     "ProjectSettings": {
@@ -22,6 +22,16 @@
             "Entities": [
                 {
                     "Components": [
+                        {
+                            "Type": "Camera",
+                            "Value": {
+                                "ClearColor": {
+                                    "x": 0.20000000298023224,
+                                    "y": 0.30000001192092896,
+                                    "z": 0.6000000238418579
+                                }
+                            }
+                        },
                         {
                             "Type": "Transform",
                             "Value": {
@@ -51,11 +61,11 @@
                         {
                             "Type": "Name",
                             "Value": {
-                                "Value": "New entity"
+                                "Value": "Camera"
                             }
                         }
                     ],
-                    "ID": 3
+                    "ID": 0
                 },
                 {
                     "Components": [
@@ -89,6 +99,25 @@
                                     "y": 1.0,
                                     "z": 1.0
                                 }
+                            }
+                        },
+                        {
+                            "Type": "SpriteRenderer",
+                            "Value": {
+                                "Color": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "FlipX": false,
+                                "FlipY": false,
+                                "Layer": 0,
+                                "Pivot": {
+                                    "x": 0.5,
+                                    "y": 0.5
+                                },
+                                "m_textureAsset": 5
                             }
                         }
                     ],

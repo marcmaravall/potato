@@ -82,6 +82,7 @@ target_include_directories(potato PRIVATE
     "thirdparty/meb"
     "thirdparty/sol2/include"
     "thirdparty/nlohmann_json/include"
+    "thirdparty/portable-file-dialogs/"
 )
 
 target_link_libraries(potato PRIVATE
