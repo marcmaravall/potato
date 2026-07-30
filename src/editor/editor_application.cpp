@@ -84,6 +84,16 @@ void EditorApplication::OnUpdate() {
 
     auto io = ImGui::GetIO();
 
+    if (ImGui::IsKeyPressed(ImGuiKey_S) && io.KeyCtrl) {
+        auto dialog = pfd::save_file("Save project", pfd::path::home(),
+                                     {"JSON Files", "*.json", "All Files", "*"});
+        auto file = dialog.result();
+
+        if (!file.empty()) {
+            m_editorContext.CurrentProject->SaveToFile(file, m_engineContext);
+        }
+    }
+
     if (ImGui::IsKeyPressed(ImGuiKey_O) && io.KeyCtrl) {
         auto dialog = pfd::open_file(
             "Choose project to open", pfd::path::home(),
