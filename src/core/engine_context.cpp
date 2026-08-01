@@ -6,6 +6,7 @@
 #include <ecs/components/name.h>
 #include <ecs/components/transform.h>
 #include <ecs/systems/camera.h>
+#include <ecs/components/isometric_grid.hpp>
 #include <ecs/systems/example.h>
 #include <ecs/systems/sprite_renderer.h>
 
@@ -18,26 +19,11 @@ EngineContext::~EngineContext() { Debug.Log("Engine context destroyed."); }
 void EngineContext::Start() {
     RegisterComponents();
 
-    m_mainCamera = Registry.CreateEntity("Camera");
-    Registry.AddComponent<ECS::Components::Camera>(m_mainCamera);
-
-    EntityID e = Registry.CreateEntity("A");
-    Registry.AddComponent<ECS::Components::SpriteRenderer>(e, 0);
-
-    EntityID e1 = Registry.CreateEntity("Manolo");
-    Registry.AddComponent<ECS::Components::SpriteRenderer>(e1, 0);
-    Registry.GetComponent<ECS::Components::Transform>(e1).Position.x = 1;
-
-    EntityID child0 = Registry.CreateEntity("B", e);
-    EntityID child1 = Registry.CreateEntity("C", e);
-
     Registry.AddSystem<ECS::Systems::CameraSystem>(*this);
     Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
     Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
 
     _AssetManager.ScanAssets();
-
-    Registry.AddComponent<ECS::Components::LuaScript>(e1, 0);
 }
 
 void EngineContext::RegisterComponents() {
@@ -51,4 +37,17 @@ void EngineContext::RegisterComponents() {
     Registry.RegisterComponent<SpriteRenderer>();
     Registry.RegisterComponent<Transform>();
 }
+
+glm::mat4 EngineContext::GetViewProjectionMatrix() { 
+    auto* component = Registry.TryGetComponent<Components::Camera>(m_mainCamera); 
+    auto* transform =
+        Registry.TryGetComponent<Components::Transform>(m_mainCamera);
+    if (!component || !transform) return glm::mat4(1.0f);
+
+    glm::mat4 res = glm::translate(glm::mat4(1.0f), -transform->Position) *
+                    glm::scale(glm::mat4(1.0f), glm::vec3(component->Zoom)) *
+                    glm::mat4(1.0f);
+    return res;
+}
+
 }  // namespace PotatoEngine::Core

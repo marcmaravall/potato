@@ -12,7 +12,7 @@ set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(thirdparty/glfw)
 
-add_library(glad STATIC thirdparty/glad/src/glad.c)
+add_library(glad STATIC thirdparty/glad/src/glad.c "src/editor/isometric/map_editor_state.cpp")
 target_include_directories(glad PUBLIC "thirdparty/glad/include")
 
 add_subdirectory(thirdparty/glm)
@@ -28,7 +28,7 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
-)
+ )
 
 target_include_directories(imgui_lib PUBLIC
     thirdparty/imgui
@@ -46,6 +46,7 @@ target_link_libraries(sol2 INTERFACE lua_static)
 file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" 
     "src/editor/commands/*.cpp"
     "src/editor/*.cpp" 
+    "src/editor/isometric/*.cpp"
     "src/editor/serialize/*.cpp"
     "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" 
     "src/platform/*.cpp"
@@ -74,7 +75,7 @@ add_executable(potato
     src/main.cpp
     ${ENGINE_SOURCES}
     ${PLATFORM_SOURCES}
-)
+ "src/editor/isometric/map_editor_state.cpp")
 
 target_include_directories(potato PRIVATE
     "src/core"

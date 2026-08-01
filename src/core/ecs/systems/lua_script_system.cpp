@@ -168,7 +168,7 @@ namespace PotatoEngine::Core::ECS::Systems {
 			Camera()
 			>(),
 
-			"clearColor", &Camera::ClearColor
+			"clearColor", &Camera::ClearColor, "zoom", &Camera::Zoom
 		);
 
 		m_lua.new_usertype<glm::vec3>("vec3",

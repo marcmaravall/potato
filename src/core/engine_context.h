@@ -54,6 +54,8 @@ namespace PotatoEngine::Core {
 	public:
 		sol::state& GetLuaState() { return Registry.GetSystem<ECS::Systems::LuaScriptSystem>().GetLuaState(); }
 
+		glm::mat4 GetViewProjectionMatrix();
+
 		EngineContext();
 		~EngineContext();
 

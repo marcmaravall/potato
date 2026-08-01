@@ -25,7 +25,7 @@ namespace PotatoEngine::Core::Rendering {
 
         m_framebuffer = Framebuffer::Create(spec);
 
-        // m_rendererAPI->Init();
+        m_rendererAPI->Init();
 
         m_rendererAPI->SetClearColor(glm::vec4(0.2f, 0.3f, 0.6f, 1.0f));
 
@@ -74,7 +74,7 @@ namespace PotatoEngine::Core::Rendering {
             void main()
             {
                 v_TexCoord = a_TexCoord;
-                gl_Position = u_Model * vec4(a_Position, 1.0);
+                gl_Position = u_ViewProjection * u_Model * vec4(a_Position, 1.0);
             }
         )";
 
@@ -132,6 +132,8 @@ namespace PotatoEngine::Core::Rendering {
         });
 
         m_shaderProgram->Use();
+        m_shaderProgram->UniformMatrix4fv("u_ViewProjection", m_engineContext.GetViewProjectionMatrix());
+
         for (auto* command : m_srCommandBuffers) {
 
             m_shaderProgram->UniformMatrix4fv("u_Model", command->T.GetMatrix());

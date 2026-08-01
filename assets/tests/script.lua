@@ -1,9 +1,9 @@
 -- test script
 
-local entity = 2
+local entity = 0
 
+local camera = nil
 local transform = nil
-local sprite = nil
 
 local speed = 4.0
 local rotationSpeed = 90.0
@@ -13,16 +13,14 @@ function _start()
 	print("=== Test Script Started ===")
 
 	transform = registry.get_component(entity, "Transform")
-	sprite = registry.get_component(entity, "SpriteRenderer")
+	camera = registry.get_component(entity, "Camera")
 
 	if transform == nil then
 		print("Transform component not found.")
 		return
 	end
 
-	if sprite == nil then
-		print("SpriteRenderer not found.")
-	end
+	camera.zoom = 2.0
 
 	transform.position.x = 0
 	transform.position.y = 0
@@ -67,12 +65,6 @@ function _update()
 	if input.is_key(Key.X) then
 		transform.scale.x = transform.scale.x + dt
 		transform.scale.y = transform.scale.y + dt
-	end
-
-	--
-	if sprite ~= nil then
-		sprite.color.r = (math.sin(timer) + 1.0) * 0.5
-		sprite.color.g = (math.cos(timer) + 1.0) * 0.5
 	end
 
 	if timer >= 1.0 then

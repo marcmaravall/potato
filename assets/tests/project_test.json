@@ -8,9 +8,7 @@
     ],
     "ECS_Meta": {
         "CurrentID": 4,
-        "EmptyQueue": [
-            3
-        ]
+        "EmptyQueue": []
     },
     "ProjectSettings": {
         "EngineVersion": "0.0.1",
@@ -29,7 +27,8 @@
                                     "x": 0.20000000298023224,
                                     "y": 0.30000001192092896,
                                     "z": 0.6000000238418579
-                                }
+                                },
+                                "Zoom": 1.0499999523162842
                             }
                         },
                         {
@@ -78,7 +77,9 @@
                         {
                             "Type": "Children",
                             "Value": {
-                                "Value": []
+                                "Value": [
+                                    3
+                                ]
                             }
                         },
                         {
@@ -117,7 +118,7 @@
                                     "x": 0.5,
                                     "y": 0.5
                                 },
-                                "m_textureAsset": 4
+                                "m_textureAsset": 1
                             }
                         }
                     ],
@@ -159,6 +160,68 @@
                         }
                     ],
                     "ID": 2
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "New entity"
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.30000001192092896,
+                                    "y": -0.30000001192092896,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 180.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "Parent",
+                            "Value": {
+                                "Value": 1
+                            }
+                        },
+                        {
+                            "Type": "SpriteRenderer",
+                            "Value": {
+                                "Color": {
+                                    "w": 1.0,
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                },
+                                "FlipX": false,
+                                "FlipY": false,
+                                "Layer": 0,
+                                "Pivot": {
+                                    "x": 0.5,
+                                    "y": 0.5
+                                },
+                                "m_textureAsset": 1
+                            }
+                        }
+                    ],
+                    "ID": 3
                 }
             ],
             "Name": "Scene1"

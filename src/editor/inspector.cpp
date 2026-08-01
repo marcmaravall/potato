@@ -142,6 +142,7 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
     Registry.Add<Core::ECS::Components::Camera>(
         [](Core::ECS::Components::Camera& camera) {
             ImGui::ColorEdit3("Clear Color", &camera.ClearColor[0]);
+            ImGui::InputFloat("Zoom", &camera.Zoom, 0.01f, 100.0f, "%.2f");
         });
 }
 
