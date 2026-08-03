@@ -1,5 +1,4 @@
-#ifndef POTATO_TEXTURE_H
-#define POTATO_TEXTURE_H
+#pragma once
 
 #include <string>
 #include <cstdint>
@@ -8,7 +7,32 @@
 #include <ref_scope.h>
 
 namespace PotatoEngine::Core::Rendering {
-	class Texture2D {
+
+enum class TextureFilter {
+	POINT,
+	BILINEAR,
+	TRILINEAR
+};
+
+enum class TextureWrap {
+	REPEAT,
+	MIRRORED_REPEAT,
+	CLAMP_TO_EDGE,
+    CLAMP_TO_BORDER
+};
+
+class Texture2D_Settings {
+public:
+    TextureFilter Filter = TextureFilter::BILINEAR;
+    TextureWrap WrapS = TextureWrap::REPEAT;
+    TextureWrap WrapT = TextureWrap::REPEAT;
+
+public:
+    Texture2D_Settings() = default;
+    ~Texture2D_Settings() = default;
+};
+
+class Texture2D {
 	public:
 		virtual ~Texture2D() = default;
 
@@ -23,8 +47,7 @@ namespace PotatoEngine::Core::Rendering {
 
 	public:
 		static Scope<Texture2D> Create(uint32_t width, uint32_t height);
-		static Scope<Texture2D> Create(const std::string& path);
-	};
+		static Scope<Texture2D> Create(const std::string& path, const Texture2D_Settings& settings);
 };
 
-#endif // POTATO_TEXTURE_H
+}  // namespace PotatoEngine::Core::Rendering

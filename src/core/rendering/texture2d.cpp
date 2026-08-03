@@ -3,6 +3,7 @@
 #include "opengl/opengl_texture2d.h"
 
 namespace PotatoEngine::Core::Rendering {
+
 	Scope<Texture2D> Texture2D::Create(uint32_t width, uint32_t height) {
 		switch (RendererAPI::s_Backend) {
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Texture2D>(width, height);
@@ -12,9 +13,9 @@ namespace PotatoEngine::Core::Rendering {
 		return nullptr;
 	}
 
-	Scope<Texture2D> Texture2D::Create(const std::string& path) {
+	Scope<Texture2D> Texture2D::Create(const std::string& path, const Texture2D_Settings& settings = Texture2D_Settings()) {
 		switch (RendererAPI::s_Backend) {
-		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Texture2D>(path);
+		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Texture2D>(path, settings);
 		}
 
 		MEB_ASSERT(false && "Unknown RendererAPI backend!");

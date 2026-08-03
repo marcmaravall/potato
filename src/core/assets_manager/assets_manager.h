@@ -41,7 +41,7 @@ namespace PotatoEngine::Core {
 		const std::vector<AssetID> GetAssets(AssetType type);
 
 	public:
-    	NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetManager, m_root)
+    	NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetManager, m_map)
 	};
 }
 

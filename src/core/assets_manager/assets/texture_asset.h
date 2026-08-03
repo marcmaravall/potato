@@ -7,6 +7,7 @@
 #include <rendering/texture2d.h>
 
 namespace PotatoEngine::Core {
+	
 	class TextureAsset : public Asset {
 	private:
 		std::unique_ptr<Rendering::Texture2D> m_texture;

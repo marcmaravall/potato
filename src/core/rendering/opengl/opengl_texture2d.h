@@ -22,7 +22,7 @@ namespace PotatoEngine::Core::Rendering {
 		OpenGL_Texture2D() { glGenTextures(1, &m_id); }
 		OpenGL_Texture2D(uint32_t width, uint32_t height) {}
 		
-		OpenGL_Texture2D(const std::string& filepath);
+		OpenGL_Texture2D(const std::string& filepath, const Texture2D_Settings& settings = Texture2D_Settings());
 
 	public:
 

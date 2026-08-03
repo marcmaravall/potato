@@ -2,19 +2,36 @@
 
 namespace PotatoEngine::Core::Rendering {
 
-OpenGL_Texture2D::OpenGL_Texture2D(const std::string& filepath) {
+GLuint WrapToGl(const TextureWrap wrap) {
+    return wrap == TextureWrap::REPEAT ? GL_REPEAT
+         : wrap == TextureWrap::MIRRORED_REPEAT ? GL_MIRRORED_REPEAT
+         : wrap == TextureWrap::CLAMP_TO_EDGE   ? GL_CLAMP_TO_EDGE
+         : wrap == TextureWrap::CLAMP_TO_BORDER ? GL_CLAMP_TO_BORDER
+         : GL_REPEAT;
+}
+
+GLuint FilterToGl(const TextureFilter filter) {
+    return filter == TextureFilter::POINT ? GL_NEAREST
+         : filter == TextureFilter::BILINEAR ? GL_LINEAR 
+         : GL_LINEAR;
+}
+
+OpenGL_Texture2D::OpenGL_Texture2D(const std::string& filepath, const Texture2D_Settings& settings) {
     glGenTextures(1, &m_id);
     glBindTexture(GL_TEXTURE_2D, m_id);
 
-    // This should be set according to the texture's actual properties,
-    // for now we can just set it to some default values
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                    GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    GLuint textureWrapS = WrapToGl(settings.WrapS);
+    GLuint textureWrapT = WrapToGl(settings.WrapT);
 
-    unsigned char* data =
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, textureWrapS);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, textureWrapT);
+    
+    GLuint filter = FilterToGl(settings.Filter);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
+
+    unsigned char* data = 
         stbi_load(filepath.c_str(), &m_width, &m_height, &m_channels, 4);
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA,
