@@ -13,7 +13,7 @@ namespace PotatoEngine::Core::Rendering {
 		return nullptr;
 	}
 
-	Scope<Texture2D> Texture2D::Create(const std::string& path, const Texture2D_Settings& settings = Texture2D_Settings()) {
+	Scope<Texture2D> Texture2D::Create(const std::string& path, const Texture2D_Settings& settings) {
 		switch (RendererAPI::s_Backend) {
 		case RendererAPI::Backend::OpenGL: return CreateScope<OpenGL_Texture2D>(path, settings);
 		}

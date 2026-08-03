@@ -1,5 +1,4 @@
-#ifndef POTATO_ASSETS_MANAGER_H
-#define POTATO_ASSETS_MANAGER_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -8,6 +7,9 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
+
+#include <limits>
+#include <random>
 
 #include <nlohmann/json.hpp>
 
@@ -18,7 +20,6 @@ namespace PotatoEngine::Core {
 	private:
 		std::string m_root = "";
 		std::unordered_map<AssetID, std::unique_ptr<Asset>> m_map;
-		AssetID m_nextID = 0;
 
 	public:
 		AssetManager();
@@ -37,12 +38,14 @@ namespace PotatoEngine::Core {
 		static std::string Path(const std::string& str);
 
 	public:
-		// TODO: optimize to save result so then will be O(1)
-		const std::vector<AssetID> GetAssets(AssetType type);
+		std::unique_ptr<Asset> CreateAssetInstance(AssetType type, const std::filesystem::path& path);
+		AssetID GenerateRandomAssetID();
+		AssetID GetOrCreateAssetID(const std::filesystem::path& assetPath);
+		void WriteMetaFile(const std::filesystem::path& metaPath, AssetID id);
 
 	public:
-    	NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetManager, m_map)
+		// TODO: optimize to save result so then will be O(1) (returning reference)
+		const std::vector<AssetID> GetAssets(AssetType type);
 	};
-}
 
-#endif // POTATO_ASSETS_MANAGER_H
+} // namespace PotatoEngine::Core

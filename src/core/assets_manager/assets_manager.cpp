@@ -1,138 +1,211 @@
 #include "assets_manager.h"
 
+#include <fstream>
+#include <limits>
+#include <random>
+
 #include "assets/lua_script_asset.h"
 #include "assets/texture_asset.h"
 
 namespace PotatoEngine::Core {
-	Asset& AssetManager::GetAsset(AssetID id) {
-		if (m_map.contains(id)) {
-			return *m_map[id];
-		} else {
-			throw std::runtime_error("Asset with ID " + std::to_string(id) + " not found.");
-		}
-	}
 
-	Asset* AssetManager::TryGetAsset(AssetID id) {
-		if (m_map.contains(id)) {
-			return m_map[id].get();
-		} else {
-			return nullptr;
-		}
-	}
+namespace {
+constexpr const char* kMetaExtension = ".meta";
+constexpr const char* kMetaIdKey = "id";
+}  // namespace
 
-	AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
-		AssetID id = m_nextID++;
-
-		m_map.emplace(id, std::move(asset));
-
-		return id;
-	}
-
-	AssetManager::AssetManager() {
-		std::filesystem::path currentPath = std::filesystem::current_path();
-		
-		while (currentPath.has_parent_path() && currentPath.filename() != "potato") {
-			currentPath = currentPath.parent_path();
-		}
-
-		if (currentPath.filename() == "potato") {
-			m_root = currentPath.string();
-		} else {
-			assert(0 && "Could not find potato directory in path hierarchy.");
-			m_root = "";
-		}
-	}
-
-	// TODO: complete:
-	AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
-		const auto& ext = path.extension().string();
-
-		if (ext == ".lua")
-			return AssetType::LUA_SCRIPT;
-
-		if (ext == ".png" || ext == ".jpg" || ext == ".gif")
-			return AssetType::TEXTURE;
-
-		if (ext == ".glsl")
-			return AssetType::SHADER;
-
-		if (ext == ".obj" || ext == ".fbx")
-			return AssetType::MODEL;
-
-		if (ext == ".wav" || ext == ".ogg")
-			return AssetType::SOUND;
-
-		return AssetType::OTHER;
-	}
-
-	void AssetManager::ScanAssets() {
-		m_map.clear();
-
-		MEB_LOG_INFOF("Scanning Assets; Root: %s", m_root.c_str());
-
-		for (auto& entry : std::filesystem::recursive_directory_iterator(Path(m_root + "/assets"))) {
-			if (!entry.is_regular_file())
-				continue;
-
-			AssetType type = GetAssetType(entry.path());
-			std::unique_ptr<Asset> asset;
-
-			// TODO: put this in a separate function
-			switch (type)
-			{
-			case PotatoEngine::Core::AssetType::SHADER:
-				break;
-			case PotatoEngine::Core::AssetType::TEXTURE:
-				asset = std::make_unique<TextureAsset>(entry.path().string());
-				break;
-			case PotatoEngine::Core::AssetType::MODEL:
-				break;
-			case PotatoEngine::Core::AssetType::SOUND:
-				break;
-			case PotatoEngine::Core::AssetType::ANIMATION:
-				break;
-			case PotatoEngine::Core::AssetType::TEXT:
-				break;
-			case PotatoEngine::Core::AssetType::LUA_SCRIPT:
-				asset = std::make_unique<LuaScriptAsset>(entry.path().string());
-				break;
-			case PotatoEngine::Core::AssetType::OTHER:
-				break;
-			default:
-				break;
-			}
-
-			AssetID id = CreateAsset(std::move(asset));
-
-			MEB_LOG_INFOF("Create asset '%s' with id %lld", entry.path().generic_string().c_str(), id);
-		}
-	}
-
-	const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
-		std::vector<AssetID> res{};
-		for (auto& [id, assetPtr] : m_map) {
-			if (assetPtr == nullptr) {
-				continue;
-			}
-			if (assetPtr->GetType() == type) {
-				res.push_back(id);
-			}
-		}
-		return res;
-	}
-
-	std::string AssetManager::Path(const std::string& str) {
-		std::string out = str;
-#ifdef _WIN32
-		for (char& c : out) {
-			if (c == '/') c = '\\';
-		}
-#elif __linux__
-		for (char& c : out) {
-			if (c == '\\') c = '/';
-		}
-
-#endif 
-		return out;
-	}
+Asset& AssetManager::GetAsset(AssetID id) {
+    if (m_map.contains(id)) {
+        return *m_map[id];
+    } else {
+        throw std::runtime_error("Asset with ID " + std::to_string(id) +
+                                 " not found.");
+    }
 }
+
+Asset* AssetManager::TryGetAsset(AssetID id) {
+    if (m_map.contains(id)) {
+        return m_map[id].get();
+    } else {
+        return nullptr;
+    }
+}
+
+AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
+    AssetID id = GenerateRandomAssetID();
+
+    m_map.emplace(id, std::move(asset));
+
+    return id;
+}
+
+AssetManager::AssetManager() {
+    std::filesystem::path currentPath = std::filesystem::current_path();
+
+    while (currentPath.has_parent_path() && currentPath.filename() != "potato") {
+        currentPath = currentPath.parent_path();
+    }
+
+    if (currentPath.filename() == "potato") {
+        m_root = currentPath.string();
+    } else {
+        assert(0 && "Could not find potato directory in path hierarchy.");
+        m_root = "";
+    }
+}
+
+// TODO: complete:
+AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
+    const auto& ext = path.extension().string();
+
+    if (ext == ".lua") return AssetType::LUA_SCRIPT;
+
+    if (ext == ".png" || ext == ".jpg" || ext == ".gif")
+        return AssetType::TEXTURE;
+
+    if (ext == ".glsl") return AssetType::SHADER;
+
+    if (ext == ".obj" || ext == ".fbx") return AssetType::MODEL;
+
+    if (ext == ".wav" || ext == ".ogg") return AssetType::SOUND;
+
+    return AssetType::OTHER;
+}
+
+std::unique_ptr<Asset> AssetManager::CreateAssetInstance(AssetType type, const std::filesystem::path& path) {
+    switch (type) {
+        case AssetType::SHADER:
+            return nullptr;
+        case AssetType::TEXTURE:
+            return std::make_unique<TextureAsset>(path.string());
+        case AssetType::MODEL:
+            return nullptr;
+        case AssetType::SOUND:
+            return nullptr;
+        case AssetType::ANIMATION:
+            return nullptr;
+        case AssetType::TEXT:
+            return nullptr;
+        case AssetType::LUA_SCRIPT:
+            return std::make_unique<LuaScriptAsset>(path.string());
+        case AssetType::OTHER:
+        default:
+            return nullptr;
+    }
+}
+
+AssetID AssetManager::GenerateRandomAssetID() {
+    static std::mt19937_64 rng{std::random_device{}()};
+    static std::uniform_int_distribution<AssetID> dist(1, UINT64_MAX);
+
+    AssetID id;
+    do {
+        id = dist(rng);
+    } while (m_map.contains(id) || id == 0);
+
+    return id;
+}
+
+void AssetManager::WriteMetaFile(const std::filesystem::path& metaPath,
+                                 AssetID id) {
+    nlohmann::json metaJson;
+    metaJson[kMetaIdKey] = id;
+
+    std::ofstream metaFile(metaPath);
+    if (!metaFile.is_open()) {
+        MEB_LOG_WARNINGF("Could not write meta file '%s'.",
+                      metaPath.string().c_str());
+        return;
+    }
+    metaFile << metaJson.dump(4);
+}
+
+AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath) {
+    std::filesystem::path metaPath = assetPath;
+    metaPath += kMetaExtension;
+
+    if (std::filesystem::exists(metaPath)) {
+        std::ifstream metaFile(metaPath);
+        try {
+            nlohmann::json metaJson;
+            metaFile >> metaJson;
+
+            if (metaJson.contains(kMetaIdKey)) {
+                AssetID id = metaJson.at(kMetaIdKey).get<AssetID>();
+
+                if (id != 0 && !m_map.contains(id))
+                    return id;
+
+                MEB_LOG_WARNINGF(
+                    "Meta file '%s' has an invalid or duplicate id (%llu); "
+                    "regenerating.",
+                    metaPath.string().c_str(),
+                    static_cast<unsigned long long>(id));
+            }
+        } catch (const std::exception& e) {
+            MEB_LOG_WARNINGF("Failed to parse meta file '%s' (%s); regenerating.", metaPath.string().c_str(), e.what());
+        }
+    }
+
+    AssetID id = GenerateRandomAssetID();
+    WriteMetaFile(metaPath, id);
+    return id;
+}
+
+void AssetManager::ScanAssets() {
+    m_map.clear();
+
+    MEB_LOG_INFOF("Scanning Assets; Root: %s", m_root.c_str());
+
+    for (auto& entry : std::filesystem::recursive_directory_iterator(Path(m_root + "/assets"))) {
+        if (!entry.is_regular_file()) continue;
+
+        if (entry.path().extension() == kMetaExtension) continue;
+
+        AssetType type = GetAssetType(entry.path());
+        std::unique_ptr<Asset> asset = CreateAssetInstance(type, entry.path());
+
+        if (asset == nullptr) {
+            MEB_LOG_INFOF("Skipping unsupported asset type for file: %s", entry.path().string().c_str());
+            continue;
+        }
+
+        AssetID id = GetOrCreateAssetID(entry.path());
+
+        MEB_LOG_INFOF("Create asset '%s' with id %llu",
+                      entry.path().generic_string().c_str(),
+                      static_cast<unsigned long long>(id));
+
+        m_map.emplace(id, std::move(asset));
+    }
+}
+
+const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
+    std::vector<AssetID> res{};
+    for (auto& [id, assetPtr] : m_map) {
+        if (assetPtr == nullptr) {
+            continue;
+        }
+        if (assetPtr->GetType() == type) {
+            res.push_back(id);
+        }
+    }
+    return res;
+}
+
+std::string AssetManager::Path(const std::string& str) {
+    std::string out = str;
+#ifdef _WIN32
+    for (char& c : out) {
+        if (c == '/') c = '\\';
+    }
+#elif __linux__
+    for (char& c : out) {
+        if (c == '\\') c = '/';
+    }
+
+#endif
+    return out;
+}
+
+}  // namespace PotatoEngine::Core

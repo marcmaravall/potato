@@ -7,7 +7,7 @@
 #include <meb.h>
 
 namespace PotatoEngine::Core {
-	typedef long long AssetID;
+	typedef unsigned long long AssetID;
 	
 	enum class AssetType {
 		SHADER,

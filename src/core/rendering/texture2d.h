@@ -6,6 +6,8 @@
 #include <meb.h>
 #include <ref_scope.h>
 
+#include <nlohmann/json.hpp>
+
 namespace PotatoEngine::Core::Rendering {
 
 enum class TextureFilter {
@@ -14,12 +16,25 @@ enum class TextureFilter {
 	TRILINEAR
 };
 
+NLOHMANN_JSON_SERIALIZE_ENUM(TextureFilter, {
+	{TextureFilter::POINT, "POINT"},
+	{TextureFilter::BILINEAR, "BILINEAR"},
+	{TextureFilter::TRILINEAR, "TRILINEAR"}
+})
+
 enum class TextureWrap {
 	REPEAT,
 	MIRRORED_REPEAT,
 	CLAMP_TO_EDGE,
     CLAMP_TO_BORDER
 };
+
+NLOHMANN_JSON_SERIALIZE_ENUM(TextureWrap, {
+	{TextureWrap::REPEAT, "REPEAT"},
+	{TextureWrap::MIRRORED_REPEAT, "MIRRORED_REPEAT"},
+	{TextureWrap::CLAMP_TO_EDGE, "CLAMP_TO_EDGE"},
+	{TextureWrap::CLAMP_TO_BORDER, "CLAMP_TO_BORDER"}
+})
 
 class Texture2D_Settings {
 public:
@@ -30,6 +45,9 @@ public:
 public:
     Texture2D_Settings() = default;
     ~Texture2D_Settings() = default;
+
+public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Texture2D_Settings, Filter, WrapS, WrapT)
 };
 
 class Texture2D {
@@ -47,7 +65,7 @@ class Texture2D {
 
 	public:
 		static Scope<Texture2D> Create(uint32_t width, uint32_t height);
-		static Scope<Texture2D> Create(const std::string& path, const Texture2D_Settings& settings);
+		static Scope<Texture2D> Create(const std::string& path, const Texture2D_Settings& settings = Texture2D_Settings());
 };
 
 }  // namespace PotatoEngine::Core::Rendering
