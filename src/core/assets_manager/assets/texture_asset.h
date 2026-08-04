@@ -23,6 +23,9 @@ public:
 
 	bool Load();
 
+	nlohmann::json Serialize() const override;
+	void Deserialize(const nlohmann::json& j) override;
+
 public:
 	NLOHMANN_DEFINE_TYPE_INTRUSIVE(TextureAsset, m_settings)
 };

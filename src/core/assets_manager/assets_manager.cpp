@@ -12,6 +12,7 @@ namespace PotatoEngine::Core {
 namespace {
 constexpr const char* kMetaExtension = ".meta";
 constexpr const char* kMetaIdKey = "id";
+constexpr const char* kMetaDataKey = "data";
 }  // namespace
 
 Asset& AssetManager::GetAsset(AssetID id) {
@@ -107,9 +108,10 @@ AssetID AssetManager::GenerateRandomAssetID() {
 }
 
 void AssetManager::WriteMetaFile(const std::filesystem::path& metaPath,
-                                 AssetID id) {
+                                 AssetID id, const Asset& asset) {
     nlohmann::json metaJson;
     metaJson[kMetaIdKey] = id;
+    metaJson[kMetaDataKey] = asset.Serialize();
 
     std::ofstream metaFile(metaPath);
     if (!metaFile.is_open()) {
@@ -118,6 +120,18 @@ void AssetManager::WriteMetaFile(const std::filesystem::path& metaPath,
         return;
     }
     metaFile << metaJson.dump(4);
+}
+
+void AssetManager::LoadMetaFile(const std::filesystem::path& metaPath, AssetID id, Asset& asset) {
+    std::ifstream metaFile(metaPath);
+    nlohmann::json metaJson;
+    metaFile >> metaJson;
+
+    try {
+        asset.Deserialize(metaJson.at(kMetaDataKey));
+    } catch (const std::exception& e) {
+        MEB_LOG_WARNINGF("Failed to deserialize meta file '%s' (%s)", metaPath.string().c_str(), e.what());
+    }
 }
 
 AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath) {
@@ -148,7 +162,6 @@ AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath)
     }
 
     AssetID id = GenerateRandomAssetID();
-    WriteMetaFile(metaPath, id);
     return id;
 }
 
@@ -170,7 +183,18 @@ void AssetManager::ScanAssets() {
             continue;
         }
 
+        const auto& metaPath = entry.path().string() + kMetaExtension;
+
+        bool existsMeta =
+            std::filesystem::exists(metaPath);
+
         AssetID id = GetOrCreateAssetID(entry.path());
+
+        if (!existsMeta) {
+            WriteMetaFile(metaPath, id, *asset);
+        }
+
+        LoadMetaFile(metaPath, id, *asset);
 
         MEB_LOG_INFOF("Create asset '%s' with id %llu",
                       entry.path().generic_string().c_str(),

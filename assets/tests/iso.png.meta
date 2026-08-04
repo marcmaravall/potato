@@ -1,3 +1,8 @@
 {
+    "data": {
+        "Filter": "POINT",
+        "WrapS": "REPEAT",
+        "WrapT": "REPEAT"
+    },
     "id": 16032791000818019246
 }

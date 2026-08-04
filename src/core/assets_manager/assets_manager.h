@@ -41,7 +41,10 @@ namespace PotatoEngine::Core {
 		std::unique_ptr<Asset> CreateAssetInstance(AssetType type, const std::filesystem::path& path);
 		AssetID GenerateRandomAssetID();
 		AssetID GetOrCreateAssetID(const std::filesystem::path& assetPath);
-		void WriteMetaFile(const std::filesystem::path& metaPath, AssetID id);
+
+	public:
+		void WriteMetaFile(const std::filesystem::path& metaPath, AssetID id, const Asset& asset);
+		void LoadMetaFile(const std::filesystem::path& metaPath, AssetID id, Asset& asset);
 
 	public:
 		// TODO: optimize to save result so then will be O(1) (returning reference)

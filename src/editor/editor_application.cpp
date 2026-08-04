@@ -41,11 +41,9 @@ void EditorApplication::OnStart() {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui::StyleColorsDark();
+    Theme::SetCapMotchaTheme();
     ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)m_window->GetData(), true);
     ImGui_ImplOpenGL3_Init("#version 450");
-
-    Theme::SetCapMotchaTheme();
 
     AddPanel<Viewport>(m_engineContext, m_editorContext);
     AddPanel<Console>(m_engineContext, m_editorContext);
