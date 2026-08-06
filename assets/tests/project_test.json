@@ -21,88 +21,6 @@
                 {
                     "Components": [
                         {
-                            "Type": "Camera",
-                            "Value": {
-                                "ClearColor": {
-                                    "x": 0.20000000298023224,
-                                    "y": 0.30000001192092896,
-                                    "z": 0.6000000238418579
-                                },
-                                "Zoom": 1.0499999523162842
-                            }
-                        },
-                        {
-                            "Type": "Transform",
-                            "Value": {
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Rotation": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Scale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                }
-                            }
-                        },
-                        {
-                            "Type": "Children",
-                            "Value": {
-                                "Value": []
-                            }
-                        },
-                        {
-                            "Type": "Name",
-                            "Value": {
-                                "Value": "Camera"
-                            }
-                        }
-                    ],
-                    "ID": 0
-                },
-                {
-                    "Components": [
-                        {
-                            "Type": "Name",
-                            "Value": {
-                                "Value": "manolo"
-                            }
-                        },
-                        {
-                            "Type": "Children",
-                            "Value": {
-                                "Value": [
-                                    3
-                                ]
-                            }
-                        },
-                        {
-                            "Type": "Transform",
-                            "Value": {
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Rotation": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 180.0
-                                },
-                                "Scale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                }
-                            }
-                        },
-                        {
                             "Type": "SpriteRenderer",
                             "Value": {
                                 "Color": {
@@ -120,59 +38,11 @@
                                 },
                                 "m_textureAsset": 16032791000818019246
                             }
-                        }
-                    ],
-                    "ID": 1
-                },
-                {
-                    "Components": [
-                        {
-                            "Type": "Name",
-                            "Value": {
-                                "Value": "New entity"
-                            }
                         },
                         {
-                            "Type": "Children",
+                            "Type": "Parent",
                             "Value": {
-                                "Value": []
-                            }
-                        },
-                        {
-                            "Type": "Transform",
-                            "Value": {
-                                "Position": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Rotation": {
-                                    "x": 0.0,
-                                    "y": 0.0,
-                                    "z": 0.0
-                                },
-                                "Scale": {
-                                    "x": 1.0,
-                                    "y": 1.0,
-                                    "z": 1.0
-                                }
-                            }
-                        }
-                    ],
-                    "ID": 2
-                },
-                {
-                    "Components": [
-                        {
-                            "Type": "Name",
-                            "Value": {
-                                "Value": "New entity"
-                            }
-                        },
-                        {
-                            "Type": "Children",
-                            "Value": {
-                                "Value": []
+                                "Value": 1
                             }
                         },
                         {
@@ -196,11 +66,59 @@
                             }
                         },
                         {
-                            "Type": "Parent",
+                            "Type": "Children",
                             "Value": {
-                                "Value": 1
+                                "Value": []
                             }
                         },
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "New entity"
+                            }
+                        }
+                    ],
+                    "ID": 3
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "New entity"
+                            }
+                        }
+                    ],
+                    "ID": 2
+                },
+                {
+                    "Components": [
                         {
                             "Type": "SpriteRenderer",
                             "Value": {
@@ -212,16 +130,98 @@
                                 },
                                 "FlipX": false,
                                 "FlipY": false,
-                                "Layer": 0,
+                                "Layer": -1,
                                 "Pivot": {
                                     "x": 0.5,
                                     "y": 0.5
                                 },
                                 "m_textureAsset": 16032791000818019246
                             }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 180.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": [
+                                    3
+                                ]
+                            }
+                        },
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "manolo"
+                            }
                         }
                     ],
-                    "ID": 3
+                    "ID": 1
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "Camera"
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "Camera",
+                            "Value": {
+                                "ClearColor": {
+                                    "x": 0.20000000298023224,
+                                    "y": 0.30000001192092896,
+                                    "z": 0.6000000238418579
+                                },
+                                "Zoom": 1.0499999523162842
+                            }
+                        }
+                    ],
+                    "ID": 0
                 }
             ],
             "Name": "Scene1"

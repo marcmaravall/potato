@@ -1,26 +1,25 @@
 #pragma once
 
-#include <string>
-#include <cstdint>
-#include <filesystem>
-
 #include <meb.h>
 
+#include <cstdint>
+#include <filesystem>
 #include <nlohmann/json.hpp>
+#include <string>
 
 namespace PotatoEngine::Core {
 
 typedef unsigned long long AssetID;
 
 enum class AssetType {
-	SHADER,
-	TEXTURE,
-	MODEL,
-	SOUND,
-	ANIMATION,
-	TEXT,
-	LUA_SCRIPT,
-	OTHER
+    SHADER,
+    TEXTURE,
+    MODEL,
+    SOUND,
+    ANIMATION,
+    TEXT,
+    LUA_SCRIPT,
+    OTHER
 };
 
 struct AssetMeta {
@@ -28,7 +27,7 @@ struct AssetMeta {
 
     nlohmann::json Data;
 
-	NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetMeta, ID, Data)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetMeta, ID, Data)
 };
 
 class Asset {
@@ -53,4 +52,4 @@ public:
     virtual void Deserialize(const nlohmann::json& j) {}
 };
 
-} // namespace PotatoEngine::Core
+}  // namespace PotatoEngine::Core

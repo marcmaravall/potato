@@ -7,13 +7,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(OpenGL REQUIRED)
+
 set(GLFW_BUILD_DOCS     OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(thirdparty/glfw)
 
-add_library(glad STATIC thirdparty/glad/src/glad.c "src/editor/isometric/map_editor_state.cpp")
+add_library(glad STATIC thirdparty/glad/src/glad.c)
 target_include_directories(glad PUBLIC "thirdparty/glad/include")
+target_link_libraries(glad PUBLIC OpenGL::GL)
 
 add_subdirectory(thirdparty/glm)
 
@@ -28,14 +31,14 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
- )
+)
 
 target_include_directories(imgui_lib PUBLIC
     thirdparty/imgui
     thirdparty/imgui/backends
 )
 
-target_link_libraries(imgui_lib PUBLIC glfw)
+target_link_libraries(imgui_lib PUBLIC glfw OpenGL::GL)
 
 add_subdirectory(thirdparty/lua)
 
@@ -43,41 +46,36 @@ add_library(sol2 INTERFACE)
 target_include_directories(sol2 INTERFACE thirdparty/sol2/include)
 target_link_libraries(sol2 INTERFACE lua_static)
 
-file(GLOB ENGINE_SOURCES CONFIGURE_DEPENDS "src/core/*.cpp" 
-    "src/editor/commands/*.cpp"
-    "src/editor/*.cpp" 
-    "src/editor/isometric/*.cpp"
-    "src/editor/serialize/*.cpp"
-    "src/core/rendering/*.cpp" "src/core/rendering/opengl/*.cpp" "src/core/logging/*.cpp" 
-    "src/platform/*.cpp"
-    "src/core/assets_manager/*.cpp"
-    "src/core/assets_manager/assets/*.cpp"
-    "src/core/ecs/*.cpp"
-    "src/core/ecs/systems/*.cpp"
-    "src/core/ecs/components/*.cpp"
-    "src/core/scripting/*.cpp"
-    "src/core/input/*.cpp"
-    "src/core/windowing/*.cpp"
-    "src/core/windowing/glfw/*.cpp"
+file(GLOB_RECURSE POTATO_CORE_SOURCES CONFIGURE_DEPENDS
+    "src/core/*.cpp"
 )
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    file(GLOB PLATFORM_SOURCES CONFIGURE_DEPENDS
-        src/platform/linux/*.cpp
-    )
-else()
-    file(GLOB PLATFORM_SOURCES CONFIGURE_DEPENDS
-        "src/platform/windows/*.cpp"
-    )
-endif()
+add_library(potato_core STATIC ${POTATO_CORE_SOURCES})
 
-add_executable(potato
-    src/main.cpp
-    ${ENGINE_SOURCES}
-    ${PLATFORM_SOURCES}
- "src/editor/isometric/map_editor_state.cpp")
+target_include_directories(potato_core PUBLIC
+    "src/core"
+    "src/"
+    "thirdparty/meb"
+    "thirdparty/sol2/include"
+    "thirdparty/nlohmann_json/include"
+)
 
-target_include_directories(potato PRIVATE
+target_link_libraries(potato_core PUBLIC
+    glfw
+    glad
+    glm::glm
+    stb_image
+    imgui_lib
+    sol2
+)
+
+file(GLOB_RECURSE POTATO_EDITOR_SOURCES CONFIGURE_DEPENDS
+    "src/editor/*.cpp"
+)
+
+add_library(potato_editor STATIC ${POTATO_EDITOR_SOURCES})
+
+target_include_directories(potato_editor PUBLIC
     "src/core"
     "src/"
     "thirdparty/meb"
@@ -86,11 +84,29 @@ target_include_directories(potato PRIVATE
     "thirdparty/portable-file-dialogs/"
 )
 
-target_link_libraries(potato PRIVATE
-    glfw
-    glad
-    glm::glm
-    stb_image
-    imgui_lib
-    sol2
+target_link_libraries(potato_editor PUBLIC
+    potato_core
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    file(GLOB PLATFORM_SOURCES CONFIGURE_DEPENDS
+        "src/platform/*.cpp"
+        "src/platform/linux/*.cpp"
+    )
+else()
+    file(GLOB PLATFORM_SOURCES CONFIGURE_DEPENDS
+        "src/platform/*.cpp"
+        "src/platform/windows/*.cpp"
+    )
+endif()
+
+add_executable(potato
+    src/main.cpp
+    ${PLATFORM_SOURCES}
+)
+
+target_link_libraries(potato PRIVATE
+    potato_core
+    potato_editor
+)
+
