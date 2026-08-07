@@ -28,12 +28,18 @@ private:
     AssetNode* m_selectedNode = nullptr;
 
 private:
+    float m_thumbnailSize = 64.0f;
+    float m_padding = 16.0f;
+
+private:
     void ClearAssetTree();
     void ClearAssetTree(AssetNode& node);
     void GenerateAssetTree(const std::filesystem::path& path, AssetNode& node);
+    void OpenAsset(const AssetNode& node);
 
 private:
     void DrawTree(AssetNode& node);
+    void DrawAssetViewer(AssetNode& node);
 
 public:
     ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)

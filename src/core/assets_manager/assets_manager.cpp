@@ -43,7 +43,8 @@ AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
 AssetManager::AssetManager() {
     std::filesystem::path currentPath = std::filesystem::current_path();
 
-    while (currentPath.has_parent_path() && currentPath.filename() != "potato") {
+    while (currentPath.has_parent_path() &&
+           currentPath.filename() != "potato") {
         currentPath = currentPath.parent_path();
     }
 
@@ -73,7 +74,8 @@ AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
     return AssetType::OTHER;
 }
 
-std::unique_ptr<Asset> AssetManager::CreateAssetInstance(AssetType type, const std::filesystem::path& path) {
+std::unique_ptr<Asset> AssetManager::CreateAssetInstance(
+    AssetType type, const std::filesystem::path& path) {
     switch (type) {
         case AssetType::SHADER:
             return nullptr;
@@ -116,13 +118,14 @@ void AssetManager::WriteMetaFile(const std::filesystem::path& metaPath,
     std::ofstream metaFile(metaPath);
     if (!metaFile.is_open()) {
         MEB_LOG_WARNINGF("Could not write meta file '%s'.",
-                      metaPath.string().c_str());
+                         metaPath.string().c_str());
         return;
     }
     metaFile << metaJson.dump(4);
 }
 
-void AssetManager::LoadMetaFile(const std::filesystem::path& metaPath, AssetID id, Asset& asset) {
+void AssetManager::LoadMetaFile(const std::filesystem::path& metaPath,
+                                AssetID id, Asset& asset) {
     std::ifstream metaFile(metaPath);
     nlohmann::json metaJson;
     metaFile >> metaJson;
@@ -130,11 +133,13 @@ void AssetManager::LoadMetaFile(const std::filesystem::path& metaPath, AssetID i
     try {
         asset.Deserialize(metaJson.at(kMetaDataKey));
     } catch (const std::exception& e) {
-        MEB_LOG_WARNINGF("Failed to deserialize meta file '%s' (%s)", metaPath.string().c_str(), e.what());
+        MEB_LOG_WARNINGF("Failed to deserialize meta file '%s' (%s)",
+                         metaPath.string().c_str(), e.what());
     }
 }
 
-AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath) {
+AssetID AssetManager::GetOrCreateAssetID(
+    const std::filesystem::path& assetPath) {
     std::filesystem::path metaPath = assetPath;
     metaPath += kMetaExtension;
 
@@ -147,8 +152,7 @@ AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath)
             if (metaJson.contains(kMetaIdKey)) {
                 AssetID id = metaJson.at(kMetaIdKey).get<AssetID>();
 
-                if (id != 0 && !m_map.contains(id))
-                    return id;
+                if (id != 0 && !m_map.contains(id)) return id;
 
                 MEB_LOG_WARNINGF(
                     "Meta file '%s' has an invalid or duplicate id (%llu); "
@@ -157,7 +161,9 @@ AssetID AssetManager::GetOrCreateAssetID(const std::filesystem::path& assetPath)
                     static_cast<unsigned long long>(id));
             }
         } catch (const std::exception& e) {
-            MEB_LOG_WARNINGF("Failed to parse meta file '%s' (%s); regenerating.", metaPath.string().c_str(), e.what());
+            MEB_LOG_WARNINGF(
+                "Failed to parse meta file '%s' (%s); regenerating.",
+                metaPath.string().c_str(), e.what());
         }
     }
 
@@ -170,7 +176,8 @@ void AssetManager::ScanAssets() {
 
     MEB_LOG_INFOF("Scanning Assets; Root: %s", m_root.c_str());
 
-    for (auto& entry : std::filesystem::recursive_directory_iterator(Path(m_root + "/assets"))) {
+    for (auto& entry : std::filesystem::recursive_directory_iterator(
+             Path(m_root + "/assets"))) {
         if (!entry.is_regular_file()) continue;
 
         if (entry.path().extension() == kMetaExtension) continue;
@@ -179,14 +186,14 @@ void AssetManager::ScanAssets() {
         std::unique_ptr<Asset> asset = CreateAssetInstance(type, entry.path());
 
         if (asset == nullptr) {
-            MEB_LOG_INFOF("Skipping unsupported asset type for file: %s", entry.path().string().c_str());
+            MEB_LOG_INFOF("Skipping unsupported asset type for file: %s",
+                          entry.path().string().c_str());
             continue;
         }
 
         const auto& metaPath = entry.path().string() + kMetaExtension;
 
-        bool existsMeta =
-            std::filesystem::exists(metaPath);
+        bool existsMeta = std::filesystem::exists(metaPath);
 
         AssetID id = GetOrCreateAssetID(entry.path());
 
@@ -202,6 +209,10 @@ void AssetManager::ScanAssets() {
 
         m_map.emplace(id, std::move(asset));
     }
+}
+
+bool AssetManager::IsAssetFile(const std::filesystem::path& path) {
+    return path.extension() != kMetaExtension;
 }
 
 const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
