@@ -2,7 +2,8 @@
 
 #include <misc/cpp/imgui_stdlib.h>
 
-using namespace PotatoEngine::Editor;
+namespace PotatoEngine::Editor {
+
 using namespace PotatoEngine::Core::Logging;
 
 void Console::OnBegin() {}
@@ -87,3 +88,5 @@ void Console::OnRender() {
 }
 
 void Console::OnEnd() {}
+
+}  // namespace PotatoEngine::Editor

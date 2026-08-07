@@ -3,12 +3,38 @@
 #include <core/engine_context.h>
 #include <imgui.h>
 
+#include <filesystem>
+#include <string>
+
 #include "panel.h"
 #include "serialize/serializer.hpp"
 
 namespace PotatoEngine::Editor {
+
+struct AssetNode {
+    std::string Name;
+    std::string Path;
+    bool Directory = false;
+    std::vector<AssetNode> Nodes;
+
+public:
+    AssetNode() = default;
+    ~AssetNode() = default;
+};
+
 class ProjectWindow : public EditorPanel {
 private:
+    AssetNode m_root;
+    AssetNode* m_selectedNode = nullptr;
+
+private:
+    void ClearAssetTree();
+    void ClearAssetTree(AssetNode& node);
+    void GenerateAssetTree(const std::filesystem::path& path, AssetNode& node);
+
+private:
+    void DrawTree(AssetNode& node);
+
 public:
     ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
         : EditorPanel("Project", ctx, ectx) {}
@@ -19,4 +45,5 @@ public:
     void OnRender() override;
     void OnEnd() override;
 };
-};  // namespace PotatoEngine::Editor
+
+}  // namespace PotatoEngine::Editor
