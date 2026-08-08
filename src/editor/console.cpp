@@ -40,7 +40,7 @@ void Console::OnRender() {
 
     if (ImGui::Button("Add")) {
         m_engineContext.Debug.Log(Debug::Message(s, t));
-        s = "";
+        s.clear();
     }
 
     ImGui::SameLine();
@@ -64,6 +64,8 @@ void Console::OnRender() {
     }
 
     ImGui::Separator();
+    ImGui::BeginChild("ConsoleMessages", ImVec2(0, 0), false,
+                      ImGuiWindowFlags_HorizontalScrollbar);
 
     for (auto& message : m_engineContext.Debug.GetMessages()) {
         ImColor color;
@@ -83,8 +85,10 @@ void Console::OnRender() {
                 break;
         }
 
-        ImGui::TextColored(color, message.Text.c_str(), "");
+        ImGui::TextColored(color, "%s", message.Text.c_str());
     }
+
+    ImGui::EndChild();
 }
 
 void Console::OnEnd() {}

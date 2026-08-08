@@ -36,9 +36,6 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
     for (const auto& entry : std::filesystem::directory_iterator(path, ec)) {
         if (ec) break;
 
-        // .meta files are skipped
-        if (!m_engineContext._AssetManager.IsAssetFile(entry)) continue;
-
         AssetNode child;
         child.Name = entry.path().filename().string();
         child.Path = entry.path().string();
