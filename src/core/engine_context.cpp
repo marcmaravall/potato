@@ -6,9 +6,14 @@
 #include <ecs/components/name.h>
 #include <ecs/components/transform.h>
 #include <ecs/systems/camera.h>
-#include <ecs/components/isometric_grid.hpp>
 #include <ecs/systems/example.h>
 #include <ecs/systems/sprite_renderer.h>
+
+#include <ecs/components/isometric_grid.hpp>
+
+#include "ecs/entity_id.h"
+#include "glm/ext/matrix_float4x4.hpp"
+#include "glm/ext/matrix_transform.hpp"
 
 namespace PotatoEngine::Core {
 using namespace ECS;
@@ -38,10 +43,22 @@ void EngineContext::RegisterComponents() {
     Registry.RegisterComponent<Transform>();
 }
 
-glm::mat4 EngineContext::GetViewProjectionMatrix() { 
-    auto* component = Registry.TryGetComponent<Components::Camera>(m_mainCamera); 
+EntityID EngineContext::GetMainCameraEntity() {
+    this->Registry.ForEachComponentOfType<Components::Camera>(
+        [&](EntityID id, Components::Camera& camera) { return id; });
+
+    return NULL_ENTITY;
+}
+
+glm::mat4 EngineContext::GetViewProjectionMatrix() {
+    EntityID mainCamera = GetMainCameraEntity();
+    if (mainCamera == NULL_ENTITY) {
+        return glm::identity<glm::mat4>();
+    }
+
+    auto* component = Registry.TryGetComponent<Components::Camera>(mainCamera);
     auto* transform =
-        Registry.TryGetComponent<Components::Transform>(m_mainCamera);
+        Registry.TryGetComponent<Components::Transform>(mainCamera);
     if (!component || !transform) return glm::mat4(1.0f);
 
     glm::mat4 res = glm::translate(glm::mat4(1.0f), -transform->Position) *
