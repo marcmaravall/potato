@@ -47,14 +47,6 @@ struct SceneMeta {
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(SceneMeta, Name, Entities)
 };
 
-struct AssetMeta {
-    Core::AssetID ID;
-    std::string RelPath;  // assets/RelPath
-    std::string Type;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(AssetMeta, ID, RelPath, Type)
-};
-
 class Serializer {
 private:
 public:

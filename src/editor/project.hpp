@@ -40,7 +40,6 @@ public:
     fs::path ProjectPath;
     ProjectSettings _ProjectSettings;
     std::vector<SceneMeta> Scenes;
-    std::vector<AssetMeta> Assets;
     ECS_Meta _ECS_Meta;
 
 public:

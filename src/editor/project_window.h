@@ -4,6 +4,7 @@
 #include <imgui.h>
 
 #include <filesystem>
+#include <functional>
 #include <string>
 
 #include "panel.h"

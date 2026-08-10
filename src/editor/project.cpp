@@ -11,7 +11,7 @@ namespace PotatoEngine::Editor {
 
 using json = nlohmann::json;
 
-std::unique_ptr<Project> Project::Load(const std::string &path) {
+std::unique_ptr<Project> Project::Load(const std::string& path) {
     std::unique_ptr<Project> project = std::make_unique<Project>();
 
     if (!project->LoadFromFile(path)) {
@@ -22,7 +22,7 @@ std::unique_ptr<Project> Project::Load(const std::string &path) {
     return std::move(project);
 }
 
-bool Project::LoadFromFile(const std::string &path) {
+bool Project::LoadFromFile(const std::string& path) {
     std::ifstream file(path);
 
     json parse;
@@ -41,25 +41,17 @@ bool Project::LoadFromFile(const std::string &path) {
     MEB_LOG_INFOF("ECS CurrentID: %ld", _ECS_Meta.CurrentID);
 
     MEB_LOG_INFO("SCENES");
-    for (auto &scene : Scenes) {
+    for (auto& scene : Scenes) {
         MEB_LOG_INFO(scene.Name.c_str());
-    }
-
-    Assets = parse["Assets"];
-    MEB_LOG_INFO("ASSETS:");
-    for (auto &asset : Assets) {
-        MEB_LOG_INFOF("Asset with relative path '%s' with id: %lld",
-                      asset.RelPath.c_str(), asset.ID);
     }
 
     return true;
 }
 
-bool Project::SaveToFile(const std::string &path, Core::EngineContext &ctx) {
+bool Project::SaveToFile(const std::string& path, Core::EngineContext& ctx) {
     json save;
 
     save.emplace("ProjectSettings", _ProjectSettings);
-    save.emplace("Assets", Assets);
 
     ECS_Meta ecs;
     ecs.CurrentID = ctx.Registry.GetCurrentID();
@@ -87,7 +79,7 @@ bool Project::SaveToFile(const std::string &path, Core::EngineContext &ctx) {
 
         auto components = entities[i].second->GetComponents();
 
-        for (auto *component : components) {
+        for (auto* component : components) {
             entity.Components.push_back(Serializer::ComponentToMeta(component));
         }
 

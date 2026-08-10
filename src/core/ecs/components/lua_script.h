@@ -15,6 +15,7 @@ class LuaScript : public Component {
 private:
     sol::environment m_env;
     AssetID m_scriptAssetID = 0;
+    bool m_compiled = false;
 
 public:
 public:
