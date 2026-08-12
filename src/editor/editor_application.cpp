@@ -51,6 +51,7 @@ void EditorApplication::OnStart() {
     AddPanel<HierarchyPanel>(m_engineContext, m_editorContext);
     AddPanel<GamePlayer>(m_engineContext, m_editorContext);
     AddPanel<ProjectWindow>(m_engineContext, m_editorContext);
+    AddPanel<PluginManager>(m_engineContext, m_editorContext);
 
     m_engineContext.Start();
 
@@ -83,8 +84,9 @@ void EditorApplication::OnUpdate() {
     auto io = ImGui::GetIO();
 
     if (ImGui::IsKeyPressed(ImGuiKey_S) && io.KeyCtrl) {
-        auto dialog = pfd::save_file("Save project", pfd::path::home(),
-                                     {"JSON Files", "*.json", "All Files", "*"});
+        auto dialog =
+            pfd::save_file("Save project", pfd::path::home(),
+                           {"JSON Files", "*.json", "All Files", "*"});
         auto file = dialog.result();
 
         if (!file.empty()) {

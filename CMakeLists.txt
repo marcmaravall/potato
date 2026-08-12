@@ -31,6 +31,8 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
+
+    thirdparty/imgui/imgui_demo.cpp
 )
 
 target_include_directories(imgui_lib PUBLIC
@@ -46,6 +48,25 @@ add_library(sol2 INTERFACE)
 target_include_directories(sol2 INTERFACE thirdparty/sol2/include)
 target_link_libraries(sol2 INTERFACE lua_static)
 
+add_library(sol2_ImGui_Bindings STATIC
+    thirdparty/sol2_ImGui_Bindings/sol_ImGui.cpp
+    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_Enums_gen.cpp
+    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_0.cpp
+    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_1.cpp
+    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_2.cpp
+
+    thirdparty/sol2_ImGui_Bindings/manual/sol_ImGui_Manual.cpp
+)
+
+target_include_directories(sol2_ImGui_Bindings PUBLIC
+    thirdparty/sol2/include
+)
+
+target_link_libraries(sol2_ImGui_Bindings PUBLIC
+    sol2
+    imgui_lib
+)
+
 file(GLOB_RECURSE POTATO_CORE_SOURCES CONFIGURE_DEPENDS
     "src/core/*.cpp"
 )
@@ -58,6 +79,7 @@ target_include_directories(potato_core PUBLIC
     "thirdparty/meb"
     "thirdparty/sol2/include"
     "thirdparty/nlohmann_json/include"
+    "thirdparty/"
 )
 
 target_link_libraries(potato_core PUBLIC
@@ -67,10 +89,12 @@ target_link_libraries(potato_core PUBLIC
     stb_image
     imgui_lib
     sol2
+    sol2_ImGui_Bindings
 )
 
 file(GLOB_RECURSE POTATO_EDITOR_SOURCES CONFIGURE_DEPENDS
     "src/editor/*.cpp"
+    "src/editor/plugins/*.cpp"
 )
 
 add_library(potato_editor STATIC ${POTATO_EDITOR_SOURCES})

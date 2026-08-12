@@ -23,6 +23,7 @@
 #include "inspector.h"
 #include "panel.h"
 #include "platform/api.h"
+#include "plugins/plugin_manager.hpp"
 #include "project_window.h"
 #include "theme.h"
 #include "viewport.h"

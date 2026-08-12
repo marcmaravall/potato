@@ -32,3 +32,6 @@
 [submodule "thirdparty/portable-file-dialogs"]
 	path = thirdparty/portable-file-dialogs
 	url = https://github.com/samhocevar/portable-file-dialogs.git
+[submodule "thirdaprty/sol2_ImGui_Bindings"]
+	path = thirdparty/sol2_ImGui_Bindings
+	url = https://github.com/mblackman/sol2_ImGui_Bindings
