@@ -22,16 +22,18 @@
     path = thirdparty/sol2
     url = https://github.com/ThePhD/sol2.git
 
-[submodule "thirdparty/lua"]
+[submodule "lua"]
 	path = thirdparty/lua
 	url = https://github.com/walterschell/Lua
 
-[submodule "thirdparty/nlohmann_json"]
+[submodule "nlohmann_json"]
 	path = thirdparty/nlohmann_json
 	url = https://github.com/nlohmann/json.git
-[submodule "thirdparty/portable-file-dialogs"]
+
+[submodule "portable-file-dialogs"]
 	path = thirdparty/portable-file-dialogs
 	url = https://github.com/samhocevar/portable-file-dialogs.git
-[submodule "thirdaprty/sol2_ImGui_Bindings"]
+
+[submodule "sol2_ImGui_Bindings"]
 	path = thirdparty/sol2_ImGui_Bindings
 	url = https://github.com/mblackman/sol2_ImGui_Bindings
