@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.15)
 
 project(potato C CXX)
 
@@ -14,16 +14,27 @@ set(GLFW_BUILD_TESTS    OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(thirdparty/glfw)
 
-add_library(glad STATIC thirdparty/glad/src/glad.c)
-target_include_directories(glad PUBLIC "thirdparty/glad/include")
-target_link_libraries(glad PUBLIC OpenGL::GL)
+add_library(glad STATIC
+    thirdparty/glad/src/glad.c
+)
+
+target_include_directories(glad PUBLIC
+    thirdparty/glad/include
+)
+
+target_link_libraries(glad PUBLIC
+    OpenGL::GL
+)
 
 add_subdirectory(thirdparty/glm)
 
 add_library(stb_image INTERFACE)
-target_include_directories(stb_image INTERFACE thirdparty/stb)
 
-add_library(imgui_lib STATIC
+target_include_directories(stb_image INTERFACE
+    thirdparty/stb
+)
+
+add_library(imgui STATIC
     thirdparty/imgui/imgui.cpp
     thirdparty/imgui/imgui_draw.cpp
     thirdparty/imgui/imgui_tables.cpp
@@ -31,47 +42,44 @@ add_library(imgui_lib STATIC
     thirdparty/imgui/backends/imgui_impl_glfw.cpp
     thirdparty/imgui/misc/cpp/imgui_stdlib.cpp
     thirdparty/imgui/backends/imgui_impl_opengl3.cpp
-
     thirdparty/imgui/imgui_demo.cpp
 )
 
-target_include_directories(imgui_lib PUBLIC
+target_include_directories(imgui PUBLIC
     thirdparty/imgui
     thirdparty/imgui/backends
 )
 
-target_link_libraries(imgui_lib PUBLIC glfw OpenGL::GL)
+target_link_libraries(imgui PUBLIC
+    glfw
+    OpenGL::GL
+)
+
+add_library(imgui::imgui ALIAS imgui)
 
 add_subdirectory(thirdparty/lua)
 
 add_library(sol2 INTERFACE)
-target_include_directories(sol2 INTERFACE thirdparty/sol2/include)
-target_link_libraries(sol2 INTERFACE lua_static)
 
-add_library(sol2_ImGui_Bindings STATIC
-    thirdparty/sol2_ImGui_Bindings/sol_ImGui.cpp
-    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_Enums_gen.cpp
-    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_0.cpp
-    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_1.cpp
-    thirdparty/sol2_ImGui_Bindings/generated/sol_ImGui_gen_2.cpp
-
-    thirdparty/sol2_ImGui_Bindings/manual/sol_ImGui_Manual.cpp
-)
-
-target_include_directories(sol2_ImGui_Bindings PUBLIC
+target_include_directories(sol2 INTERFACE
     thirdparty/sol2/include
 )
 
-target_link_libraries(sol2_ImGui_Bindings PUBLIC
-    sol2
-    imgui_lib
+target_link_libraries(sol2 INTERFACE
+    lua_static
 )
+
+add_library(sol2::sol2 ALIAS sol2)
+
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/sol2_ImGui_Bindings)
 
 file(GLOB_RECURSE POTATO_CORE_SOURCES CONFIGURE_DEPENDS
     "src/core/*.cpp"
 )
 
-add_library(potato_core STATIC ${POTATO_CORE_SOURCES})
+add_library(potato_core STATIC
+    ${POTATO_CORE_SOURCES}
+)
 
 target_include_directories(potato_core PUBLIC
     "src/core"
@@ -87,9 +95,9 @@ target_link_libraries(potato_core PUBLIC
     glad
     glm::glm
     stb_image
-    imgui_lib
-    sol2
-    sol2_ImGui_Bindings
+    imgui::imgui
+    sol2::sol2
+    sol2_ImGui_Bindings::sol2_ImGui_Bindings
 )
 
 file(GLOB_RECURSE POTATO_EDITOR_SOURCES CONFIGURE_DEPENDS
@@ -97,7 +105,9 @@ file(GLOB_RECURSE POTATO_EDITOR_SOURCES CONFIGURE_DEPENDS
     "src/editor/plugins/*.cpp"
 )
 
-add_library(potato_editor STATIC ${POTATO_EDITOR_SOURCES})
+add_library(potato_editor STATIC
+    ${POTATO_EDITOR_SOURCES}
+)
 
 target_include_directories(potato_editor PUBLIC
     "src/core"
@@ -133,4 +143,3 @@ target_link_libraries(potato PRIVATE
     potato_core
     potato_editor
 )
-

@@ -19,7 +19,7 @@ void PluginManager::OnRender() {
 
     m_luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
                               sol::lib::string, sol::lib::table);
-    sol_ImGui::Init(m_luaState);
+    // sol_ImGui::Init(m_luaState);
 }
 
 void PluginManager::OnEnd() {}
