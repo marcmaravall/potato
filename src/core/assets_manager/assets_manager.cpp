@@ -40,18 +40,27 @@ AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
     return id;
 }
 
+// TODO: don't do this
 AssetManager::AssetManager() {
     std::filesystem::path currentPath = std::filesystem::current_path();
-
+#define MAX_ITERATIONS 100
+    int iterations = 0;
     while (currentPath.has_parent_path() &&
-           currentPath.filename() != "potato") {
+           currentPath.filename().string().find("potato") == std::string::npos && iterations < MAX_ITERATIONS) {
         currentPath = currentPath.parent_path();
+        iterations++;
     }
 
-    if (currentPath.filename() == "potato") {
+    if (iterations == MAX_ITERATIONS) {
+        MEB_ASSERT(0 && "Could not find potato directory in path hierarchy.");
+        m_root = "";
+        return;
+    }
+
+    if (currentPath.filename().string().find("potato") != std::string::npos) {
         m_root = currentPath.string();
     } else {
-        assert(0 && "Could not find potato directory in path hierarchy.");
+        MEB_ASSERT(0 && "Could not find potato directory in path hierarchy.");
         m_root = "";
     }
 }

@@ -12,7 +12,8 @@ enum class ComponentType {
     NAME,
     PARENT,
     SPRITE_RENDERER,
-    TRANSFORM
+    TRANSFORM,
+    ISOMETRIC_GRID,
 };
 
 class Component {
