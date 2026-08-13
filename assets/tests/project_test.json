@@ -1,6 +1,6 @@
 {
     "ECS_Meta": {
-        "CurrentID": 4,
+        "CurrentID": 5,
         "EmptyQueue": []
     },
     "ProjectSettings": {
@@ -221,6 +221,51 @@
                         }
                     ],
                     "ID": 3
+                },
+                {
+                    "Components": [
+                        {
+                            "Type": "Name",
+                            "Value": {
+                                "Value": "IsometricGrid"
+                            }
+                        },
+                        {
+                            "Type": "Children",
+                            "Value": {
+                                "Value": []
+                            }
+                        },
+                        {
+                            "Type": "Transform",
+                            "Value": {
+                                "Position": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Rotation": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                },
+                                "Scale": {
+                                    "x": 1.0,
+                                    "y": 1.0,
+                                    "z": 1.0
+                                }
+                            }
+                        },
+                        {
+                            "Type": "IsometricGrid",
+                            "Value": {
+                                "Depth": 8,
+                                "Height": 8,
+                                "Width": 8
+                            }
+                        }
+                    ],
+                    "ID": 4
                 }
             ],
             "Name": "Scene1"

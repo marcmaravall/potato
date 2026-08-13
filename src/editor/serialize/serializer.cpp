@@ -43,6 +43,8 @@ std::unique_ptr<Component> Serializer::MetaToComponent(
 
     if (component.Type == "Transform")
         return DeserializeComponent<Transform>(component.Value);
+    if (component.Type == "IsometricGrid")
+        return DeserializeComponent<IsometricGrid>(component.Value);
 
     return nullptr;
 }
@@ -77,6 +79,9 @@ ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
         res.Value = *c;
     } else if (auto c = dynamic_cast<Transform *>(component)) {
         res.Type = "Transform";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<IsometricGrid*>(component)) {
+        res.Type = "IsometricGrid";
         res.Value = *c;
     } else {
         res.Type = "NULL";

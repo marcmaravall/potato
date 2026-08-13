@@ -9,6 +9,7 @@
 #include <ecs/systems/example.h>
 #include <ecs/systems/sprite_renderer.h>
 
+#include <ecs/systems/isometric_renderer.hpp>
 #include <ecs/components/isometric_grid.hpp>
 
 #include "ecs/entity_id.h"
@@ -25,6 +26,7 @@ void EngineContext::Start() {
     RegisterComponents();
 
     Registry.AddSystem<ECS::Systems::CameraSystem>(*this);
+    Registry.AddSystem<ECS::Systems::IsometricRenderer>(*this);
     Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
     Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
 
@@ -41,18 +43,21 @@ void EngineContext::RegisterComponents() {
     Registry.RegisterComponent<Parent>();
     Registry.RegisterComponent<SpriteRenderer>();
     Registry.RegisterComponent<Transform>();
+    Registry.RegisterComponent<IsometricGrid>();
 }
 
 EntityID EngineContext::GetMainCameraEntity() {
+    EntityID mainCamera = NULL_ENTITY;
     this->Registry.ForEachComponentOfType<Components::Camera>(
-        [&](EntityID id, Components::Camera& camera) { return id; });
+        [&](EntityID id, Components::Camera& camera) { mainCamera = id; });
 
-    return NULL_ENTITY;
+    return mainCamera;
 }
 
 glm::mat4 EngineContext::GetViewProjectionMatrix() {
     EntityID mainCamera = GetMainCameraEntity();
     if (mainCamera == NULL_ENTITY) {
+        MEB_LOG_WARNING("No main camera found");
         return glm::identity<glm::mat4>();
     }
 

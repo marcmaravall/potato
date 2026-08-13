@@ -127,6 +127,9 @@ public:
         else if constexpr (std::is_same_v<Component,
                                           ECS::Components::Transform>)
             return "Transform";
+        else if constexpr (std::is_same_v<Component,
+                                          ECS::Components::IsometricGrid>)
+            return "IsometricGrid";
         else
             return "Unknown";
     }

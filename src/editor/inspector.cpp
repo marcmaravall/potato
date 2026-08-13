@@ -1,5 +1,7 @@
 #include "inspector.h"
 
+#include <ecs/components/isometric_grid.hpp>
+
 #include <assets_manager/asset.h>
 #include <misc/cpp/imgui_stdlib.h>
 
@@ -67,6 +69,13 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             ImGui::InputFloat3("Position", &transform.Position[0]);
             ImGui::InputFloat3("Rotation", &transform.Rotation[0]);
             ImGui::InputFloat3("Scale", &transform.Scale[0]);
+        });
+
+    Registry.Add<Core::ECS::Components::IsometricGrid>(
+        [](Components::IsometricGrid& grid) {
+            ImGui::InputScalar("Width", ImGuiDataType_U64, &grid.Width);
+            ImGui::InputScalar("Height", ImGuiDataType_U64, &grid.Height);
+            ImGui::InputScalar("Depth", ImGuiDataType_U64, &grid.Depth);
         });
 
     Registry.Add<Core::ECS::Components::SpriteRenderer>(
@@ -214,12 +223,6 @@ void Inspector::OnRender() {
                     std::format("Added component \"{}\" to entity with ID {}",
                                 name, m_editorContext.SelectedEntity));
 
-                // FIXME: if the camera is destroyed and then added again, the
-                // main camera will be pointing to a null reference
-                /*std::unique_ptr<Component> newComponent =
-                   Registry.AddComponent(name);
-                                    m_engineContext.Registry.AddComponent(entity,
-                   std::move(newComponent));*/
                 m_engineContext.Registry.AddComponentByName(entity, name);
 
                 ImGui::CloseCurrentPopup();

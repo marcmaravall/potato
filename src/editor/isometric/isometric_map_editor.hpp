@@ -1,8 +1,10 @@
 #pragma once
 
+#include <editor/panel.h>
+
 namespace PotatoEngine::Editor::Isometric {
 
-class MapEditorState {
+class IsometricMapEditor : public EditorPanel {
 private:
 
 public:
