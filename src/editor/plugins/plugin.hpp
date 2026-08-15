@@ -29,6 +29,9 @@ public:
 
     bool Compile(sol::state& lua);
     void Update();
+
+public:
+    bool IsCompiled() const { return m_compiled; }
 };
 
 }  // namespace PotatoEngine::Editor

@@ -25,6 +25,7 @@ public:
 
 public:
     PluginManager(Core::EngineContext& ctx, EditorContext& ectx);
+    ~PluginManager() = default;
 
 protected:
     void OnBegin() override;
