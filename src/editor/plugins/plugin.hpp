@@ -12,7 +12,7 @@ namespace PotatoEngine::Editor {
 class EditorPlugin {
 private:
     sol::environment m_env;
-    Core::AssetID m_pluginAssetId = 0;
+    Core::AssetID m_pluginAssetID = 0;
     bool m_compiled = false;
 
     EditorContext& m_editorContext;
@@ -23,8 +23,12 @@ public:
                  Core::EngineContext& engineContext, Core::AssetID id)
         : m_editorContext(editorContext),
           m_engineContext(engineContext),
-          m_pluginAssetId(id) {}
+          m_pluginAssetID(id) {}
+
     ~EditorPlugin() = default;
+
+    bool Compile(sol::state& lua);
+    void Update();
 };
 
 }  // namespace PotatoEngine::Editor
