@@ -1,8 +1,8 @@
 #pragma once
 
 #include <core/engine_context.h>
-#include <imgui.h>
 #include <editor/panel.h>
+#include <imgui.h>
 #include <platform/api.h>
 #include <sol2_ImGui_Bindings/sol_ImGui.h>
 

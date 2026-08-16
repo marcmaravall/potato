@@ -6,7 +6,6 @@ namespace PotatoEngine::Editor {
 
 PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Plugin Manager", ctx, ectx) {
-    
     m_luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
                               sol::lib::string, sol::lib::table);
     sol_ImGui::Init(m_luaState);
@@ -23,45 +22,71 @@ void PluginManager::OnBegin() {
 
         // TEST:
 #define TEST_PLUGIN_ID 5409846884224673654
-        EditorPlugin plugin = EditorPlugin(m_editorContext, m_engineContext, TEST_PLUGIN_ID);
+        EditorPlugin plugin =
+            EditorPlugin(m_editorContext, m_engineContext, TEST_PLUGIN_ID);
         AddPlugin(std::move(plugin));
     }
 }
 
 void PluginManager::OnRender() {
-    ImGui::SetNextItemWidth(120);
-    if (ImGui::Button("Recompile all Plugins")) {
+    if (ImGui::Button("Recompile All")) {
         for (auto& plugin : m_editorPlugins) plugin.Compile(m_luaState);
     }
+
+    ImGui::SameLine();
+    ImGui::TextDisabled("%zu plugin(s)", m_editorPlugins.size());
+
     ImGui::Separator();
+    ImGui::Spacing();
 
     int toRemove = -1;
-    const auto size = m_editorPlugins.size();
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < m_editorPlugins.size(); ++i) {
         auto& plugin = m_editorPlugins[i];
 
-        ImGui::Text("%lld --- ", i);
-        ImGui::SameLine();
-        ImGui::Text("Compiled: %s",
-                    (int)plugin.IsCompiled() ? "Yes" : "No");
-        ImGui::SameLine();
+        ImGui::PushID(static_cast<int>(i));
+
+        ImGui::Text("#%zu", i);
+        ImGui::SameLine(60.0f);
+
+        if (plugin.IsCompiled()) {
+            ImGui::TextColored(ImVec4(0.30f, 0.85f, 0.40f, 1.0f), "Compiled");
+        } else {
+            ImGui::TextColored(ImVec4(0.95f, 0.65f, 0.25f, 1.0f),
+                               "Not compiled");
+        }
+
+        const float removeWidth = ImGui::CalcTextSize("Remove").x +
+                                  ImGui::GetStyle().FramePadding.x * 2.0f;
+        const float compileWidth = ImGui::CalcTextSize("Compile").x +
+                                   ImGui::GetStyle().FramePadding.x * 2.0f;
+
+        const float buttonsWidth =
+            compileWidth + removeWidth + ImGui::GetStyle().ItemSpacing.x;
+
+        ImGui::SameLine(ImGui::GetWindowWidth() - buttonsWidth - 10.0f);
+
         if (ImGui::Button("Compile")) {
             plugin.Compile(m_luaState);
         }
+
         ImGui::SameLine();
+
         if (ImGui::Button("Remove")) {
-            toRemove = i;
+            toRemove = static_cast<int>(i);
         }
-        ImGui::Separator();
+
+        ImGui::PopID();
+
+        if (i + 1 < m_editorPlugins.size()) ImGui::Separator();
     }
 
-    // TODO: remove at index i
+    if (toRemove >= 0) {
+        m_editorPlugins.erase(m_editorPlugins.begin() + toRemove);
+    }
 }
-
 void PluginManager::OnEnd() {
     for (auto& plugin : m_editorPlugins) {
-        if (plugin.IsCompiled())
-            plugin.Update();
+        if (plugin.IsCompiled()) plugin.Update();
     }
 }
 

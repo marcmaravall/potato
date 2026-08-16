@@ -28,7 +28,8 @@ bool CallFunction(const char* name, sol::environment& env) {
 
 // TODO: save script for not dynamic_casting every time
 bool EditorPlugin::Compile(sol::state& lua) {
-    auto* scriptAsset = m_engineContext._AssetManager.TryGetAsset(m_pluginAssetID);
+    auto* scriptAsset =
+        m_engineContext->_AssetManager.TryGetAsset(m_pluginAssetID);
     if (!scriptAsset) {
         MEB_LOG_ERRORF("Lua script asset with ID %lld not found",
                        m_pluginAssetID);
@@ -47,7 +48,8 @@ bool EditorPlugin::Compile(sol::state& lua) {
 }
 
 void EditorPlugin::Update() {
-    Core::LuaScriptAsset* script = dynamic_cast<Core::LuaScriptAsset*>(m_engineContext._AssetManager.TryGetAsset(m_pluginAssetID));
+    Core::LuaScriptAsset* script = dynamic_cast<Core::LuaScriptAsset*>(
+        m_engineContext->_AssetManager.TryGetAsset(m_pluginAssetID));
     if (!script) {
         MEB_LOG_ERROR("script is null");
         return;

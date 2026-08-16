@@ -15,14 +15,14 @@ private:
     Core::AssetID m_pluginAssetID = 0;
     bool m_compiled = false;
 
-    EditorContext& m_editorContext;
-    Core::EngineContext& m_engineContext;
+    EditorContext* m_editorContext;
+    Core::EngineContext* m_engineContext;
 
 public:
     EditorPlugin(EditorContext& editorContext,
                  Core::EngineContext& engineContext, Core::AssetID id)
-        : m_editorContext(editorContext),
-          m_engineContext(engineContext),
+        : m_editorContext(&editorContext),
+          m_engineContext(&engineContext),
           m_pluginAssetID(id) {}
 
     ~EditorPlugin() = default;
