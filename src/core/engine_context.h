@@ -12,6 +12,7 @@
 #include <logging/debug.h>
 #include <rendering/renderer2d.h>
 
+#include <cstddef>
 #include <iostream>
 #include <sol/sol.hpp>
 #include <vector>

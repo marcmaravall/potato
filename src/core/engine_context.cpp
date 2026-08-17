@@ -9,8 +9,8 @@
 #include <ecs/systems/example.h>
 #include <ecs/systems/sprite_renderer.h>
 
-#include <ecs/systems/isometric_renderer.hpp>
 #include <ecs/components/isometric_grid.hpp>
+#include <ecs/systems/isometric_renderer.hpp>
 
 #include "ecs/entity_id.h"
 #include "glm/ext/matrix_float4x4.hpp"
@@ -58,18 +58,24 @@ glm::mat4 EngineContext::GetViewProjectionMatrix() {
     EntityID mainCamera = GetMainCameraEntity();
     if (mainCamera == NULL_ENTITY) {
         MEB_LOG_WARNING("No main camera found");
-        return glm::identity<glm::mat4>();
+        return glm::mat4(1.0f);
     }
+
+    auto spec = this->Renderer.GetFramebuffer().GetSpec();
+    float aspectRatio =
+        static_cast<float>(spec.Width) / static_cast<float>(spec.Height);
 
     auto* component = Registry.TryGetComponent<Components::Camera>(mainCamera);
     auto* transform =
         Registry.TryGetComponent<Components::Transform>(mainCamera);
     if (!component || !transform) return glm::mat4(1.0f);
 
-    glm::mat4 res = glm::translate(glm::mat4(1.0f), -transform->Position) *
-                    glm::scale(glm::mat4(1.0f), glm::vec3(component->Zoom)) *
-                    glm::mat4(1.0f);
-    return res;
+    float halfHeight = component->Zoom;
+    float halfWidth = halfHeight * aspectRatio;
+    glm::mat4 projection =
+        glm::ortho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), -transform->Position);
+    return projection * view;
 }
 
 }  // namespace PotatoEngine::Core
