@@ -63,6 +63,10 @@ private:
     void RenderFileInput(const char* label, Core::AssetID& asset,
                          Core::AssetType type);
 
+private:
+    void RenderEntity();
+    void RenderAsset();
+
 public:
     ComponentInspectorRegistry Registry;
 
@@ -74,4 +78,3 @@ protected:
     void OnEnd() override;
 };
 }  // namespace PotatoEngine::Editor
-

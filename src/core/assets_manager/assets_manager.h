@@ -53,6 +53,9 @@ public:
                       Asset& asset);
 
 public:
+    static constexpr const char* kMetaExtension = ".meta";
+
+public:
     // TODO: optimize to save result so then will be O(1) (returning reference)
     const std::vector<AssetID> GetAssets(AssetType type);
 };

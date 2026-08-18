@@ -10,7 +10,7 @@
 namespace PotatoEngine::Core {
 
 namespace {
-constexpr const char* kMetaExtension = ".meta";
+
 constexpr const char* kMetaIdKey = "id";
 constexpr const char* kMetaDataKey = "data";
 }  // namespace
@@ -46,7 +46,9 @@ AssetManager::AssetManager() {
 #define MAX_ITERATIONS 100
     int iterations = 0;
     while (currentPath.has_parent_path() &&
-           currentPath.filename().string().find("potato") == std::string::npos && iterations < MAX_ITERATIONS) {
+           currentPath.filename().string().find("potato") ==
+               std::string::npos &&
+           iterations < MAX_ITERATIONS) {
         currentPath = currentPath.parent_path();
         iterations++;
     }
@@ -212,8 +214,9 @@ void AssetManager::ScanAssets() {
 
         LoadMetaFile(metaPath, id, *asset);
 
-        MEB_LOG_INFOF("Create asset '%s' with id %llu",
+        MEB_LOG_INFOF("Create asset '%s', Extension: %s, ID %llu",
                       entry.path().generic_string().c_str(),
+                      entry.path().extension().c_str(),
                       static_cast<unsigned long long>(id));
 
         m_map.emplace(id, std::move(asset));
@@ -221,7 +224,7 @@ void AssetManager::ScanAssets() {
 }
 
 bool AssetManager::IsAssetFile(const std::filesystem::path& path) {
-    return path.extension() != kMetaExtension;
+    return strcmp(path.extension().c_str(), kMetaExtension) != 0;
 }
 
 const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {

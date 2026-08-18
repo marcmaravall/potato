@@ -1,9 +1,13 @@
 #include "inspector.h"
 
+#include <assets_manager/asset.h>
+#include <assets_manager/assets/lua_script_asset.h>
+#include <assets_manager/assets/texture_asset.h>
+#include <misc/cpp/imgui_stdlib.h>
+
 #include <ecs/components/isometric_grid.hpp>
 
-#include <assets_manager/asset.h>
-#include <misc/cpp/imgui_stdlib.h>
+#include "imgui.h"
 
 namespace PotatoEngine::Editor {
 
@@ -153,17 +157,28 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             ImGui::ColorEdit3("Clear Color", &camera.ClearColor[0]);
             ImGui::InputFloat("Zoom", &camera.Zoom, 0.01f, 100.0f, "%.2f");
         });
+
+    // ASSETS ---------------------------------------------------------------
+    // TODO: implement
 }
 
-void Inspector::OnBegin() {}
+void Inspector::RenderAsset() {
+    using namespace Core;
 
-void Inspector::OnRender() {
-    if (!m_editorContext.IsEntitySelected) {
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);
-        ImGui::TextDisabled("No entity selected");
+    AssetID assetID = m_editorContext.SelectedAsset;
+    auto* asset = m_engineContext._AssetManager.TryGetAsset(assetID);
+    if (!asset) {
+        ImGui::TextColored(
+            ImVec4(0.8, 0.1, 0.1, 1.0),
+            "ERROR: selected asset doesn't exist in the AssetManager Registry");
         return;
     }
 
+    ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Entity");
+    Registry.Render(asset, typeid(*asset));
+}
+
+void Inspector::RenderEntity() {
     EntityID entity = m_editorContext.SelectedEntity;
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
@@ -191,8 +206,8 @@ void Inspector::OnRender() {
             if (ImGui::BeginPopupModal("RemoveComponentPopup", nullptr, 0)) {
                 ImGui::SeparatorText("Do you want to remove this component?");
                 if (ImGui::Button("Yes")) {
-                    m_engineContext.Registry.RemoveComponent(
-                        entity, component->Type());
+                    m_engineContext.Registry.RemoveComponent(entity,
+                                                             component->Type());
                 }
 
                 ImGui::SameLine();
@@ -234,6 +249,30 @@ void Inspector::OnRender() {
 
     ImGui::Spacing();
     ImGui::PopFont();
+}
+
+void Inspector::OnBegin() {}
+
+void Inspector::OnRender() {
+    if (m_editorContext.IsAssetSelected && m_editorContext.IsEntitySelected) {
+        MEB_LOG_ERROR(
+            "IsAssetSelected and IsEntitySelected cannot be true at the same "
+            "time, setting both to false.");
+        m_editorContext.IsAssetSelected = false;
+        m_editorContext.IsEntitySelected = false;
+        return;
+    }
+
+    if (!m_editorContext.IsEntitySelected && !m_editorContext.IsAssetSelected) {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 20.0f);
+        ImGui::TextDisabled("No asset/entity selected");
+        return;
+    }
+
+    if (m_editorContext.IsEntitySelected)
+        RenderEntity();
+    else
+        RenderAsset();
 }
 
 void Inspector::OnEnd() {}

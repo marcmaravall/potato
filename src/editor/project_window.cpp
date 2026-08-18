@@ -1,5 +1,6 @@
 #include "project_window.h"
 
+#include "assets_manager/assets_manager.h"
 #include "imgui.h"
 
 namespace PotatoEngine::Editor {
@@ -36,6 +37,10 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
     for (const auto& entry : std::filesystem::directory_iterator(path, ec)) {
         if (ec) break;
 
+        if (entry.path().extension() == Core::AssetManager::kMetaExtension) {
+            continue;
+        }
+
         AssetNode child;
         child.Name = entry.path().filename().string();
         child.Path = entry.path().string();
@@ -48,8 +53,9 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
 }
 
 void ProjectWindow::OpenAsset(const AssetNode& node) {
-    // TODO: implement
     MEB_LOG_INFOF("Open asset %s", node.Name.c_str());
+    m_editorContext.IsAssetSelected = true;
+    // TODO: get asset id
 }
 
 void ProjectWindow::DrawAssetViewer(AssetNode& node) {
