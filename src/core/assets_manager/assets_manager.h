@@ -26,6 +26,9 @@ public:
 
     Asset& GetAsset(AssetID id);
     Asset* TryGetAsset(AssetID id);
+
+    AssetID GetAssetByPath(const std::filesystem::path& path);
+
     AssetID CreateAsset(std::unique_ptr<Asset> asset);
 
     AssetType GetAssetType(const std::filesystem::path& path);

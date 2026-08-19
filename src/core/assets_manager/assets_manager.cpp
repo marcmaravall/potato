@@ -1,5 +1,6 @@
 #include "assets_manager.h"
 
+#include <filesystem>
 #include <fstream>
 #include <limits>
 #include <random>
@@ -30,6 +31,20 @@ Asset* AssetManager::TryGetAsset(AssetID id) {
     } else {
         return nullptr;
     }
+}
+
+AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
+    if (std::filesystem::exists(path)) return 0;
+
+    if (strcmp(path.extension().c_str(), kMetaExtension) == 0) {
+        std::ifstream f(path);
+        nlohmann::json metaJson;
+        f >> metaJson;
+
+        AssetID id = metaJson.at(kMetaIdKey);
+        return id;
+    }
+    return 0;
 }
 
 AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {

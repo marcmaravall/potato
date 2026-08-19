@@ -55,7 +55,7 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
 void ProjectWindow::OpenAsset(const AssetNode& node) {
     MEB_LOG_INFOF("Open asset %s", node.Name.c_str());
     m_editorContext.IsAssetSelected = true;
-    // TODO: get asset id
+    // AssetID id = m_engineContext._AssetManager.GetAssetByPath(node.Path);
 }
 
 void ProjectWindow::DrawAssetViewer(AssetNode& node) {

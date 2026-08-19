@@ -14,7 +14,7 @@ namespace PotatoEngine::Editor {
 
 struct AssetNode {
     std::string Name;
-    std::string Path;
+    std::filesystem::path Path;
     bool Directory = false;
     std::vector<AssetNode> Nodes;
 
