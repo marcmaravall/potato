@@ -6,6 +6,7 @@
 #include <misc/cpp/imgui_stdlib.h>
 
 #include <ecs/components/isometric_grid.hpp>
+#include <strstream>
 
 #include "imgui.h"
 #include "rendering/texture2d.h"
@@ -162,7 +163,21 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
     // ASSETS ---------------------------------------------------------------
     using namespace PotatoEngine::Core::Rendering;
 
-    Registry.Add<Core::LuaScriptAsset>([](Core::LuaScriptAsset& script) {});
+    // Readonly view of the file
+    Registry.Add<Core::LuaScriptAsset>([](Core::LuaScriptAsset& script) {
+        std::ifstream file(script.GetAbsolutePath(),
+                           std::ios::binary | std::ios::in);
+        if (!file.is_open()) {
+            return;
+        }
+        std::string source;
+        source = std::string(std::istreambuf_iterator<char>(file),
+                             std::istreambuf_iterator<char>());
+
+        ImGui::InputTextMultiline(
+            "##FileContent", &source, ImVec2(-FLT_MIN, -FLT_MIN),
+            ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly);
+    });
 
     Registry.Add<Core::TextureAsset>([](Core::TextureAsset& texture) {
         static int filterSelected = static_cast<int>(texture.Settings.Filter);
