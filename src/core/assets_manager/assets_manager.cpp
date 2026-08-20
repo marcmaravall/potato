@@ -34,8 +34,9 @@ Asset* AssetManager::TryGetAsset(AssetID id) {
 }
 
 AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
-    if (std::filesystem::exists(path)) return 0;
+    if (!std::filesystem::exists(path)) return 0;
 
+    // if file is a .meta, just get the id from the json:
     if (strcmp(path.extension().c_str(), kMetaExtension) == 0) {
         std::ifstream f(path);
         nlohmann::json metaJson;
@@ -44,7 +45,10 @@ AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
         AssetID id = metaJson.at(kMetaIdKey);
         return id;
     }
-    return 0;
+
+    std::string p = path;
+    p += kMetaExtension;
+    return GetAssetByPath(p);
 }
 
 AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {

@@ -12,10 +12,11 @@ namespace PotatoEngine::Core {
 
 class TextureAsset : public Asset {
 private:
-    Rendering::Texture2D_Settings m_settings;
     std::unique_ptr<Rendering::Texture2D> m_texture;
 
 public:
+    Rendering::Texture2D_Settings Settings;
+
     TextureAsset(const std::string& path);
     ~TextureAsset() override = default;
 
@@ -27,7 +28,7 @@ public:
     void Deserialize(const nlohmann::json& j) override;
 
 public:
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(TextureAsset, m_settings)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(TextureAsset, Settings)
 };
 
 }  // namespace PotatoEngine::Core

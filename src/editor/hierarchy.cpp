@@ -22,6 +22,7 @@ void HierarchyPanel::RenderEntityNode(EntityID entity, EntityID& toDelete) {
     bool opened = ImGui::TreeNodeEx((void*)entity, flags, "%s", name.c_str());
 
     if (ImGui::IsItemClicked()) {
+        m_editorContext.IsAssetSelected = false;
         selectedEntity = entity;
         isEntitySelected = true;
     }

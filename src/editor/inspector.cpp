@@ -8,6 +8,7 @@
 #include <ecs/components/isometric_grid.hpp>
 
 #include "imgui.h"
+#include "rendering/texture2d.h"
 
 namespace PotatoEngine::Editor {
 
@@ -159,7 +160,45 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         });
 
     // ASSETS ---------------------------------------------------------------
-    // TODO: implement
+    using namespace PotatoEngine::Core::Rendering;
+
+    Registry.Add<Core::LuaScriptAsset>([](Core::LuaScriptAsset& script) {});
+
+    Registry.Add<Core::TextureAsset>([](Core::TextureAsset& texture) {
+        static int filterSelected = static_cast<int>(texture.Settings.Filter);
+        static int wrapS = static_cast<int>(texture.Settings.WrapS);
+        static int wrapT = static_cast<int>(texture.Settings.WrapT);
+
+        constexpr char* filterOptions[] = {
+            (char*)"Point",
+            (char*)"Bilinear",
+            (char*)"Trilinear",
+        };
+
+        constexpr char* wrapOptions[] = {
+            (char*)"Repeat", (char*)"Mirrored Repeat", (char*)"Clamp to Edge",
+            (char*)"Clamp to Border"};
+
+        if (ImGui::Combo("Filter", &filterSelected, filterOptions, 3)) {
+            TextureFilter filter = static_cast<TextureFilter>(filterSelected);
+            texture.Settings.Filter = filter;
+        }
+
+        if (ImGui::Combo("WrapS", &wrapS, wrapOptions, 4)) {
+            TextureWrap wrap = static_cast<TextureWrap>(wrapS);
+            texture.Settings.WrapS = wrap;
+        }
+
+        if (ImGui::Combo("WrapT", &wrapT, wrapOptions, 4)) {
+            TextureWrap wrap = static_cast<TextureWrap>(wrapT);
+            texture.Settings.WrapT = wrap;
+        }
+
+        ImGui::Separator();
+        if (ImGui::Button("Apply")) {
+            texture.Load();
+        }
+    });
 }
 
 void Inspector::RenderAsset() {
@@ -174,7 +213,8 @@ void Inspector::RenderAsset() {
         return;
     }
 
-    ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Entity");
+    ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Asset");
+    ImGui::Separator();
     Registry.Render(asset, typeid(*asset));
 }
 
@@ -183,6 +223,7 @@ void Inspector::RenderEntity() {
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
 
     ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Entity");
+    ImGui::Separator();
 
     m_engineContext.Registry.ForEachComponent(
         entity, [&](Component* component) {
