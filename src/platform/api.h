@@ -6,22 +6,21 @@
 #include <iostream>
 
 namespace PotatoEngine::Platform {
-	class PlatformAPI {
-	public:
-		PlatformAPI() {
-			if (s_Instance == nullptr)
-				s_Instance = this;
-		}
+class PlatformAPI {
+public:
+    PlatformAPI() {
+        if (s_Instance == nullptr) s_Instance = this;
+    }
 
-		virtual ~PlatformAPI() = default;
+    virtual ~PlatformAPI() = default;
 
-	public:
-		// Returns true if it's implemented in the current platform
-		virtual bool SetConsoleVisibility(const bool val) { return false; }
+public:
+    // Returns true if it's implemented in the current platform
+    virtual bool SetConsoleVisibility(const bool val) { return false; }
 
-	public:
-		static PlatformAPI *s_Instance;
-	};
-}
+public:
+    static PlatformAPI* s_Instance;
+};
+}  // namespace PotatoEngine::Platform
 
-#endif // POTATO_PLATFORM_API_H
+#endif  // POTATO_PLATFORM_API_H

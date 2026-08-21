@@ -1,12 +1,30 @@
+#include <string>
+#include <vector>
+
+#include "core/executable.h"
+#include "core/game.hpp"
 #include "editor/editor_application.h"
 
 using namespace PotatoEngine::Core;
 
 int main(int argc, char** argv) {
     MEB_INIT(nullptr);
-    Application* application = new PotatoEngine::Editor::EditorApplication();
-    application->Run();
 
+    bool runEditor = true;
+
+    for (int i = 0; i < argc; i++) {
+        if (strcmp(argv[i], "--build") == 0) runEditor = false;
+    }
+
+    if (runEditor) {
+        // run editor
+        Application* editor = new PotatoEngine::Editor::EditorApplication();
+        editor->Run();
+    } else {
+        // run game
+        Application* game = new Game();
+        game->Run();
+    }
     return 0;
 }
 

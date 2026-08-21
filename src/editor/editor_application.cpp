@@ -24,6 +24,7 @@ void EditorApplication::OnStart() {
     Core::Windowing::Window::Init(winBackend);
     m_window = Core::Windowing::Window::Create("PotatoEngine", 1920, 1080);
 
+    // TODO: don't do this directly
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         MEB_LOG_ERROR("Failed to initialize GLAD");
         exit(1);
