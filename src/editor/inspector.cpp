@@ -3,6 +3,7 @@
 #include <assets_manager/asset.h>
 #include <assets_manager/assets/lua_script_asset.h>
 #include <assets_manager/assets/texture_asset.h>
+#include <assets_manager/assets_manager.h>
 #include <misc/cpp/imgui_stdlib.h>
 
 #include <ecs/components/isometric_grid.hpp>
@@ -179,7 +180,7 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly);
     });
 
-    Registry.Add<Core::TextureAsset>([](Core::TextureAsset& texture) {
+    Registry.Add<Core::TextureAsset>([&](Core::TextureAsset& texture) {
         static int filterSelected = static_cast<int>(texture.Settings.Filter);
         static int wrapS = static_cast<int>(texture.Settings.WrapS);
         static int wrapT = static_cast<int>(texture.Settings.WrapT);
@@ -212,6 +213,10 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         ImGui::Separator();
         if (ImGui::Button("Apply")) {
             texture.Load();
+            std::string path = texture.GetAbsolutePath();
+            path += Core::AssetManager::kMetaExtension;
+            m_engineContext._AssetManager.WriteMetaFile(
+                path, m_editorContext.SelectedAsset, texture);
         }
     });
 }
