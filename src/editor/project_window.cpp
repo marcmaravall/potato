@@ -122,14 +122,20 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 }
 
 void ProjectWindow::OnBegin() {
+    static std::filesystem::path s_lastPath;
     static bool s_init = false;
-    if (!s_init) {
-        auto path = m_engineContext._AssetManager.Path(
-            m_engineContext._AssetManager.GetRoot() + "/assets/");
-        GenerateAssetTree(path, m_root);
 
+    const std::filesystem::path& path = m_engineContext._AssetManager.Path(
+        m_engineContext._AssetManager.GetRoot());
+
+    if (!s_init || path != s_lastPath) {
+        ClearAssetTree();
+        GenerateAssetTree(path.parent_path(), m_root);
+
+        s_lastPath = path;
         s_init = true;
-        MEB_LOG_INFOF("Generated asset in path %s", path.c_str());
+
+        MEB_LOG_INFOF("Generated asset tree in path %s", path.string().c_str());
     }
 }
 

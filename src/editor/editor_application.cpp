@@ -33,10 +33,12 @@ void EditorApplication::OnStart() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
+    /*
     std::string imguiPath = m_engineContext._AssetManager.Path(
         m_engineContext._AssetManager.GetRoot() + "/tests/imgui.ini");
     m_engineContext.Debug.Log("Loaded ImGui from: " + imguiPath);
     ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
+    */
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -56,18 +58,20 @@ void EditorApplication::OnStart() {
 
     m_engineContext.Start();
 
-    std::string path = m_engineContext._AssetManager.Path(
+    /*std::string path = m_engineContext._AssetManager.Path(
         m_engineContext._AssetManager.GetRoot() +
         "/assets/tests/project_test.json");
     std::cout << path << "\n";
-
+    */
     if (!pfd::settings::available()) {
         MEB_LOG_ERROR("PFD is not available for current platform!");
     }
     pfd::settings::verbose(true);
 
+    /*
     m_editorContext.CurrentProject = Project::Load(path);
     m_editorContext.LoadFromProject(m_engineContext);
+    */
 }
 
 void EditorApplication::OnUpdate() {
@@ -103,8 +107,15 @@ void EditorApplication::OnUpdate() {
         auto files = dialog.result();
 
         if (!files.empty()) {
-            m_editorContext.CurrentProject->LoadFromFile(files[0].c_str());
+            const std::filesystem::path& p = files[0];
+            MEB_LOG_INFOF("Open project from directory %s",
+                          p.parent_path().c_str());
+            m_engineContext._AssetManager.SetRoot(p.parent_path());
+            m_engineContext._AssetManager.ScanAssets();
+
+            m_editorContext.CurrentProject = Project::Load(p.c_str());
             m_editorContext.LoadFromProject(m_engineContext);
+            MEB_LOG_INFO("Loaded project successfully!");
         }
     }
 

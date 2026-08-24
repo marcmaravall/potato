@@ -4,7 +4,7 @@
 
 #include "ecs/components/all_components.h"
 
-namespace PotatoEngine::Editor {
+namespace PotatoEngine::Core {
 
 using namespace Core::ECS;
 using namespace Core::ECS::Components;
@@ -80,7 +80,7 @@ ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
     } else if (auto c = dynamic_cast<Transform *>(component)) {
         res.Type = "Transform";
         res.Value = *c;
-    } else if (auto c = dynamic_cast<IsometricGrid*>(component)) {
+    } else if (auto c = dynamic_cast<IsometricGrid *>(component)) {
         res.Type = "IsometricGrid";
         res.Value = *c;
     } else {
@@ -121,4 +121,4 @@ void Serializer::SaveToFile(const Core::EngineContext &ctx,
 }
 // ----
 
-}  // namespace PotatoEngine::Editor
+}  // namespace PotatoEngine::Core

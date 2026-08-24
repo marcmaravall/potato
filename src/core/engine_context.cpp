@@ -30,7 +30,7 @@ void EngineContext::Start() {
     Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
     Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
 
-    _AssetManager.ScanAssets();
+    // _AssetManager.ScanAssets();
 }
 
 void EngineContext::RegisterComponents() {
@@ -57,7 +57,7 @@ EntityID EngineContext::GetMainCameraEntity() {
 glm::mat4 EngineContext::GetViewProjectionMatrix() {
     EntityID mainCamera = GetMainCameraEntity();
     if (mainCamera == NULL_ENTITY) {
-        MEB_LOG_WARNING("No main camera found");
+        // MEB_LOG_WARNING("No main camera found");
         return glm::mat4(1.0f);
     }
 

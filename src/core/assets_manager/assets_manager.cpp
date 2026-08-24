@@ -61,6 +61,7 @@ AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
 
 // TODO: don't do this
 AssetManager::AssetManager() {
+    /*
     std::filesystem::path currentPath = std::filesystem::current_path();
 #define MAX_ITERATIONS 100
     int iterations = 0;
@@ -84,7 +85,10 @@ AssetManager::AssetManager() {
         MEB_ASSERT(0 && "Could not find potato directory in path hierarchy.");
         m_root = "";
     }
+    */
 }
+
+void AssetManager::SetRoot(const std::filesystem::path& root) { m_root = root; }
 
 // TODO: complete:
 AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
@@ -206,8 +210,8 @@ void AssetManager::ScanAssets() {
 
     MEB_LOG_INFOF("Scanning Assets; Root: %s", m_root.c_str());
 
-    for (auto& entry : std::filesystem::recursive_directory_iterator(
-             Path(m_root + "/assets"))) {
+    for (auto& entry :
+         std::filesystem::recursive_directory_iterator(Path(m_root))) {
         if (!entry.is_regular_file()) continue;
 
         if (entry.path().extension() == kMetaExtension) continue;

@@ -9,6 +9,7 @@
 
 namespace PotatoEngine::Editor {
 
+using namespace PotatoEngine::Core;
 using json = nlohmann::json;
 
 std::unique_ptr<Project> Project::Load(const std::string& path) {

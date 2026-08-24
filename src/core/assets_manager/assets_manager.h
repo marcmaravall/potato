@@ -24,6 +24,8 @@ public:
     AssetManager();
     ~AssetManager() = default;
 
+    void SetRoot(const std::filesystem::path& root);
+
     Asset& GetAsset(AssetID id);
     Asset* TryGetAsset(AssetID id);
 

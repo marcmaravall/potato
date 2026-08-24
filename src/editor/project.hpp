@@ -39,8 +39,8 @@ class Project {
 public:
     fs::path ProjectPath;
     ProjectSettings _ProjectSettings;
-    std::vector<SceneMeta> Scenes;
-    ECS_Meta _ECS_Meta;
+    std::vector<Core::SceneMeta> Scenes;
+    Core::ECS_Meta _ECS_Meta;
 
 public:
     Project() = default;

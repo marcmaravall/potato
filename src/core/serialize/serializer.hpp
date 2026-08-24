@@ -17,7 +17,7 @@
 
 #include "nlohmann/detail/macro_scope.hpp"
 
-namespace PotatoEngine::Editor {
+namespace PotatoEngine::Core {
 
 struct ComponentMeta {
     std::string Type;
@@ -61,7 +61,7 @@ public:
     static ComponentMeta ComponentToMeta(Core::ECS::Component* component);
 };
 
-}  // namespace PotatoEngine::Editor
+}  // namespace PotatoEngine::Core
 
 // Define types to nlohmann::json
 namespace glm {
