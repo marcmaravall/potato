@@ -1,11 +1,14 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
+
 namespace PotatoEngine::Core::Physics {
 
-	class PhysicsMaterial {
+struct PhysicsMaterial {
+    float Friction = 0.0;
+    float Mass = 1.0;
 
-	public:
-		double Friction = 0.0;
-		double Mass = 1.0;
-	};
-}
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(PhysicsMaterial, Friction, Mass)
+};
+
+}  // namespace PotatoEngine::Core::Physics
