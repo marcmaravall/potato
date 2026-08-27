@@ -130,6 +130,11 @@ public:
         else if constexpr (std::is_same_v<Component,
                                           ECS::Components::IsometricGrid>)
             return "IsometricGrid";
+
+        else if constexpr (std::is_same_v<Component,
+                                          ECS::Components::BoxCollider2D>)
+            return "BoxCollider2D";
+
         else
             return "Unknown";
     }

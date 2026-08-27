@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "ecs/components/all_components.h"
+#include "ecs/components/box_collider_2d.h"
 
 namespace PotatoEngine::Core {
 
@@ -23,9 +24,6 @@ std::unique_ptr<Component> Serializer::MetaToComponent(
     if (component.Type == "Name")
         return DeserializeComponent<Name>(component.Value);
 
-    // if (component.Type == "BoxCollider2D")
-    //    return DeserializeComponent<BoxCollider2D>(component.Value);
-
     if (component.Type == "Camera")
         return DeserializeComponent<Camera>(component.Value);
 
@@ -45,6 +43,8 @@ std::unique_ptr<Component> Serializer::MetaToComponent(
         return DeserializeComponent<Transform>(component.Value);
     if (component.Type == "IsometricGrid")
         return DeserializeComponent<IsometricGrid>(component.Value);
+    if (component.Type == "BoxCollider2D")
+        return DeserializeComponent<BoxCollider2D>(component.Value);
 
     return nullptr;
 }
@@ -82,6 +82,9 @@ ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
         res.Value = *c;
     } else if (auto c = dynamic_cast<IsometricGrid *>(component)) {
         res.Type = "IsometricGrid";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<BoxCollider2D *>(component)) {
+        res.Type = "BoxCollider2D";
         res.Value = *c;
     } else {
         res.Type = "NULL";

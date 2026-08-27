@@ -4,9 +4,10 @@
 #include <assets_manager/assets/lua_script_asset.h>
 #include <assets_manager/assets/texture_asset.h>
 #include <assets_manager/assets_manager.h>
-#include <misc/cpp/imgui_stdlib.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include <ecs/components/isometric_grid.hpp>
+#include <glm/glm.hpp>
 #include <strstream>
 
 #include "imgui.h"
@@ -159,6 +160,12 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         [](Core::ECS::Components::Camera& camera) {
             ImGui::ColorEdit3("Clear Color", &camera.ClearColor[0]);
             ImGui::InputFloat("Zoom", &camera.Zoom, 0.01f, 100.0f, "%.2f");
+        });
+
+    Registry.Add<Core::ECS::Components::BoxCollider2D>(
+        [](Core::ECS::Components::BoxCollider2D& collider) {
+            ImGui::InputFloat2("Origin", (float*)&collider.Origin);
+            ImGui::InputFloat2("Size", (float*)&collider.Size);
         });
 
     // ASSETS ---------------------------------------------------------------

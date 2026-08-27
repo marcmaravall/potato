@@ -5,11 +5,14 @@
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 
-namespace PotatoEngine::Core::ECS {
+namespace PotatoEngine::Core::ECS::Components {
 
 class BoxCollider2D : public Component {
-private:
-    // TODO: add:
+public:
+    // Origin relative to transform.position
+    glm::vec2 Origin = glm::vec2(0);
+
+    glm::vec2 Size = glm::vec2(1);
 
 public:
     BoxCollider2D() : Component("Box Collider 2D") {}
@@ -18,6 +21,6 @@ public:
     static constexpr ComponentType StaticType = ComponentType::BOX_COLLIDER_2D;
     ComponentType Type() const override { return StaticType; }
 
-    // NLOHMANN_DEFINE_TYPE_INTRUSIVE(BoxCollider2D);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(BoxCollider2D, Origin, Size);
 };
-}  // namespace PotatoEngine::Core::ECS
+}  // namespace PotatoEngine::Core::ECS::Components
