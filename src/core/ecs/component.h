@@ -6,6 +6,7 @@ namespace PotatoEngine::Core::ECS {
 
 enum class ComponentType {
     BOX_COLLIDER_2D,
+    RIGIDBODY_2D,
     CAMERA,
     CHILDREN,
     LUA_SCRIPT,

@@ -13,6 +13,7 @@
 #include <ecs/systems/isometric_renderer.hpp>
 
 #include "ecs/components/box_collider_2d.h"
+#include "ecs/components/rigidbody2d.hpp"
 #include "ecs/entity_id.h"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
@@ -46,6 +47,7 @@ void EngineContext::RegisterComponents() {
     Registry.RegisterComponent<Transform>();
     Registry.RegisterComponent<IsometricGrid>();
     Registry.RegisterComponent<BoxCollider2D>();
+    Registry.RegisterComponent<Rigidbody2D>();
 }
 
 EntityID EngineContext::GetMainCameraEntity() {

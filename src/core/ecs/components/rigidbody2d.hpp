@@ -17,6 +17,9 @@ public:
     Rigidbody2D() : Component("Rigidbody2D") {}
     ~Rigidbody2D() = default;
 
+    static constexpr ComponentType StaticType = ComponentType::RIGIDBODY_2D;
+    ComponentType Type() const override { return StaticType; }
+
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rigidbody2D, GravityForce, Mass)
 };
 

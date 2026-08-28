@@ -13,6 +13,6 @@ struct AABB_Collision2D {
     AABB_Collision2D() = default;
 };
 
-bool AABB(AABB_Collision2D collision);
+bool AABB(const AABB_Collision2D& collision);
 
 }  // namespace PotatoEngine::Core::Physics::Collisions

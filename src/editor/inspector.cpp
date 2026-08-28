@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <strstream>
 
+#include "ecs/components/rigidbody2d.hpp"
 #include "imgui.h"
 #include "rendering/texture2d.h"
 
@@ -166,6 +167,12 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         [](Core::ECS::Components::BoxCollider2D& collider) {
             ImGui::InputFloat2("Origin", (float*)&collider.Origin);
             ImGui::InputFloat2("Size", (float*)&collider.Size);
+        });
+
+    Registry.Add<Core::ECS::Components::Rigidbody2D>(
+        [](Core::ECS::Components::Rigidbody2D& rb) {
+            ImGui::InputFloat("Mass", &rb.Mass);
+            ImGui::InputFloat("GravityForce", &rb.GravityForce);
         });
 
     // ASSETS ---------------------------------------------------------------
