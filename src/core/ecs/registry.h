@@ -12,6 +12,7 @@
 
 #include "component.h"
 #include "components/all_components.h"
+#include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
 #include "entity.h"
 #include "entity_id.h"
@@ -135,6 +136,9 @@ public:
         else if constexpr (std::is_same_v<Component,
                                           ECS::Components::BoxCollider2D>)
             return "BoxCollider2D";
+        else if constexpr (std::is_same_v<Component,
+                                          ECS::Components::CircleCollider2D>)
+            return "CircleCollider2D";
         else if constexpr (std::is_same_v<Component,
                                           ECS::Components::Rigidbody2D>)
             return "Rigidbody2D";

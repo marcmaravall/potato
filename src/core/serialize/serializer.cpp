@@ -4,6 +4,8 @@
 
 #include "ecs/components/all_components.h"
 #include "ecs/components/box_collider_2d.h"
+#include "ecs/components/circle_collider_2d.hpp"
+#include "ecs/components/rigidbody2d.hpp"
 
 namespace PotatoEngine::Core {
 
@@ -45,6 +47,8 @@ std::unique_ptr<Component> Serializer::MetaToComponent(
         return DeserializeComponent<IsometricGrid>(component.Value);
     if (component.Type == "BoxCollider2D")
         return DeserializeComponent<BoxCollider2D>(component.Value);
+    if (component.Type == "Rigidbody2D")
+        return DeserializeComponent<Rigidbody2D>(component.Value);
 
     return nullptr;
 }
@@ -85,6 +89,12 @@ ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
         res.Value = *c;
     } else if (auto c = dynamic_cast<BoxCollider2D *>(component)) {
         res.Type = "BoxCollider2D";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<Rigidbody2D *>(component)) {
+        res.Type = "Rigidbody2D";
+        res.Value = *c;
+    } else if (auto c = dynamic_cast<CircleCollider2D *>(component)) {
+        res.Type = "CircleCollider2D";
         res.Value = *c;
     } else {
         res.Type = "NULL";

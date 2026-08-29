@@ -13,8 +13,10 @@
 #include <ecs/systems/isometric_renderer.hpp>
 
 #include "ecs/components/box_collider_2d.h"
+#include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
 #include "ecs/entity_id.h"
+#include "ecs/systems/physics2d.hpp"
 #include "glm/ext/matrix_float4x4.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
@@ -31,6 +33,7 @@ void EngineContext::Start() {
     Registry.AddSystem<ECS::Systems::IsometricRenderer>(*this);
     Registry.AddSystem<ECS::Systems::SpriteRendererSystem>(*this);
     Registry.AddSystem<ECS::Systems::LuaScriptSystem>(*this);
+    Registry.AddSystem<ECS::Systems::Physics2D>(*this);
 
     // _AssetManager.ScanAssets();
 }
@@ -47,6 +50,7 @@ void EngineContext::RegisterComponents() {
     Registry.RegisterComponent<Transform>();
     Registry.RegisterComponent<IsometricGrid>();
     Registry.RegisterComponent<BoxCollider2D>();
+    Registry.RegisterComponent<CircleCollider2D>();
     Registry.RegisterComponent<Rigidbody2D>();
 }
 

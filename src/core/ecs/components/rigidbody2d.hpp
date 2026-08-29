@@ -2,6 +2,7 @@
 
 #include <ecs/component.h>
 
+#include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 
 namespace PotatoEngine::Core::ECS::Components {
@@ -12,6 +13,7 @@ public:
     float GravityForce = 1.0f;
 
     float Mass = 1.0f;
+    glm::vec2 Velocity = glm::vec2(0, 0);
 
 public:
     Rigidbody2D() : Component("Rigidbody2D") {}
@@ -20,7 +22,7 @@ public:
     static constexpr ComponentType StaticType = ComponentType::RIGIDBODY_2D;
     ComponentType Type() const override { return StaticType; }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rigidbody2D, GravityForce, Mass)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Rigidbody2D, GravityForce, Mass, Velocity)
 };
 
 }  // namespace PotatoEngine::Core::ECS::Components

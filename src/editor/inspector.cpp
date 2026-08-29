@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <strstream>
 
+#include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
 #include "imgui.h"
 #include "rendering/texture2d.h"
@@ -167,6 +168,12 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         [](Core::ECS::Components::BoxCollider2D& collider) {
             ImGui::InputFloat2("Origin", (float*)&collider.Origin);
             ImGui::InputFloat2("Size", (float*)&collider.Size);
+        });
+
+    Registry.Add<Core::ECS::Components::CircleCollider2D>(
+        [](Core::ECS::Components::CircleCollider2D& collider) {
+            ImGui::InputFloat2("Origin", (float*)&collider.Origin);
+            ImGui::InputFloat("Radius", &collider.Radius);
         });
 
     Registry.Add<Core::ECS::Components::Rigidbody2D>(
