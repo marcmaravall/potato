@@ -7,7 +7,8 @@
 namespace PotatoEngine::Editor {
 using namespace PotatoEngine::Core::Rendering;
 
-EditorApplication::EditorApplication() {
+EditorApplication::EditorApplication()
+    : m_menuBar(m_editorContext, m_engineContext) {
 #ifdef _WIN32
     SetPlatform(new Platform::Win32_API());
 #elif __linux__
@@ -127,7 +128,7 @@ void EditorApplication::OnUpdate() {
         m_editorContext.CManager.Redo();  // REDO
     }
 
-    menuBar();
+    m_menuBar.Render();
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
@@ -144,14 +145,4 @@ void EditorApplication::OnDestroy() {}
 
 bool EditorApplication::ShouldClose() const { return !m_running; }
 
-void EditorApplication::menuBar() const {
-    if (ImGui::BeginMainMenuBar()) {
-        ImGui::Text("Potato Engine");
-
-        ImGui::SameLine();
-        ImGui::Separator();
-
-        ImGui::EndMainMenuBar();
-    }
-}
 }  // namespace PotatoEngine::Editor

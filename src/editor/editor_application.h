@@ -21,6 +21,7 @@
 #include "game_player.h"
 #include "hierarchy.h"
 #include "inspector.h"
+#include "menu_bar.hpp"
 #include "panel.h"
 #include "platform/api.h"
 #include "plugins/plugin_manager.hpp"
@@ -49,9 +50,8 @@ private:
     Core::EngineContext m_engineContext;
     std::vector<std::unique_ptr<EditorPanel>> m_panels;
 
-public:
 private:
-    void menuBar() const;
+    MenuBar m_menuBar;
 
 public:
     EditorApplication();
