@@ -12,37 +12,6 @@ LuaScriptSystem::LuaScriptSystem(EngineContext& ctx) : ECS::System(ctx) {
                          sol::lib::string, sol::lib::table);
 
     Scripting::ScriptingAPI::InitCore(m_lua, ctx);
-
-    // misc:
-    // TODO: move to scripting_api.hpp
-    sol::table debug = m_lua.create_named_table("Debug");
-
-    debug.set_function(
-        "log", [&ctx](const std::string& message) { ctx.Debug.Log(message); });
-
-    sol::table reg = m_lua.create_named_table("Registry");
-    reg.set_function("create", [&ctx](const std::string& name) -> EntityID {
-        return ctx.Registry.CreateEntity(name);
-    });
-
-    reg.set_function(
-        "getComponent",
-        [&ctx](sol::this_state ts, EntityID e,
-               const std::string& name) -> sol::object {
-            sol::state_view lua(ts);
-
-            for (const auto& comp : ctx.Registry.GetComponentNames()) {
-                if (name == comp) {
-                    Component* c = ctx.Registry.GetComponentByName(e, name);
-                    MEB_ASSERT(c);
-
-                    return ctx.Registry.BindComponentToLua(lua, c, name);
-                }
-            }
-
-            return sol::nil;
-        });
-    // ------
 }
 
 bool LuaScriptSystem::RunLuaSafe(sol::load_result& chunk, const char* stage) {

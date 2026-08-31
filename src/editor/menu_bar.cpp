@@ -26,7 +26,14 @@ void MenuBar::Edit() { ImGui::EndMenu(); }
 
 void MenuBar::View() { ImGui::EndMenu(); }
 
-void MenuBar::Help() { ImGui::EndMenu(); }
+void MenuBar::Help() {
+    if (ImGui::Button("Welcome")) {
+    }
+    if (ImGui::Button("Documentation")) {
+    }
+
+    ImGui::EndMenu();
+}
 
 void MenuBar::Render() {
     if (ImGui::BeginMainMenuBar()) {

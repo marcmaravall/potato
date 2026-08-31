@@ -19,6 +19,9 @@ private:
     static void InitGLM(sol::state& lua);
     static void InitComponents(sol::state& lua);
 
+    static void InitDebug(sol::state& lua, EngineContext& ctx);
+    static void InitECS(sol::state& lua, EngineContext& ctx);
+
 public:
     static void InitCore(sol::state& lua, EngineContext& ctx);
 };

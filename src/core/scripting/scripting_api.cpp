@@ -9,6 +9,40 @@ namespace PotatoEngine::Core::Scripting {
 
 using namespace ECS::Components;
 
+void ScriptingAPI::InitECS(sol::state& lua, EngineContext& ctx) {
+    sol::table reg = lua.create_named_table("Registry");
+    reg.set_function("create",
+                     [&ctx](const std::string& name) -> ECS::EntityID {
+                         return ctx.Registry.CreateEntity(name);
+                     });
+
+    reg.set_function(
+        "getComponent",
+        [&ctx](sol::this_state ts, ECS::EntityID e,
+               const std::string& name) -> sol::object {
+            sol::state_view lua(ts);
+
+            for (const auto& comp : ctx.Registry.GetComponentNames()) {
+                if (name == comp) {
+                    ECS::Component* c =
+                        ctx.Registry.GetComponentByName(e, name);
+                    MEB_ASSERT(c);
+
+                    return ctx.Registry.BindComponentToLua(lua, c, name);
+                }
+            }
+
+            return sol::nil;
+        });
+}
+
+void ScriptingAPI::InitDebug(sol::state& lua, EngineContext& ctx) {
+    sol::table debug = lua.create_named_table("Debug");
+
+    debug.set_function(
+        "log", [&ctx](const std::string& message) { ctx.Debug.Log(message); });
+}
+
 void ScriptingAPI::InitInput(sol::state& lua, EngineContext& ctx) {
     sol::table input = lua.create_named_table("Input");
     input.set_function("isKey", [&ctx](Input::Key key) -> bool {
@@ -208,6 +242,8 @@ void ScriptingAPI::InitCore(sol::state& lua, EngineContext& ctx) {
     InitInput(lua, ctx);
     InitGLM(lua);
     InitComponents(lua);
+    InitECS(lua, ctx);
+    InitDebug(lua, ctx);
 }
 
 }  // namespace PotatoEngine::Core::Scripting

@@ -34,7 +34,6 @@ public:
                                    EngineVersion)
 };
 
-// TODO: put all *Meta structs in a better place
 class Project {
 public:
     fs::path ProjectPath;
