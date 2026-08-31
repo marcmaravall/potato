@@ -116,6 +116,8 @@ void EditorApplication::OnUpdate() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     m_window->SwapBuffers();
+
+    m_menuBar.ExecEvents();
 }
 
 void EditorApplication::OnDestroy() {}

@@ -12,6 +12,8 @@ private:
     EditorContext& m_editorContext;
     Core::EngineContext& m_engineContext;
 
+    std::queue<std::function<void()>> m_events;
+
 private:
     void File();
     void Edit();
@@ -26,6 +28,10 @@ public:
 
 public:
     void Render();
+
+    // This should be called at the end of frame so the engine don't freezes
+    // with save/open actions
+    void ExecEvents();
 };
 
 }  // namespace PotatoEngine::Editor

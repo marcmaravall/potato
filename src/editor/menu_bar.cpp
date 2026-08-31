@@ -4,15 +4,21 @@
 
 namespace PotatoEngine::Editor {
 
-void MenuBar::File() {
-    // FIXME: applications freezes when opening or saving a project
-    // SOLUTION: add a queue of instructions (save/open) at the end of the frame
+void MenuBar::ExecEvents() {
+    while (!m_events.empty()) {
+        m_events.front()();
+        m_events.pop();
+    }
+}
 
+void MenuBar::File() {
     if (ImGui::Button("Open")) {
-        m_editorContext.UserOpenProject(m_engineContext);
+        m_events.push(
+            [&]() { m_editorContext.UserOpenProject(m_engineContext); });
     }
     if (ImGui::Button("Save")) {
-        m_editorContext.UserSaveProject(m_engineContext);
+        m_events.push(
+            [&]() { m_editorContext.UserSaveProject(m_engineContext); });
     }
     ImGui::Separator();
     if (ImGui::Button("Exit")) {
@@ -37,9 +43,6 @@ void MenuBar::Help() {
 
 void MenuBar::Render() {
     if (ImGui::BeginMainMenuBar()) {
-        ImGui::Text("Potato Engine");
-
-        ImGui::Separator();
         if (ImGui::BeginMenu("File")) File();
         ImGui::Separator();
         if (ImGui::BeginMenu("Edit")) Edit();
