@@ -90,34 +90,11 @@ void EditorApplication::OnUpdate() {
     auto io = ImGui::GetIO();
 
     if (ImGui::IsKeyPressed(ImGuiKey_S) && io.KeyCtrl) {
-        auto dialog =
-            pfd::save_file("Save project", pfd::path::home(),
-                           {"JSON Files", "*.json", "All Files", "*"});
-        auto file = dialog.result();
-
-        if (!file.empty()) {
-            m_editorContext.CurrentProject->SaveToFile(file, m_engineContext);
-        }
+        m_editorContext.UserSaveProject(m_engineContext);
     }
 
     if (ImGui::IsKeyPressed(ImGuiKey_O) && io.KeyCtrl) {
-        auto dialog = pfd::open_file(
-            "Choose project to open", pfd::path::home(),
-            {"JSON Files", "*.json", "All Files", "*"}, pfd::opt::multiselect);
-
-        auto files = dialog.result();
-
-        if (!files.empty()) {
-            const std::filesystem::path& p = files[0];
-            MEB_LOG_INFOF("Open project from directory %s",
-                          p.parent_path().c_str());
-            m_engineContext._AssetManager.SetRoot(p.parent_path());
-            m_engineContext._AssetManager.ScanAssets();
-
-            m_editorContext.CurrentProject = Project::Load(p.c_str());
-            m_editorContext.LoadFromProject(m_engineContext);
-            MEB_LOG_INFO("Loaded project successfully!");
-        }
+        m_editorContext.UserOpenProject(m_engineContext);
     }
 
     if (ImGui::IsKeyPressed(ImGuiKey_Z) && io.KeyCtrl) {

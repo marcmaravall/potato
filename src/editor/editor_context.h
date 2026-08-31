@@ -27,6 +27,11 @@ public:
     std::unique_ptr<Project> CurrentProject;
 
 public:
+    // Utils:
+    void UserOpenProject(Core::EngineContext& ctx);
+    void UserSaveProject(Core::EngineContext& ctx);
+
+public:
     // This should be called when loading CurrentProject to change engine/editor
     // contexts
     void LoadFromProject(Core::EngineContext& engineContext);
