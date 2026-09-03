@@ -6,6 +6,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <mfsw/mfsw.hpp>
 #include <nlohmann/json.hpp>
 #include <random>
 #include <string>
@@ -24,8 +25,9 @@ public:
     AssetManager();
     ~AssetManager() = default;
 
-    void SetRoot(const std::filesystem::path& root);
+    void UnsafeEmplace(AssetID id, std::unique_ptr<Asset> asset);
 
+    void SetRoot(const std::filesystem::path& root);
     Asset& GetAsset(AssetID id);
     Asset* TryGetAsset(AssetID id);
 
@@ -61,7 +63,8 @@ public:
     static constexpr const char* kMetaExtension = ".meta";
 
 public:
-    // TODO: optimize to save result so then will be O(1) (returning reference)
+    // TODO: optimize to save result so then will be O(1) (returning
+    // reference)
     const std::vector<AssetID> GetAssets(AssetType type);
 };
 

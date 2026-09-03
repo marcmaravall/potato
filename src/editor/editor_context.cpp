@@ -4,6 +4,7 @@
 #include <portable-file-dialogs/portable-file-dialogs.h>
 
 #include "ecs/entity.h"
+#include "file_listener.hpp"
 #include "serialize/serializer.hpp"
 
 namespace PotatoEngine::Editor {
@@ -23,6 +24,10 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
                       p.parent_path().c_str());
         ctx._AssetManager.SetRoot(p.parent_path());
         ctx._AssetManager.ScanAssets();
+
+        m_fileWatcher.stop();
+        m_fileWatcher.add_listener(p.parent_path(), new FileListener(ctx));
+        m_fileWatcher.watch();
 
         CurrentProject = Project::Load(p.c_str());
         LoadFromProject(ctx);

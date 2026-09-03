@@ -7,6 +7,7 @@
 
 #include "assets/lua_script_asset.h"
 #include "assets/texture_asset.h"
+#include "assets_manager/asset.h"
 
 namespace PotatoEngine::Core {
 
@@ -244,6 +245,10 @@ void AssetManager::ScanAssets() {
 
         m_map.emplace(id, std::move(asset));
     }
+}
+
+void AssetManager::UnsafeEmplace(AssetID id, std::unique_ptr<Asset> asset) {
+    m_map.emplace(id, std::move(asset));
 }
 
 bool AssetManager::IsAssetFile(const std::filesystem::path& path) {

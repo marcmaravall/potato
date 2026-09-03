@@ -4,6 +4,8 @@
 #include <core/ecs/entity_id.h>
 #include <core/logging/debug.h>
 
+#include <mfsw/mfsw.hpp>
+
 #include "assets_manager/asset.h"
 #include "commands/command_manager.h"
 #include "project.hpp"
@@ -12,6 +14,8 @@ namespace PotatoEngine::Editor {
 
 class EditorContext {
 private:
+    mfsw::file_watcher m_fileWatcher;
+
 public:
     EditorContext() = default;
     ~EditorContext() = default;

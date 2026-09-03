@@ -31,6 +31,9 @@ int main(int argc, char** argv) {
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define MFSW_IMPLEMENTATION
+#include <mfsw/mfsw.hpp>
+
 #define MEB_IMPLEMENTATION
 #define MEB_LOG_TO_STDOUT
 #include <meb.h>
