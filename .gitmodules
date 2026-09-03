@@ -37,3 +37,6 @@
 [submodule "sol2_ImGui_Bindings"]
     path = thirdparty/sol2_ImGui_Bindings
     url = https://github.com/marcmaravall/sol2_ImGui_Bindings.git
+[submodule "thirdparty/mfsw"]
+	path = thirdparty/mfsw
+	url = https://github.com/marcmaravall/mfsw
