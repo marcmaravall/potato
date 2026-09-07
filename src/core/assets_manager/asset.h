@@ -42,6 +42,10 @@ public:
     virtual ~Asset() = default;
 
 public:
+    void SetAbsolutePath(const std::filesystem::path& path) noexcept {
+        m_absPath = path;
+    }
+
     const std::filesystem::path& GetAbsolutePath() const noexcept {
         return m_absPath;
     }

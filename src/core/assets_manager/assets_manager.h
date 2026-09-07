@@ -31,9 +31,16 @@ public:
     Asset& GetAsset(AssetID id);
     Asset* TryGetAsset(AssetID id);
 
+    void ClearAssets();
+    void RemoveAsset(AssetID id);
+
+    void LoadOrCreateAsset(const std::filesystem::path& path,
+                           const std::filesystem::path& meta);
+
     AssetID GetAssetByPath(const std::filesystem::path& path);
 
     AssetID CreateAsset(std::unique_ptr<Asset> asset);
+    bool UpdateAssetPath(AssetID id, const std::filesystem::path& path);
 
     AssetType GetAssetType(const std::filesystem::path& path);
 

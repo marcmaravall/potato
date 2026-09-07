@@ -18,20 +18,21 @@ constexpr const char* kMetaDataKey = "data";
 }  // namespace
 
 Asset& AssetManager::GetAsset(AssetID id) {
-    if (m_map.contains(id)) {
-        return *m_map[id];
-    } else {
-        throw std::runtime_error("Asset with ID " + std::to_string(id) +
-                                 " not found.");
-    }
+    if (m_map.contains(id)) return *m_map[id];
+    throw std::runtime_error("Asset with ID " + std::to_string(id) +
+                             " not found.");
 }
 
 Asset* AssetManager::TryGetAsset(AssetID id) {
-    if (m_map.contains(id)) {
-        return m_map[id].get();
-    } else {
-        return nullptr;
-    }
+    if (m_map.contains(id)) return m_map[id].get();
+    return nullptr;
+}
+
+void AssetManager::ClearAssets() { m_map.clear(); }
+
+void AssetManager::RemoveAsset(AssetID id) {
+    if (!m_map.contains(id)) return;
+    m_map.erase(id);
 }
 
 AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
@@ -58,6 +59,15 @@ AssetID AssetManager::CreateAsset(std::unique_ptr<Asset> asset) {
     m_map.emplace(id, std::move(asset));
 
     return id;
+}
+
+bool AssetManager::UpdateAssetPath(AssetID id,
+                                   const std::filesystem::path& path) {
+    if (!m_map.contains(id)) return false;
+    Asset* asset = TryGetAsset(id);
+    if (!asset) return false;
+    asset->SetAbsolutePath(path);
+    return true;
 }
 
 // TODO: don't do this
@@ -171,6 +181,15 @@ void AssetManager::LoadMetaFile(const std::filesystem::path& metaPath,
         MEB_LOG_WARNINGF("Failed to deserialize meta file '%s' (%s)",
                          metaPath.string().c_str(), e.what());
     }
+}
+
+void AssetManager::LoadOrCreateAsset(const std::filesystem::path& fullPath,
+                                     const std::filesystem::path& metaPath) {
+    AssetType type = GetAssetType(fullPath);
+    AssetID newId = GenerateRandomAssetID();
+    std::unique_ptr<Asset> asset = CreateAssetInstance(type, fullPath);
+    WriteMetaFile(metaPath, newId, *asset);
+    UnsafeEmplace(newId, std::move(asset));
 }
 
 AssetID AssetManager::GetOrCreateAssetID(

@@ -6,7 +6,7 @@ namespace PotatoEngine::Editor {
 
 using namespace Core;
 
-// TODO: implement
+// TODO: solve bugs
 void FileListener::on_event(const mfsw::event& event) {
     AssetManager& assetManager = m_engineContext._AssetManager;
 
@@ -28,18 +28,47 @@ void FileListener::on_event(const mfsw::event& event) {
             LuaScriptAsset* asset =
                 dynamic_cast<LuaScriptAsset*>(assetManager.TryGetAsset(id));
             if (!asset) return;
-            // TODO: compile
         }
     }
 
     if (event.type == mfsw::action::ADD) {
-        AssetType type = assetManager.GetAssetType(fullPath);
-        AssetID id = assetManager.GenerateRandomAssetID();
-        std::unique_ptr<Asset> asset =
-            assetManager.CreateAssetInstance(type, fullPath);
-        assetManager.WriteMetaFile(metaPath, id, *asset);
-        assetManager.UnsafeEmplace(id, std::move(asset));
-        MEB_LOG_INFO("Create new asset");
+        try {
+            AssetType type = assetManager.GetAssetType(fullPath);
+            AssetID id = assetManager.GenerateRandomAssetID();
+            std::unique_ptr<Asset> asset =
+                assetManager.CreateAssetInstance(type, fullPath);
+            assetManager.WriteMetaFile(metaPath, id, *asset);
+            assetManager.UnsafeEmplace(id, std::move(asset));
+            MEB_LOG_INFO("Create new asset");
+        } catch (std::exception& ex) {
+            MEB_LOG_ERRORF("%s", ex.what());
+        }
+    }
+
+    if (event.type == mfsw::action::DELETE) {
+        // TODO: implement
+    }
+
+    // FIXME: for some reason this creates duplicates
+    if (event.type == mfsw::action::MOVE) {
+        const std::filesystem::path oldFullPath = event.old_filename;
+        const std::filesystem::path oldMetaPath =
+            oldFullPath.string() + AssetManager::kMetaExtension;
+        AssetID id = assetManager.GetAssetByPath(oldFullPath);
+        if (id) {
+            assetManager.RemoveAsset(id);
+            if (std::filesystem::exists(oldMetaPath))
+                std::filesystem::rename(oldMetaPath, metaPath);
+            assetManager.LoadOrCreateAsset(fullPath, metaPath);
+            MEB_LOG_INFOF("Moved asset %s -> %s", oldFullPath.string().c_str(),
+                          fullPath.string().c_str());
+            return;
+        }
+        try {
+            assetManager.LoadOrCreateAsset(fullPath, metaPath);
+        } catch (std::exception& ex) {
+            MEB_LOG_ERRORF("%s", ex.what());
+        }
     }
 }
 
