@@ -1,16 +1,31 @@
 #include "file_listener.hpp"
 
-#include "assets_manager/asset.h"
+#include "engine_context.h"
 
 namespace PotatoEngine::Editor {
 
 using namespace Core;
 
+static const char* ActionToString(const mfsw::action action) {
+    switch (action) {
+        case mfsw::action::ADD:
+            return "ADD";
+        case mfsw::action::DELETE:
+            return "DELETE";
+        case mfsw::action::MODIFY:
+            return "MODIFY";
+        case mfsw::action::MOVE:
+            return "MOVE";
+        default:
+            return "NONE";
+    }
+}
+
 // TODO: solve bugs
 void FileListener::on_event(const mfsw::event& event) {
     AssetManager& assetManager = m_engineContext._AssetManager;
 
-    MEB_LOG_INFOF("Event received with type %d", (int)event.type);
+    MEB_LOG_INFOF("Event received with type %s", ActionToString(event.type));
     MEB_LOG_INFOF("Directory: %s    Filename: %s",
                   event.directory.string().c_str(),
                   event.filename.string().c_str());
@@ -51,23 +66,24 @@ void FileListener::on_event(const mfsw::event& event) {
 
     // FIXME: for some reason this creates duplicates
     if (event.type == mfsw::action::MOVE) {
-        const std::filesystem::path oldFullPath = event.old_filename;
+        const std::filesystem::path oldFullPath =
+            event.old_directory / event.old_filename;
         const std::filesystem::path oldMetaPath =
             oldFullPath.string() + AssetManager::kMetaExtension;
-        AssetID id = assetManager.GetAssetByPath(oldFullPath);
+        AssetID id = assetManager.GetAssetByPath(oldMetaPath);
         if (id) {
-            assetManager.RemoveAsset(id);
-            if (std::filesystem::exists(oldMetaPath))
-                std::filesystem::rename(oldMetaPath, metaPath);
-            assetManager.LoadOrCreateAsset(fullPath, metaPath);
+            std::filesystem::rename(oldMetaPath, metaPath);
+            if (!assetManager.UpdateAssetPath(id, fullPath)) {
+                MEB_LOG_ERROR("Cannot update asset path");
+            }
             MEB_LOG_INFOF("Moved asset %s -> %s", oldFullPath.string().c_str(),
                           fullPath.string().c_str());
-            return;
-        }
-        try {
-            assetManager.LoadOrCreateAsset(fullPath, metaPath);
-        } catch (std::exception& ex) {
-            MEB_LOG_ERRORF("%s", ex.what());
+        } else {
+            try {
+                assetManager.LoadOrCreateAsset(fullPath, metaPath);
+            } catch (std::exception& ex) {
+                MEB_LOG_ERRORF("%s", ex.what());
+            }
         }
     }
 }

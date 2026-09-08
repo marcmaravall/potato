@@ -2,7 +2,9 @@
 
 #include <mfsw/mfsw.hpp>
 
-#include "engine_context.h"
+namespace PotatoEngine::Core {
+class EngineContext;
+}
 
 namespace PotatoEngine::Editor {
 
