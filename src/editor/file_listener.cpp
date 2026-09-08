@@ -30,6 +30,11 @@ void FileListener::on_event(const mfsw::event& event) {
                   event.directory.string().c_str(),
                   event.filename.string().c_str());
     const std::filesystem::path fullPath = event.directory / event.filename;
+    const std::filesystem::path oldFullPath =
+        event.old_directory / event.old_filename;
+    const std::filesystem::path oldMetaPath =
+        oldFullPath.string() + AssetManager::kMetaExtension;
+
     if (fullPath.extension() == AssetManager::kMetaExtension) {
         MEB_LOG_INFOF("Skipped because extension was %s",
                       AssetManager::kMetaExtension);
@@ -61,15 +66,13 @@ void FileListener::on_event(const mfsw::event& event) {
     }
 
     if (event.type == mfsw::action::DELETE) {
-        // TODO: implement
+        AssetID id = assetManager.GetAssetByPath(metaPath);
+        assetManager.RemoveAsset(id);
+        std::filesystem::remove(metaPath);
+        MEB_LOG_INFOF("Delete asset with path %s", metaPath.c_str());
     }
 
-    // FIXME: for some reason this creates duplicates
     if (event.type == mfsw::action::MOVE) {
-        const std::filesystem::path oldFullPath =
-            event.old_directory / event.old_filename;
-        const std::filesystem::path oldMetaPath =
-            oldFullPath.string() + AssetManager::kMetaExtension;
         AssetID id = assetManager.GetAssetByPath(oldMetaPath);
         if (id) {
             std::filesystem::rename(oldMetaPath, metaPath);
