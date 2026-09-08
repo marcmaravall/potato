@@ -64,6 +64,9 @@ private:
                          Core::AssetType type);
 
 private:
+    bool m_dontShowAgain = false;
+
+private:
     void RenderEntity();
     void RenderAsset();
 

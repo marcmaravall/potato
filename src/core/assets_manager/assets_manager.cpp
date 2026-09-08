@@ -70,40 +70,13 @@ bool AssetManager::UpdateAssetPath(AssetID id,
     return true;
 }
 
-// TODO: don't do this
-AssetManager::AssetManager() {
-    /*
-    std::filesystem::path currentPath = std::filesystem::current_path();
-#define MAX_ITERATIONS 100
-    int iterations = 0;
-    while (currentPath.has_parent_path() &&
-           currentPath.filename().string().find("potato") ==
-               std::string::npos &&
-           iterations < MAX_ITERATIONS) {
-        currentPath = currentPath.parent_path();
-        iterations++;
-    }
-
-    if (iterations == MAX_ITERATIONS) {
-        MEB_ASSERT(0 && "Could not find potato directory in path hierarchy.");
-        m_root = "";
-        return;
-    }
-
-    if (currentPath.filename().string().find("potato") != std::string::npos) {
-        m_root = currentPath.string();
-    } else {
-        MEB_ASSERT(0 && "Could not find potato directory in path hierarchy.");
-        m_root = "";
-    }
-    */
-}
-
 void AssetManager::SetRoot(const std::filesystem::path& root) { m_root = root; }
 
 // TODO: complete:
 AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
     const auto& ext = path.extension().string();
+
+    if (ext.empty()) return AssetType::TEXT;
 
     if (ext == ".lua") return AssetType::LUA_SCRIPT;
 

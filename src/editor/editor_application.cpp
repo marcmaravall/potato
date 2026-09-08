@@ -34,13 +34,6 @@ void EditorApplication::OnStart() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    /*
-    std::string imguiPath = m_engineContext._AssetManager.Path(
-        m_engineContext._AssetManager.GetRoot() + "/tests/imgui.ini");
-    m_engineContext.Debug.Log("Loaded ImGui from: " + imguiPath);
-    ImGui::LoadIniSettingsFromDisk(imguiPath.c_str());
-    */
-
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -59,20 +52,10 @@ void EditorApplication::OnStart() {
 
     m_engineContext.Start();
 
-    /*std::string path = m_engineContext._AssetManager.Path(
-        m_engineContext._AssetManager.GetRoot() +
-        "/assets/tests/project_test.json");
-    std::cout << path << "\n";
-    */
     if (!pfd::settings::available()) {
         MEB_LOG_ERROR("PFD is not available for current platform!");
     }
     pfd::settings::verbose(true);
-
-    /*
-    m_editorContext.CurrentProject = Project::Load(path);
-    m_editorContext.LoadFromProject(m_engineContext);
-    */
 }
 
 void EditorApplication::OnUpdate() {

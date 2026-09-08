@@ -22,7 +22,7 @@ private:
     std::unordered_map<AssetID, std::unique_ptr<Asset>> m_map;
 
 public:
-    AssetManager();
+    AssetManager() = default;
     ~AssetManager() = default;
 
     void UnsafeEmplace(AssetID id, std::unique_ptr<Asset> asset);

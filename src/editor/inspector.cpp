@@ -281,7 +281,11 @@ void Inspector::RenderEntity() {
             }
 
             if (!visible) {
-                ImGui::OpenPopup("RemoveComponentPopup");
+                if (!m_dontShowAgain)
+                    ImGui::OpenPopup("RemoveComponentPopup");
+                else
+                    m_engineContext.Registry.RemoveComponent(entity,
+                                                             component->Type());
             }
 
             if (ImGui::BeginPopupModal("RemoveComponentPopup", nullptr, 0)) {
@@ -296,7 +300,8 @@ void Inspector::RenderEntity() {
                 if (ImGui::Button("No")) {
                     ImGui::CloseCurrentPopup();
                 }
-                // TODO: add a "don't show again" checkbox
+                ImGui::Separator();
+                ImGui::Checkbox("Don't show again", &m_dontShowAgain);
 
                 ImGui::EndPopup();
             }

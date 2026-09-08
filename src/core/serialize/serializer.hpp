@@ -48,12 +48,7 @@ struct SceneMeta {
 };
 
 class Serializer {
-private:
 public:
-    static void LoadFromFile(Core::EngineContext& ctx, const std::string& path);
-    static void SaveToFile(const Core::EngineContext& ctx,
-                           const std::string& path);
-
     static void MetaToEntity(const EntityMeta& meta, Core::ECS::Entity& out);
     static std::unique_ptr<Core::ECS::Component> MetaToComponent(
         const ComponentMeta& meta);

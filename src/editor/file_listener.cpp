@@ -21,7 +21,6 @@ static const char* ActionToString(const mfsw::action action) {
     }
 }
 
-// TODO: solve bugs
 void FileListener::on_event(const mfsw::event& event) {
     AssetManager& assetManager = m_engineContext._AssetManager;
 
@@ -42,13 +41,7 @@ void FileListener::on_event(const mfsw::event& event) {
     }
     const std::filesystem::path metaPath = fullPath.string() + ".meta";
     if (event.type == mfsw::action::MODIFY) {
-        if (event.filename.extension() == ".lua") {
-            AssetID id = assetManager.GetAssetByPath(fullPath);
-            if (!id) return;
-            LuaScriptAsset* asset =
-                dynamic_cast<LuaScriptAsset*>(assetManager.TryGetAsset(id));
-            if (!asset) return;
-        }
+        // Do some shit depending on the asset
     }
 
     if (event.type == mfsw::action::ADD) {
