@@ -9,9 +9,6 @@
 #include <ecs/components/isometric_grid.hpp>
 #include <glm/glm.hpp>
 
-// FIXME: use a non deprecated header
-#include <strstream>
-
 #include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
 #include "imgui.h"
