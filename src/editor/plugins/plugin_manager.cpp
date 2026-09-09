@@ -1,5 +1,7 @@
 #include "plugin_manager.hpp"
 
+#include "assets_manager/asset.h"
+#include "editor/utils/imgui_utils.hpp"
 #include "imgui.h"
 
 namespace PotatoEngine::Editor {
@@ -15,18 +17,7 @@ void PluginManager::AddPlugin(const EditorPlugin& plugin) {
     m_editorPlugins.push_back(plugin);
 }
 
-void PluginManager::OnBegin() {
-    static bool init = false;
-    if (!init) {
-        init = true;
-
-        // TEST:
-#define TEST_PLUGIN_ID 5409846884224673654
-        EditorPlugin plugin =
-            EditorPlugin(m_editorContext, m_engineContext, TEST_PLUGIN_ID);
-        AddPlugin(std::move(plugin));
-    }
-}
+void PluginManager::OnBegin() {}
 
 void PluginManager::OnRender() {
     if (ImGui::Button("Recompile All")) {
@@ -35,6 +26,16 @@ void PluginManager::OnRender() {
 
     ImGui::SameLine();
     ImGui::TextDisabled("%zu plugin(s)", m_editorPlugins.size());
+
+    if (ImGui::Button("Add plugin")) {
+        if (m_selectedAsset)
+            AddPlugin(EditorPlugin(m_editorContext, m_engineContext,
+                                   m_selectedAsset));
+    }
+    ImGui::SameLine();
+    Utils::ImGuiUtils::RenderFileInput("Select asset", m_selectedAsset,
+                                       Core::AssetType::LUA_SCRIPT,
+                                       m_engineContext);
 
     ImGui::Separator();
     ImGui::Spacing();
@@ -45,7 +46,7 @@ void PluginManager::OnRender() {
 
         ImGui::PushID(static_cast<int>(i));
 
-        ImGui::Text("#%zu", i);
+        ImGui::Text("%zu", i);
         ImGui::SameLine(60.0f);
 
         if (plugin.IsCompiled()) {

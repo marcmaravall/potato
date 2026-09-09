@@ -34,12 +34,19 @@ void FileListener::on_event(const mfsw::event& event) {
     const std::filesystem::path oldMetaPath =
         oldFullPath.string() + AssetManager::kMetaExtension;
 
+    constexpr const char* NEOVIM_BUFFER_FILE = (const char*)"4913";
+    if (event.filename == NEOVIM_BUFFER_FILE) {
+        // Ignore neovim buffer
+        return;
+    }
+
     if (fullPath.extension() == AssetManager::kMetaExtension) {
         MEB_LOG_INFOF("Skipped because extension was %s",
                       AssetManager::kMetaExtension);
         return;
     }
-    const std::filesystem::path metaPath = fullPath.string() + ".meta";
+    const std::filesystem::path metaPath =
+        fullPath.string() + AssetManager::kMetaExtension;
     if (event.type == mfsw::action::MODIFY) {
         // Do some shit depending on the asset
     }

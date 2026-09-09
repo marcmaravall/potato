@@ -13,41 +13,12 @@
 #include "ecs/components/rigidbody2d.hpp"
 #include "imgui.h"
 #include "rendering/texture2d.h"
+#include "utils/imgui_utils.hpp"
 
 namespace PotatoEngine::Editor {
 
+using namespace Utils;
 using namespace PotatoEngine::Core::ECS;
-
-void Inspector::RenderFileInput(const char* label, Core::AssetID& asset,
-                                Core::AssetType type) {
-    auto p_asset = m_engineContext._AssetManager.TryGetAsset(asset);
-
-    if (p_asset) {
-        std::filesystem::path scriptPath(p_asset->GetAbsolutePath());
-        ImGui::Text("%s", scriptPath.filename().string().c_str());
-    } else {
-        ImGui::TextDisabled("No file selected");
-    }
-
-    if (ImGui::Button("Select Asset")) {
-        ImGui::OpenPopup("AssetSelection");
-    }
-
-    if (ImGui::BeginPopup("AssetSelection")) {
-        const auto& assetsIds = m_engineContext._AssetManager.GetAssets(type);
-        for (Core::AssetID id : assetsIds) {
-            auto p_currentAsset = m_engineContext._AssetManager.TryGetAsset(id);
-            std::filesystem::path path(p_currentAsset->GetAbsolutePath());
-
-            if (ImGui::MenuItem(path.filename().string().c_str())) {
-                asset = id;
-                ImGui::CloseCurrentPopup();
-            }
-        }
-
-        ImGui::EndPopup();
-    }
-}
 
 Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Inspector", ctx, ectx) {
@@ -69,7 +40,9 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             }
 
             Core::AssetID s = script.GetScriptAssetID();
-            RenderFileInput("Script Asset", s, Core::AssetType::LUA_SCRIPT);
+            ImGuiUtils::RenderFileInput("Script Asset", s,
+                                        Core::AssetType::LUA_SCRIPT,
+                                        m_engineContext);
             script.SetScriptAssetID(s);
         });
 
@@ -124,7 +97,9 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
                 ImGui::TableSetColumnIndex(0);
 
                 Core::AssetID t = sr.GetTextureAssetID();
-                RenderFileInput("Texture Asset", t, Core::AssetType::TEXTURE);
+                ImGuiUtils::RenderFileInput("Texture Asset", t,
+                                            Core::AssetType::TEXTURE,
+                                            m_engineContext);
                 sr.SetTextureAssetID(t);
 
                 ImGui::EndTable();

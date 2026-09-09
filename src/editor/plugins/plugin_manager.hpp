@@ -18,6 +18,9 @@ private:
     sol::state m_luaState;
     std::vector<EditorPlugin> m_editorPlugins;
 
+private:
+    Core::AssetID m_selectedAsset = 0;
+
 public:
     sol::state_view GetLuaState() { return m_luaState; }
 
