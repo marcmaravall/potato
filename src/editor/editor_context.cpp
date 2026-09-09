@@ -69,7 +69,8 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
         ECS::EntityID id = eMeta.ID;
         engineContext.Registry.CreateEntityWithID(id);
         for (auto& component : eMeta.Components) {
-            auto c = Serializer::MetaToComponent(component);
+            auto c =
+                Serializer::MetaToComponent(component, engineContext.Registry);
             if (!c) {
                 MEB_LOG_ERRORF("Component %s not found",
                                component.Type.c_str());

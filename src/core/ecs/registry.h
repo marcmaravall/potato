@@ -6,6 +6,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <queue>
+#include <serialize/meta.hpp>
 #include <sol/sol.hpp>
 #include <unordered_map>
 #include <vector>
@@ -21,6 +22,10 @@
 namespace PotatoEngine::Core::ECS {
 using AddComponentFn = std::function<Core::ECS::Component*(EntityID)>;
 using GetComponentFn = std::function<Core::ECS::Component*(EntityID)>;
+
+using DeserializeFn =
+    std::function<std::unique_ptr<Component>(const nlohmann::json&)>;
+using SerializeFn = std::function<ComponentMeta(Component*)>;
 
 using LuaComponentBinder =
     std::function<sol::object(sol::state_view, Component*)>;
@@ -38,6 +43,11 @@ private:
     std::unordered_map<std::string, AddComponentFn> m_addComponentFunctions;
     std::unordered_map<std::string, GetComponentFn> m_getComponentFunctions;
     std::unordered_map<std::string, LuaComponentBinder> m_bindLuaComponent;
+
+    std::unordered_map<std::string, DeserializeFn>
+        m_deserializeComponentFunctions;
+    std::unordered_map<ComponentType, SerializeFn>
+        m_serializeComponentFunctions;
 
 public:
     void SetCurrentID(EntityID id) { m_currentID = id; }
@@ -67,9 +77,7 @@ public:
 
 public:
     template <typename T>
-    void RegisterComponent() {
-        std::string name = GetReadableComponentName<T>();
-
+    void RegisterComponent(const std::string& name) {
         m_componentNames.push_back(name);
 
         m_addComponentFunctions[name] =
@@ -86,6 +94,21 @@ public:
                                       Component* component) -> sol::object {
             return sol::make_object(lua, dynamic_cast<T*>(component));
         };
+
+        m_deserializeComponentFunctions[name] =
+            [](const nlohmann::json& j) -> std::unique_ptr<Component> {
+            auto c = std::make_unique<T>();
+            j.get_to(*c);
+            return c;
+        };
+
+        m_serializeComponentFunctions[T::StaticType] =
+            [name](Component* c) -> ComponentMeta {
+            ComponentMeta meta;
+            meta.Type = name;
+            meta.Value = *static_cast<T*>(c);
+            return meta;
+        };
     }
 
     Component* GetComponentByName(EntityID e, const std::string& name) {
@@ -97,53 +120,13 @@ public:
     }
 
     sol::object BindComponentToLua(sol::state_view s, Component* c,
-                                   const std::string& name) {
-        try {
-            return m_bindLuaComponent[name](s, c);
-        } catch (std::exception& ex) {
-            MEB_LOG_ERROR(ex.what());
-            return sol::nil;
-        }
-    }
+                                   const std::string& name);
+
+    ComponentMeta SerializeComponent(Component* component);
+    std::unique_ptr<Component> DeserializeComponent(const ComponentMeta& meta);
 
     const std::vector<std::string>& GetComponentNames() const {
         return m_componentNames;
-    }
-
-    template <typename Component>
-    std::string GetReadableComponentName() {
-        if constexpr (std::is_same_v<Component, ECS::Components::Camera>)
-            return "Camera";
-        else if constexpr (std::is_same_v<Component, ECS::Components::Children>)
-            return "Children";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::LuaScript>)
-            return "LuaScript";
-        else if constexpr (std::is_same_v<Component, ECS::Components::Name>)
-            return "Name";
-        else if constexpr (std::is_same_v<Component, ECS::Components::Parent>)
-            return "Parent";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::SpriteRenderer>)
-            return "SpriteRenderer";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::Transform>)
-            return "Transform";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::IsometricGrid>)
-            return "IsometricGrid";
-
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::BoxCollider2D>)
-            return "BoxCollider2D";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::CircleCollider2D>)
-            return "CircleCollider2D";
-        else if constexpr (std::is_same_v<Component,
-                                          ECS::Components::Rigidbody2D>)
-            return "Rigidbody2D";
-        else
-            return "Unknown";
     }
 
 public:

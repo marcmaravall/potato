@@ -6,6 +6,7 @@
 #include "ecs/components/box_collider_2d.h"
 #include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
+#include "ecs/registry.h"
 
 namespace PotatoEngine::Core {
 
@@ -22,86 +23,21 @@ std::unique_ptr<Component> DeserializeComponent(const nlohmann::json &j) {
 }
 
 std::unique_ptr<Component> Serializer::MetaToComponent(
-    const ComponentMeta &component) {
-    if (component.Type == "Name")
-        return DeserializeComponent<Name>(component.Value);
-
-    if (component.Type == "Camera")
-        return DeserializeComponent<Camera>(component.Value);
-
-    if (component.Type == "Children")
-        return DeserializeComponent<Children>(component.Value);
-
-    if (component.Type == "LuaScript")
-        return DeserializeComponent<LuaScript>(component.Value);
-
-    if (component.Type == "Parent")
-        return DeserializeComponent<Parent>(component.Value);
-
-    if (component.Type == "SpriteRenderer")
-        return DeserializeComponent<SpriteRenderer>(component.Value);
-
-    if (component.Type == "Transform")
-        return DeserializeComponent<Transform>(component.Value);
-    if (component.Type == "IsometricGrid")
-        return DeserializeComponent<IsometricGrid>(component.Value);
-    if (component.Type == "BoxCollider2D")
-        return DeserializeComponent<BoxCollider2D>(component.Value);
-    if (component.Type == "Rigidbody2D")
-        return DeserializeComponent<Rigidbody2D>(component.Value);
-
-    return nullptr;
+    const ComponentMeta &component, ECS::Registry &registry) {
+    return registry.DeserializeComponent(component);
 }
 
-void Serializer::MetaToEntity(const EntityMeta &meta, Entity &out) {
+void Serializer::MetaToEntity(const EntityMeta &meta, Entity &out,
+                              ECS::Registry &registry) {
     for (auto &component : meta.Components) {
-        out.Add(std::move(MetaToComponent(component)));
+        out.Add(std::move(MetaToComponent(component, registry)));
     }
 }
 
 // TODO: do in a  better way
-ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component) {
-    ComponentMeta res;
-
-    if (auto c = dynamic_cast<Name *>(component)) {
-        res.Type = "Name";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<Camera *>(component)) {
-        res.Type = "Camera";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<Children *>(component)) {
-        res.Type = "Children";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<LuaScript *>(component)) {
-        res.Type = "LuaScript";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<Parent *>(component)) {
-        res.Type = "Parent";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<SpriteRenderer *>(component)) {
-        res.Type = "SpriteRenderer";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<Transform *>(component)) {
-        res.Type = "Transform";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<IsometricGrid *>(component)) {
-        res.Type = "IsometricGrid";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<BoxCollider2D *>(component)) {
-        res.Type = "BoxCollider2D";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<Rigidbody2D *>(component)) {
-        res.Type = "Rigidbody2D";
-        res.Value = *c;
-    } else if (auto c = dynamic_cast<CircleCollider2D *>(component)) {
-        res.Type = "CircleCollider2D";
-        res.Value = *c;
-    } else {
-        res.Type = "NULL";
-        res.Value = nullptr;
-    }
-
-    return res;
+ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component,
+                                          ECS::Registry &registry) {
+    return registry.SerializeComponent(component);
 }
 
 }  // namespace PotatoEngine::Core

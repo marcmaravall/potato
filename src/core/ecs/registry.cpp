@@ -8,6 +8,29 @@
 
 namespace PotatoEngine::Core::ECS {
 
+sol::object Registry::BindComponentToLua(sol::state_view s, Component* c,
+                                         const std::string& name) {
+    try {
+        return m_bindLuaComponent[name](s, c);
+    } catch (std::exception& ex) {
+        MEB_LOG_ERROR(ex.what());
+        return sol::nil;
+    }
+}
+
+ComponentMeta Registry::SerializeComponent(Component* component) {
+    auto it = m_serializeComponentFunctions.find(component->Type());
+    if (it == m_serializeComponentFunctions.end()) return {"NULL", nullptr};
+    return it->second(component);
+}
+
+std::unique_ptr<Component> Registry::DeserializeComponent(
+    const ComponentMeta& meta) {
+    auto it = m_deserializeComponentFunctions.find(meta.Type);
+    if (it == m_deserializeComponentFunctions.end()) return nullptr;
+    return it->second(meta.Value);
+}
+
 void Registry::Clear() {
     m_entities.clear();
     m_currentID = 0;

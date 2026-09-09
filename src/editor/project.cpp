@@ -81,7 +81,8 @@ bool Project::SaveToFile(const std::string& path, Core::EngineContext& ctx) {
         auto components = entities[i].second->GetComponents();
 
         for (auto* component : components) {
-            entity.Components.push_back(Serializer::ComponentToMeta(component));
+            entity.Components.push_back(
+                Serializer::ComponentToMeta(component, ctx.Registry));
         }
 
         scene["Entities"].push_back(entity);

@@ -4,6 +4,7 @@ namespace PotatoEngine::Editor {
 
 void GamePlayer::OnBegin() {}
 
+// TODO: save start state and load it when stop
 void GamePlayer::OnRender() {
     if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
         ImGui::SetWindowFocus("Viewport");

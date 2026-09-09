@@ -20,7 +20,7 @@ void SceneLoader::Load(EngineContext& ctx, const std::filesystem::path& path) {
         ECS::EntityID id = eMeta.ID;
         ctx.Registry.CreateEntityWithID(id);
         for (auto& component : eMeta.Components) {
-            auto c = Serializer::MetaToComponent(component);
+            auto c = Serializer::MetaToComponent(component, ctx.Registry);
             if (!c) {
                 MEB_LOG_ERRORF("Component %s not found",
                                component.Type.c_str());

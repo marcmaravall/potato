@@ -41,17 +41,17 @@ void EngineContext::Start() {
 void EngineContext::RegisterComponents() {
     using namespace ECS::Components;
 
-    Registry.RegisterComponent<Camera>();
-    Registry.RegisterComponent<Children>();
-    Registry.RegisterComponent<LuaScript>();
-    Registry.RegisterComponent<Name>();
-    Registry.RegisterComponent<Parent>();
-    Registry.RegisterComponent<SpriteRenderer>();
-    Registry.RegisterComponent<Transform>();
-    Registry.RegisterComponent<IsometricGrid>();
-    Registry.RegisterComponent<BoxCollider2D>();
-    Registry.RegisterComponent<CircleCollider2D>();
-    Registry.RegisterComponent<Rigidbody2D>();
+    Registry.RegisterComponent<Camera>("Camera");
+    Registry.RegisterComponent<Children>("Children");
+    Registry.RegisterComponent<LuaScript>("LuaScript");
+    Registry.RegisterComponent<Name>("Name");
+    Registry.RegisterComponent<Parent>("Parent");
+    Registry.RegisterComponent<SpriteRenderer>("SpriteRenderer");
+    Registry.RegisterComponent<Transform>("Transform");
+    Registry.RegisterComponent<IsometricGrid>("IsometricGrid");
+    Registry.RegisterComponent<BoxCollider2D>("BoxCollider2D");
+    Registry.RegisterComponent<CircleCollider2D>("CircleCollider2D");
+    Registry.RegisterComponent<Rigidbody2D>("Rigidbody2D");
 }
 
 EntityID EngineContext::GetMainCameraEntity() {

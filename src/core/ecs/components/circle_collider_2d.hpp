@@ -20,6 +20,6 @@ public:
         ComponentType::CIRCLE_COLLIDER_2D;
     ComponentType Type() const override { return StaticType; }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(CircleCollider2D, Origin, Radius);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(CircleCollider2D, Origin, Radius)
 };
 }  // namespace PotatoEngine::Core::ECS::Components
