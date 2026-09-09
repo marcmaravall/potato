@@ -24,6 +24,7 @@ public:
         : Component("Lua Script"), m_scriptAssetID(script) {}
     ~LuaScript() = default;
 
+    constexpr bool Compiled() const { return m_compiled; }
     bool Compile(sol::state& lua, AssetManager& am);
     bool CallFunction(const char* name);
 

@@ -29,6 +29,8 @@ void Game::OnStart() {
     m_engineContext.Start();
     m_engineContext.Renderer.Init();
 
+    // TODO: load game
+
     // calls start
     m_engineContext.Registry.Start();
 }
