@@ -39,7 +39,7 @@ AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
     if (!std::filesystem::exists(path)) return 0;
 
     // if file is a .meta, just get the id from the json:
-    if (strcmp(path.extension().c_str(), kMetaExtension) == 0) {
+    if (strcmp(path.extension().string().c_str(), kMetaExtension) == 0) {
         std::ifstream f(path);
         nlohmann::json metaJson;
         f >> metaJson;
@@ -48,7 +48,7 @@ AssetID AssetManager::GetAssetByPath(const std::filesystem::path& path) {
         return id;
     }
 
-    std::string p = path;
+    std::string p = path.string();
     p += kMetaExtension;
     return GetAssetByPath(p);
 }
@@ -70,7 +70,7 @@ bool AssetManager::UpdateAssetPath(AssetID id,
     return true;
 }
 
-void AssetManager::SetRoot(const std::filesystem::path& root) { m_root = root; }
+void AssetManager::SetRoot(const std::filesystem::path& root) { m_root = root.string(); }
 
 // TODO: complete:
 AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
@@ -244,7 +244,7 @@ void AssetManager::UnsafeEmplace(AssetID id, std::unique_ptr<Asset> asset) {
 }
 
 bool AssetManager::IsAssetFile(const std::filesystem::path& path) {
-    return strcmp(path.extension().c_str(), kMetaExtension) != 0;
+    return strcmp(path.extension().string().c_str(), kMetaExtension) != 0;
 }
 
 const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {

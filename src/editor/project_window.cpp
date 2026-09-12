@@ -128,6 +128,9 @@ void ProjectWindow::OnBegin() {
     const std::filesystem::path& path = m_engineContext._AssetManager.Path(
         m_engineContext._AssetManager.GetRoot());
 
+    if (path.is_absolute())
+        return;
+
     if (!s_init || path != s_lastPath) {
         ClearAssetTree();
         GenerateAssetTree(path.parent_path(), m_root);

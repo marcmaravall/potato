@@ -21,7 +21,7 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
     if (!files.empty()) {
         const std::filesystem::path& p = files[0];
         MEB_LOG_INFOF("Open project from directory %s",
-                      p.parent_path().c_str());
+                      p.parent_path().string().c_str());
         ctx._AssetManager.SetRoot(p.parent_path());
         ctx._AssetManager.ScanAssets();
 
@@ -29,7 +29,7 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
         m_fileWatcher.add_listener(p.parent_path(), new FileListener(ctx));
         m_fileWatcher.watch();
 
-        CurrentProject = Project::Load(p.c_str());
+        CurrentProject = Project::Load(p.string().c_str());
         LoadFromProject(ctx);
         MEB_LOG_INFO("Loaded project successfully!");
     }
@@ -41,7 +41,7 @@ void EditorContext::UserSaveProject(Core::EngineContext& ctx) {
     auto file = dialog.result();
 
     if (!file.empty()) {
-        CurrentProject->SaveToFile(file, ctx);
+        CurrentProject->SaveToFile(file.c_str(), ctx);
     }
 }
 

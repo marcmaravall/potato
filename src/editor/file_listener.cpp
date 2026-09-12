@@ -10,8 +10,8 @@ static const char* ActionToString(const mfsw::action action) {
     switch (action) {
         case mfsw::action::ADD:
             return "ADD";
-        case mfsw::action::DELETE:
-            return "DELETE";
+        case mfsw::action::REMOVE:
+            return "REMOVE";
         case mfsw::action::MODIFY:
             return "MODIFY";
         case mfsw::action::MOVE:
@@ -65,7 +65,7 @@ void FileListener::on_event(const mfsw::event& event) {
         }
     }
 
-    if (event.type == mfsw::action::DELETE) {
+    if (event.type == mfsw::action::REMOVE) {
         AssetID id = assetManager.GetAssetByPath(metaPath);
         assetManager.RemoveAsset(id);
         std::filesystem::remove(metaPath);

@@ -171,7 +171,7 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
                              std::istreambuf_iterator<char>());
 
         ImGui::InputTextMultiline(
-            "##FileContent", &source, ImVec2(-FLT_MIN, -FLT_MIN),
+            "##FileContent", &source, ImVec2{-FLT_MIN, -FLT_MIN},
             ImGuiInputTextFlags_AllowTabInput | ImGuiInputTextFlags_ReadOnly);
     });
 
@@ -208,7 +208,7 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         ImGui::Separator();
         if (ImGui::Button("Apply")) {
             texture.Load();
-            std::string path = texture.GetAbsolutePath();
+            std::string path = texture.GetAbsolutePath().string();
             path += Core::AssetManager::kMetaExtension;
             m_engineContext._AssetManager.WriteMetaFile(
                 path, m_editorContext.SelectedAsset, texture);
