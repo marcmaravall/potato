@@ -16,7 +16,7 @@ GLFW_WindowBackend::GLFW_WindowBackend(const std::string& title, size_t width,
     m_glfwWindow = glfwCreateWindow(width, height, title.c_str(), NULL,
                                     (GLFWwindow*)share);
     glfwMakeContextCurrent(m_glfwWindow);
-    glfwSwapInterval(0);
+    glfwSwapInterval(1);
 }
 
 Input::Key GLFW_WindowBackend::ToInputKey(int glfwKey) {

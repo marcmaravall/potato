@@ -260,6 +260,16 @@ const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
     return res;
 }
 
+const std::vector<std::pair<AssetID, Asset*>> AssetManager::GetAssets() {
+    std::vector<std::pair<AssetID, Asset*>> res{};
+    for (auto& [id, assetPtr] : m_map) {
+        if (assetPtr == nullptr)
+            continue;
+        res.push_back({id, assetPtr.get()});
+    }
+    return res;
+}
+
 std::string AssetManager::Path(const std::string& str) {
     std::string out = str;
 #ifdef _WIN32

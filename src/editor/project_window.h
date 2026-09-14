@@ -7,6 +7,8 @@
 #include <functional>
 #include <string>
 
+#include <mfsw/mfsw.hpp>
+
 #include "panel.h"
 #include "serialize/serializer.hpp"
 
@@ -26,11 +28,16 @@ public:
 class ProjectWindow : public EditorPanel {
 private:
     AssetNode m_root;
-    AssetNode* m_selectedNode = nullptr;
+    std::filesystem::path m_selectedPath = "";
 
 private:
     float m_thumbnailSize = 64.0f;
     float m_padding = 16.0f;
+
+    mfsw::file_watcher m_fileWatcher;
+
+private:
+    AssetNode* FindNode(AssetNode& node, const std::filesystem::path& path);
 
 private:
     void ClearAssetTree();
@@ -51,6 +58,20 @@ public:
     void OnBegin() override;
     void OnRender() override;
     void OnEnd() override;
+
+    friend class AssetFileListener;
+};
+
+class AssetFileListener : public mfsw::watch_listener {
+private:
+    ProjectWindow& m_projectWindow;
+
+public:
+    void on_event(const mfsw::event& event) override;
+
+    AssetFileListener(ProjectWindow& window)
+        : m_projectWindow(window) {}
+    ~AssetFileListener() = default;
 };
 
 }  // namespace PotatoEngine::Editor

@@ -4,5 +4,6 @@ function _update()
 		ImGui.ShowStyleSelector("Style Selector")
 		ImGui.ShowFontSelector("Font Selector")
 	end
+
 	ImGui.End()
 end

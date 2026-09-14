@@ -9,6 +9,14 @@ void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
 
 void ProjectWindow::ClearAssetTree(AssetNode& node) { node.Nodes.clear(); }
 
+AssetNode* ProjectWindow::FindNode(AssetNode& node, const std::filesystem::path& path) {
+    if (node.Path == path.string()) return &node;
+    for (auto& child : node.Nodes) {
+        if (AssetNode* found = FindNode(child, path)) return found;
+    }
+    return nullptr;
+}
+
 void ProjectWindow::DrawTree(AssetNode& node) {
     for (auto& child : node.Nodes) {
         if (!child.Directory) continue;
@@ -16,11 +24,11 @@ void ProjectWindow::DrawTree(AssetNode& node) {
         ImGuiTreeNodeFlags flags =
             ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-        if (&child == m_selectedNode) flags |= ImGuiTreeNodeFlags_Selected;
+        if (child.Path == m_selectedPath) flags |= ImGuiTreeNodeFlags_Selected;
 
         bool open = ImGui::TreeNodeEx(child.Name.c_str(), flags);
 
-        if (ImGui::IsItemClicked()) m_selectedNode = &child;
+        if (ImGui::IsItemClicked()) m_selectedPath = child.Path;
 
         if (open) {
             DrawTree(child);
@@ -83,13 +91,13 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
                           ImVec2(m_thumbnailSize, m_thumbnailSize + 20.0f))) {
         }
 
-        bool isSelected = (&child == m_selectedNode);
+        bool isSelected = (child.Path == m_selectedPath);
         bool hovered = ImGui::IsItemHovered();
         bool clicked = ImGui::IsItemClicked();
 
         if (hovered && ImGui::IsMouseDoubleClicked(0)) {
             if (child.Directory)
-                m_selectedNode = &child;
+                m_selectedPath = child.Path;
             else {
                 // open asset
                 OpenAsset(child);
@@ -128,16 +136,17 @@ void ProjectWindow::OnBegin() {
     const std::filesystem::path& path = m_engineContext._AssetManager.Path(
         m_engineContext._AssetManager.GetRoot());
 
-    if (path.is_absolute())
-        return;
-
     if (!s_init || path != s_lastPath) {
         ClearAssetTree();
         GenerateAssetTree(path.parent_path(), m_root);
 
         s_lastPath = path;
         s_init = true;
-
+        if (!path.empty()) {
+            m_fileWatcher.add_listener(path.parent_path().string(),
+                                       new AssetFileListener(*this), true);
+            m_fileWatcher.watch();
+        }
         MEB_LOG_INFOF("Generated asset tree in path %s", path.string().c_str());
     }
 }
@@ -151,10 +160,29 @@ void ProjectWindow::OnRender() {
     auto avail = ImGui::GetContentRegionAvail();
 
     ImGui::BeginChild("AssetViewer", ImVec2(avail.x, 0), true);
-    if (m_selectedNode) DrawAssetViewer(*m_selectedNode);
+    if (m_selectedPath.empty()) {
+        DrawAssetViewer(m_root);
+    } else {
+        AssetNode* selectedNode = FindNode(m_root, m_selectedPath);
+        if (selectedNode) DrawAssetViewer(*selectedNode);
+    }
     ImGui::EndChild();
 }
 
 void ProjectWindow::OnEnd() {}
+
+
+// AssetFileListener:
+
+// FIXME: don't generate the whole tree, just update the changed node
+void AssetFileListener::on_event(const mfsw::event& event) {
+    if (event.type != mfsw::action::MODIFY) {
+        MEB_LOG_INFO("AssetFileListener received event");
+        m_projectWindow.ClearAssetTree();
+        std::filesystem::path p = m_projectWindow.m_engineContext._AssetManager.Path(
+            m_projectWindow.m_engineContext._AssetManager.GetRoot());
+        m_projectWindow.GenerateAssetTree(p.parent_path(), m_projectWindow.m_root);
+    }
+}
 
 }  // namespace PotatoEngine::Editor

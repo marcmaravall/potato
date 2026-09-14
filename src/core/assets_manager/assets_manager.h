@@ -73,6 +73,7 @@ public:
     // TODO: optimize to save result so then will be O(1) (returning
     // reference)
     const std::vector<AssetID> GetAssets(AssetType type);
+    const std::vector<std::pair<AssetID, Asset*>> GetAssets();
 };
 
 }  // namespace PotatoEngine::Core
