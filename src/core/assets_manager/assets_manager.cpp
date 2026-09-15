@@ -7,6 +7,7 @@
 
 #include "assets/lua_script_asset.h"
 #include "assets/texture_asset.h"
+#include "assets/unhandled_asset.h"
 #include "assets_manager/asset.h"
 
 namespace PotatoEngine::Core {
@@ -70,7 +71,9 @@ bool AssetManager::UpdateAssetPath(AssetID id,
     return true;
 }
 
-void AssetManager::SetRoot(const std::filesystem::path& root) { m_root = root.string(); }
+void AssetManager::SetRoot(const std::filesystem::path& root) {
+    m_root = root.string();
+}
 
 // TODO: complete:
 AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
@@ -96,23 +99,23 @@ std::unique_ptr<Asset> AssetManager::CreateAssetInstance(
     AssetType type, const std::filesystem::path& path) {
     switch (type) {
         case AssetType::SHADER:
-            return nullptr;
+            break;
         case AssetType::TEXTURE:
             return std::make_unique<TextureAsset>(path.string());
         case AssetType::MODEL:
-            return nullptr;
+            break;
         case AssetType::SOUND:
-            return nullptr;
+            break;
         case AssetType::ANIMATION:
-            return nullptr;
+            break;
         case AssetType::TEXT:
-            return nullptr;
+            break;
         case AssetType::LUA_SCRIPT:
             return std::make_unique<LuaScriptAsset>(path.string());
         case AssetType::OTHER:
-        default:
-            return nullptr;
+            break;
     }
+    return std::make_unique<UnhandledAsset>(path.string());
 }
 
 AssetID AssetManager::GenerateRandomAssetID() {
@@ -263,8 +266,7 @@ const std::vector<AssetID> AssetManager::GetAssets(AssetType type) {
 const std::vector<std::pair<AssetID, Asset*>> AssetManager::GetAssets() {
     std::vector<std::pair<AssetID, Asset*>> res{};
     for (auto& [id, assetPtr] : m_map) {
-        if (assetPtr == nullptr)
-            continue;
+        if (assetPtr == nullptr) continue;
         res.push_back({id, assetPtr.get()});
     }
     return res;

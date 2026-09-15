@@ -34,7 +34,6 @@ void Serializer::MetaToEntity(const EntityMeta &meta, Entity &out,
     }
 }
 
-// TODO: do in a  better way
 ComponentMeta Serializer::ComponentToMeta(Core::ECS::Component *component,
                                           ECS::Registry &registry) {
     return registry.SerializeComponent(component);
