@@ -86,6 +86,19 @@ void FileListener::on_event(const mfsw::event& event) {
     if (event.type == mfsw::action::MOVE) {
         AssetID id = assetManager.GetAssetByPath(oldMetaPath);
         if (id) {
+            if (fullPath.extension() != oldFullPath.extension()) {
+                // Change extension, so we need to remove the old asset and
+                // create a new one with the same id
+                MEB_LOG_INFO("Changing asset extension and type");
+                AssetType type = assetManager.GetAssetType(fullPath);
+                std::unique_ptr<Asset> asset =
+                    assetManager.CreateAssetInstance(type, fullPath);
+                assetManager.WriteMetaFile(metaPath, id,
+                                           *assetManager.TryGetAsset(id));
+                assetManager.RemoveAsset(id);
+                assetManager.UnsafeEmplace(id, std::move(asset));
+            }
+
             std::filesystem::rename(oldMetaPath, metaPath);
             if (!assetManager.UpdateAssetPath(id, fullPath)) {
                 MEB_LOG_ERROR("Cannot update asset path");
