@@ -19,6 +19,7 @@ enum class AssetType {
     ANIMATION,
     TEXT,
     LUA_SCRIPT,
+    SCENE,
     OTHER
 };
 

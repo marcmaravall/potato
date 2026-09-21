@@ -3,6 +3,7 @@
 #include <assets_manager/asset.h>
 #include <assets_manager/assets/lua_script_asset.h>
 #include <assets_manager/assets/texture_asset.h>
+#include <assets_manager/assets/scene_asset.hpp>
 #include <assets_manager/assets_manager.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
@@ -212,6 +213,21 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             path += Core::AssetManager::kMetaExtension;
             m_engineContext._AssetManager.WriteMetaFile(
                 path, m_editorContext.SelectedAsset, texture);
+        }
+    });
+
+    Registry.Add<Core::SceneAsset>([&](Core::SceneAsset& scene) {
+        try {
+            std::ifstream file(scene.GetAbsolutePath());
+            if (!file.is_open()) {
+                throw std::runtime_error("Cannot open scene file: " + scene.GetAbsolutePath().string());
+            }
+            nlohmann::json serializer;
+            file >> serializer;
+            Core::SceneMeta meta = serializer.get<Core::SceneMeta>();
+            m_editorContext.OpenScene(m_engineContext, meta);
+        } catch (const std::exception& e) {
+            MEB_LOG_ERRORF("Cannot load scene: exception %s", e.what());
         }
     });
 }

@@ -37,13 +37,6 @@ bool Project::LoadFromFile(const std::string& path) {
                   _ProjectSettings.ProjectVersion.c_str(),
                   _ProjectSettings.EngineVersion.c_str());
 
-    Scenes = parse["Scenes"];
-
-    MEB_LOG_INFO("SCENES");
-    for (auto& scene : Scenes) {
-        MEB_LOG_INFO(scene.Name.c_str());
-    }
-
     return true;
 }
 

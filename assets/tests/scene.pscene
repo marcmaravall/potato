@@ -1,0 +1,260 @@
+{
+  "Entities": [
+    {
+      "Components": [
+        {
+          "Type": "Camera",
+          "Value": {
+            "ClearColor": {
+              "x": 0.20000000298023224,
+              "y": 0.30000001192092896,
+              "z": 0.6000000238418579
+            },
+            "Zoom": 1.0499999523162842
+          }
+        },
+        {
+          "Type": "Transform",
+          "Value": {
+            "Position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        },
+        {
+          "Type": "Children",
+          "Value": {
+            "Value": []
+          }
+        },
+        {
+          "Type": "Name",
+          "Value": {
+            "Value": "Camera"
+          }
+        }
+      ],
+      "ID": 1
+    },
+    {
+      "Components": [
+        {
+          "Type": "LuaScript",
+          "Value": {
+            "m_scriptAssetID": 5106332930341666686
+          }
+        },
+        {
+          "Type": "Name",
+          "Value": {
+            "Value": "manolo"
+          }
+        },
+        {
+          "Type": "Children",
+          "Value": {
+            "Value": [
+              3
+            ]
+          }
+        },
+        {
+          "Type": "Transform",
+          "Value": {
+            "Position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 180.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        },
+        {
+          "Type": "SpriteRenderer",
+          "Value": {
+            "Color": {
+              "w": 1.0,
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "FlipX": false,
+            "FlipY": false,
+            "Layer": -1,
+            "Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_textureAsset": 16032791000818019246
+          }
+        }
+      ],
+      "ID": 2
+    },
+    {
+      "Components": [
+        {
+          "Type": "Name",
+          "Value": {
+            "Value": "New entity"
+          }
+        },
+        {
+          "Type": "Children",
+          "Value": {
+            "Value": []
+          }
+        },
+        {
+          "Type": "Transform",
+          "Value": {
+            "Position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        }
+      ],
+      "ID": 3
+    },
+    {
+      "Components": [
+        {
+          "Type": "Name",
+          "Value": {
+            "Value": "New entity"
+          }
+        },
+        {
+          "Type": "Children",
+          "Value": {
+            "Value": []
+          }
+        },
+        {
+          "Type": "Transform",
+          "Value": {
+            "Position": {
+              "x": 0.30000001192092896,
+              "y": -0.30000001192092896,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 180.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        },
+        {
+          "Type": "Parent",
+          "Value": {
+            "Value": 1
+          }
+        },
+        {
+          "Type": "SpriteRenderer",
+          "Value": {
+            "Color": {
+              "w": 1.0,
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            },
+            "FlipX": false,
+            "FlipY": false,
+            "Layer": 0,
+            "Pivot": {
+              "x": 0.5,
+              "y": 0.5
+            },
+            "m_textureAsset": 16032791000818019246
+          }
+        }
+      ],
+      "ID": 4
+    },
+    {
+      "Components": [
+        {
+          "Type": "Name",
+          "Value": {
+            "Value": "IsometricGrid"
+          }
+        },
+        {
+          "Type": "Children",
+          "Value": {
+            "Value": []
+          }
+        },
+        {
+          "Type": "Transform",
+          "Value": {
+            "Position": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Rotation": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            },
+            "Scale": {
+              "x": 1.0,
+              "y": 1.0,
+              "z": 1.0
+            }
+          }
+        },
+        {
+          "Type": "IsometricGrid",
+          "Value": {
+            "Depth": 8,
+            "Height": 8,
+            "Width": 8
+          }
+        }
+      ],
+      "ID": 5
+    }
+  ]
+}

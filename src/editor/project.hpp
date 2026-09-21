@@ -20,8 +20,6 @@ namespace PotatoEngine::Editor {
 
 class EditorContext;
 
-namespace fs = std::filesystem;
-
 class ProjectSettings {
 public:
     std::string ProjectName = "DefaultProject";
@@ -36,9 +34,8 @@ public:
 
 class Project {
 public:
-    fs::path ProjectPath;
+    std::filesystem::path ProjectPath;
     ProjectSettings _ProjectSettings;
-    std::vector<Core::SceneMeta> Scenes;
 
 public:
     Project() = default;

@@ -24,10 +24,9 @@ struct EntityMeta {
 };
 
 struct SceneMeta {
-    std::string Name;
     std::vector<EntityMeta> Entities;
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SceneMeta, Name, Entities)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(SceneMeta, Entities)
 };
 
 }  // namespace PotatoEngine::Core

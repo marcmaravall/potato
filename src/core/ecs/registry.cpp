@@ -80,7 +80,6 @@ void Registry::RemoveEntity(EntityID e) {
     m_entities.erase(it);
 }
 
-// This only clears the entities hashmap, the empty stack is not modified
 void Registry::RemoveAllEntities() { m_entities.clear(); }
 
 EntityID Registry::CreateEntity() {

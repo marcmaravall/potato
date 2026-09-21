@@ -9,6 +9,7 @@
 #include "assets/texture_asset.h"
 #include "assets/unhandled_asset.h"
 #include "assets_manager/asset.h"
+#include "assets/scene_asset.hpp"
 
 namespace PotatoEngine::Core {
 
@@ -92,6 +93,8 @@ AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
 
     if (ext == ".wav" || ext == ".ogg") return AssetType::SOUND;
 
+    if (ext == kSceneExtension) return AssetType::SCENE;
+
     return AssetType::OTHER;
 }
 
@@ -112,6 +115,8 @@ std::unique_ptr<Asset> AssetManager::CreateAssetInstance(
             break;
         case AssetType::LUA_SCRIPT:
             return std::make_unique<LuaScriptAsset>(path.string());
+        case AssetType::SCENE:
+            return std::make_unique<SceneAsset>(path.string());
         case AssetType::OTHER:
             break;
     }
@@ -235,7 +240,7 @@ void AssetManager::ScanAssets() {
 
         MEB_LOG_INFOF("Create asset '%s', Extension: %s, ID %llu",
                       entry.path().generic_string().c_str(),
-                      entry.path().extension().c_str(),
+                      entry.path().extension().string().c_str(),
                       static_cast<unsigned long long>(id));
 
         m_map.emplace(id, std::move(asset));

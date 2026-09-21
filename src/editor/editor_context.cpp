@@ -32,7 +32,7 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
     auto dialog = pfd::open_file("Choose project to open", pfd::path::home(),
                                  {"JSON Files", "*.json", "All Files", "*"},
                                  pfd::opt::multiselect);
-
+    
     auto files = dialog.result();
 
     if (!files.empty()) {
@@ -67,15 +67,8 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
         MEB_LOG_ERROR("CurrentProject is nullptr!");
         return;
     }
-    if (CurrentProject->Scenes.size() < 1) {
-        MEB_LOG_ERROR("CurrentProject has no scenes!");
-        return;
-    }
 
     engineContext.Registry.Clear();
-
-    std::size_t scene = 0;
-    OpenScene(engineContext, CurrentProject->Scenes[scene]);
 }
 
 void EditorContext::SaveFromProject(const EngineContext& engineContext) {}

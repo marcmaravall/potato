@@ -18,6 +18,9 @@ class EditorContext {
 private:
     mfsw::file_watcher m_fileWatcher;
 
+private:
+    void ScanScenes();
+
 public:
     EditorContext() = default;
     ~EditorContext() = default;
