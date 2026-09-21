@@ -74,13 +74,6 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
 
     engineContext.Registry.Clear();
 
-    engineContext.Registry.SetCurrentID(CurrentProject->_ECS_Meta.CurrentID);
-    auto& queue = engineContext.Registry.GetEmptyQueue();
-    auto& vec = CurrentProject->_ECS_Meta.EmptyQueue;
-    for (ECS::EntityID id : vec) {
-        queue.push(id);
-    }
-
     std::size_t scene = 0;
     OpenScene(engineContext, CurrentProject->Scenes[scene]);
 }

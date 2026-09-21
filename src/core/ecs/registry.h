@@ -32,8 +32,6 @@ using LuaComponentBinder =
 
 class Registry {
 private:
-    EntityID m_currentID = 0;
-    std::queue<EntityID> m_emptyQueue;
     std::unordered_map<EntityID, std::unique_ptr<Entity>> m_entities;
 
     std::vector<std::unique_ptr<System>> m_systems;
@@ -50,11 +48,8 @@ private:
         m_serializeComponentFunctions;
 
 public:
-    void SetCurrentID(EntityID id) { m_currentID = id; }
-    EntityID GetCurrentID() const { return m_currentID; }
-    std::queue<EntityID>& GetEmptyQueue() { return m_emptyQueue; }
+    EntityID GenerateAssetID();
 
-public:
     // Entities
     EntityID CreateEntity();
     EntityID CreateEntity(const std::string& name, bool hasChildren = true,

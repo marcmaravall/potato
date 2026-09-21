@@ -38,8 +38,6 @@ bool Project::LoadFromFile(const std::string& path) {
                   _ProjectSettings.EngineVersion.c_str());
 
     Scenes = parse["Scenes"];
-    _ECS_Meta = parse["ECS_Meta"];
-    MEB_LOG_INFOF("ECS CurrentID: %ld", _ECS_Meta.CurrentID);
 
     MEB_LOG_INFO("SCENES");
     for (auto& scene : Scenes) {
@@ -53,18 +51,6 @@ bool Project::SaveToFile(const std::string& path, Core::EngineContext& ctx) {
     json save;
 
     save.emplace("ProjectSettings", _ProjectSettings);
-
-    ECS_Meta ecs;
-    ecs.CurrentID = ctx.Registry.GetCurrentID();
-
-    std::queue q = ctx.Registry.GetEmptyQueue();
-    ecs.EmptyQueue.clear();
-    while (!q.empty()) {
-        ecs.EmptyQueue.push_back(q.front());
-        q.pop();
-    }
-
-    save.emplace("ECS_Meta", ecs);
 
     json scenes = json::array();
 

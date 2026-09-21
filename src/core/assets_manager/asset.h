@@ -9,7 +9,7 @@
 
 namespace PotatoEngine::Core {
 
-typedef unsigned long long AssetID;
+typedef uint64_t AssetID;
 
 enum class AssetType {
     SHADER,

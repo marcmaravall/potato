@@ -23,13 +23,6 @@ struct EntityMeta {
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(EntityMeta, ID, Components)
 };
 
-struct ECS_Meta {
-    Core::ECS::EntityID CurrentID;
-    std::vector<Core::ECS::EntityID> EmptyQueue;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(ECS_Meta, CurrentID, EmptyQueue)
-};
-
 struct SceneMeta {
     std::string Name;
     std::vector<EntityMeta> Entities;

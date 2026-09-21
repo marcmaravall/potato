@@ -31,10 +31,20 @@ std::unique_ptr<Component> Registry::DeserializeComponent(
     return it->second(meta.Value);
 }
 
+EntityID Registry::GenerateAssetID() {
+    static std::mt19937_64 rng{std::random_device{}()};
+    static std::uniform_int_distribution<EntityID> dist(1, ENTITY_MAX);
+    
+    EntityID id;
+    do {
+        id = dist(rng);
+    } while (m_entities.contains(id) || id == NULL_ENTITY);
+
+    return id;
+}
+
 void Registry::Clear() {
     m_entities.clear();
-    m_currentID = 0;
-    while (!m_emptyQueue.empty()) m_emptyQueue.pop();
 }
 
 std::vector<std::pair<EntityID, Entity*>> Registry::GetEntities() {
@@ -68,21 +78,13 @@ void Registry::RemoveEntity(EntityID e) {
     }
 
     m_entities.erase(it);
-    m_emptyQueue.push(e);
 }
 
 // This only clears the entities hashmap, the empty stack is not modified
 void Registry::RemoveAllEntities() { m_entities.clear(); }
 
 EntityID Registry::CreateEntity() {
-    EntityID id;
-    if (m_emptyQueue.empty()) {
-        id = m_currentID++;
-        MEB_LOG_INFOF("Create entity with ID: %ld", id);
-    } else {
-        id = m_emptyQueue.front();
-        m_emptyQueue.pop();
-    }
+    EntityID id = GenerateAssetID();
 
     m_entities.emplace(id, std::make_unique<Entity>());
     return id;

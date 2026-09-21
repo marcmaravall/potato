@@ -5,5 +5,6 @@
 
 namespace PotatoEngine::Core::ECS {
 	typedef uint64_t EntityID;
-	constexpr EntityID NULL_ENTITY = UINT64_MAX;
+	constexpr EntityID NULL_ENTITY = 0;
+    constexpr EntityID ENTITY_MAX = UINT64_MAX;
 }
