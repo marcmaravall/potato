@@ -10,6 +10,8 @@
 #include "commands/command_manager.h"
 #include "project.hpp"
 
+#include <core/serialize/meta.hpp>
+
 namespace PotatoEngine::Editor {
 
 class EditorContext {
@@ -34,6 +36,9 @@ public:
     // Utils:
     void UserOpenProject(Core::EngineContext& ctx);
     void UserSaveProject(Core::EngineContext& ctx);
+
+    void OpenScene(Core::EngineContext& engineContext,
+                   const Core::SceneMeta& sceneMeta);
 
 public:
     // This should be called when loading CurrentProject to change engine/editor

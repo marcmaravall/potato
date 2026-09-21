@@ -11,6 +11,23 @@ namespace PotatoEngine::Editor {
 
 using namespace Core;
 
+void EditorContext::OpenScene(EngineContext& engineContext, const SceneMeta& sceneMeta) {
+    for (const EntityMeta& eMeta : sceneMeta.Entities) {
+        ECS::EntityID id = eMeta.ID;
+        engineContext.Registry.CreateEntityWithID(id);
+        for (auto& component : eMeta.Components) {
+            auto c =
+                Serializer::MetaToComponent(component, engineContext.Registry);
+            if (!c) {
+                MEB_LOG_ERRORF("Component %s not found",
+                               component.Type.c_str());
+                continue;
+            }
+            engineContext.Registry.AddComponent(id, std::move(c));
+        }
+    }
+}
+
 void EditorContext::UserOpenProject(EngineContext& ctx) {
     auto dialog = pfd::open_file("Choose project to open", pfd::path::home(),
                                  {"JSON Files", "*.json", "All Files", "*"},
@@ -65,20 +82,7 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
     }
 
     std::size_t scene = 0;
-    for (EntityMeta& eMeta : CurrentProject->Scenes[scene].Entities) {
-        ECS::EntityID id = eMeta.ID;
-        engineContext.Registry.CreateEntityWithID(id);
-        for (auto& component : eMeta.Components) {
-            auto c =
-                Serializer::MetaToComponent(component, engineContext.Registry);
-            if (!c) {
-                MEB_LOG_ERRORF("Component %s not found",
-                               component.Type.c_str());
-                continue;
-            }
-            engineContext.Registry.AddComponent(id, std::move(c));
-        }
-    }
+    OpenScene(engineContext, CurrentProject->Scenes[scene]);
 }
 
 void EditorContext::SaveFromProject(const EngineContext& engineContext) {}
