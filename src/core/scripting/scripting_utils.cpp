@@ -10,13 +10,13 @@ bool ScriptingUtils::CompileScript(sol::state& lua, sol::environment& env,
                                    AssetID assetID) {
     auto* scriptAsset = am.TryGetAsset(assetID);
     if (!scriptAsset) {
-        MEB_LOG_ERRORF("Lua script asset with ID %lld not found", assetID);
+        MEB_LOG_ERRORF("Lua script asset with ID %ld not found", assetID);
         return false;
     }
 
     LuaScriptAsset* luaScriptAsset = dynamic_cast<LuaScriptAsset*>(scriptAsset);
     if (!luaScriptAsset) {
-        MEB_LOG_ERRORF("Asset with ID %lld is not a Lua script asset", assetID);
+        MEB_LOG_ERRORF("Asset with ID %ld is not a Lua script asset", assetID);
         return false;
     }
 
@@ -27,7 +27,7 @@ bool ScriptingUtils::CompileScript(sol::state& lua, sol::environment& env,
 bool ScriptingUtils::CallLuaFunction(sol::environment& env, const char* name,
                                      bool& compiled, AssetID asset) {
     if (!compiled) {
-        MEB_LOG_WARNINGF("Lua Script with id %lld is not compiled!", asset);
+        MEB_LOG_WARNINGF("Lua Script with id %ld is not compiled!", asset);
         return false;
     }
 

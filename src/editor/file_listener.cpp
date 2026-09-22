@@ -1,7 +1,8 @@
 #include "file_listener.hpp"
 
-#include "engine_context.h"
 #include <string>
+
+#include "engine_context.h"
 
 namespace PotatoEngine::Editor {
 
@@ -37,6 +38,7 @@ void FileListener::on_event(const mfsw::event& event) {
 
     bool isDir = std::filesystem::is_directory(fullPath) || event.is_directory;
     if (isDir) {
+        MEB_LOG_INFO("DIRECTORY");
         if (event.type == mfsw::action::REMOVE) {
             OnRemoveFolder(fullPath);
         } else if (event.type == mfsw::action::MOVE) {
