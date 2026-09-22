@@ -53,6 +53,9 @@ void FileListener::on_event(const mfsw::event& event) {
         return;
     }
 
+    // FIXME: when modifying asset from neovim the AssetID from .meta changes
+    // HIGH PRIORITY
+
     if (fullPath.extension() == AssetManager::kMetaExtension) {
         MEB_LOG_INFOF("Skipped because extension was %s",
                       AssetManager::kMetaExtension);
