@@ -23,6 +23,27 @@ static const char* ActionToString(const mfsw::action action) {
     }
 }
 
+bool FileListener::IsTempFile(const std::filesystem::path& path) {
+    const std::string& filename = path.filename().string();
+    static const std::vector<std::regex> tempPatterns = {
+        std::regex(R"(^\d{3,5}$)"),
+        std::regex(R"(^\..*\.sw[po]$)"),
+        std::regex(R"(^.*~$)"),
+        std::regex(R"(^#.*#$)"),
+        std::regex(R"(^\.#.*)"),
+        std::regex(R"(^___.*___jb_(tmp|old)___$)"),
+        std::regex(R"(^~\$.*)"),
+        std::regex(R"(^\.~lock\..*#$)"),
+        std::regex(R"(^\.goutputstream-.*)"),
+        std::regex(R"(^\..*\.tmp$)"),
+    };
+    for (const auto& pattern : tempPatterns) {
+        if (std::regex_match(filename, pattern))
+            return true;
+    }
+    return false;
+}
+
 void FileListener::on_event(const mfsw::event& event) {
     AssetManager& assetManager = m_engineContext._AssetManager;
 
@@ -47,9 +68,8 @@ void FileListener::on_event(const mfsw::event& event) {
         return;
     }
 
-    constexpr const char* NEOVIM_BUFFER_FILE = (const char*)"4913";
-    if (event.filename == NEOVIM_BUFFER_FILE) {
-        // Ignore neovim buffer
+    if (IsTempFile(fullPath)) {
+        // Ignore temp files
         return;
     }
 
@@ -69,13 +89,33 @@ void FileListener::on_event(const mfsw::event& event) {
 
     if (event.type == mfsw::action::ADD) {
         try {
-            AssetType type = assetManager.GetAssetType(fullPath);
-            AssetID id = assetManager.GenerateRandomAssetID();
-            std::unique_ptr<Asset> asset =
-                assetManager.CreateAssetInstance(type, fullPath);
-            assetManager.WriteMetaFile(metaPath, id, *asset);
-            assetManager.UnsafeEmplace(id, std::move(asset));
-            MEB_LOG_INFO("Create new asset");
+            // Detect delete and recreate action so we don't create a new asset
+            // with a new ID (not working on Visual Studio)
+            auto it = m_pendingRemovals.find(fullPath);
+            bool reused = false;
+            if (it != m_pendingRemovals.end()) {
+                AssetID id = it->second.ID;
+                auto time = it->second.Time;
+                m_pendingRemovals.erase(it);
+                if (std::chrono::steady_clock::now() <= time+kRemoveDelay) {
+                    MEB_LOG_INFO("Atomic save detected, reusing old asset ID");
+                    AssetType type = assetManager.GetAssetType(fullPath);
+                    std::unique_ptr<Asset> asset =
+                        assetManager.CreateAssetInstance(type, fullPath);
+                    assetManager.WriteMetaFile(metaPath, id, *asset);
+                    assetManager.UnsafeEmplace(id, std::move(asset));
+                    reused = true;
+                }
+            }
+            if (!reused) {
+                AssetType type = assetManager.GetAssetType(fullPath);
+                AssetID id = assetManager.GenerateRandomAssetID();
+                std::unique_ptr<Asset> asset =
+                    assetManager.CreateAssetInstance(type, fullPath);
+                assetManager.WriteMetaFile(metaPath, id, *asset);
+                assetManager.UnsafeEmplace(id, std::move(asset));
+                MEB_LOG_INFO("Create new asset");
+            }
         } catch (std::exception& ex) {
             MEB_LOG_ERRORF("%s", ex.what());
         }
@@ -85,6 +125,10 @@ void FileListener::on_event(const mfsw::event& event) {
         AssetID id = assetManager.GetAssetByPath(metaPath);
         assetManager.RemoveAsset(id);
         std::filesystem::remove(metaPath);
+        m_pendingRemovals[fullPath] = {
+            id,
+            std::chrono::steady_clock::now()
+        };
         MEB_LOG_INFOF("Delete asset with path %s", metaPath.string().c_str());
     }
 

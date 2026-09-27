@@ -226,6 +226,9 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             file >> serializer;
             Core::SceneMeta meta = serializer.get<Core::SceneMeta>();
             m_editorContext.OpenScene(m_engineContext, meta);
+            // Don't reload the scene per frame
+            m_editorContext.IsEntitySelected = false;
+            m_editorContext.IsAssetSelected = false;
         } catch (const std::exception& e) {
             MEB_LOG_ERRORF("Cannot load scene: exception %s", e.what());
         }
