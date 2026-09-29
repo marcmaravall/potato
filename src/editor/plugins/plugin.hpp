@@ -18,6 +18,9 @@ private:
     EditorContext* m_editorContext;
     Core::EngineContext* m_engineContext;
 
+private:
+    void Call(const std::string_view name);
+
 public:
     EditorPlugin(EditorContext& editorContext,
                  Core::EngineContext& engineContext, Core::AssetID id)
@@ -28,7 +31,12 @@ public:
     ~EditorPlugin() = default;
 
     bool Compile(sol::state& lua);
+    void OnLoad();
     void Update();
+
+public:
+    static constexpr const char* kUpdateFunctionName = "_update";
+    constexpr static const char* kOnLoadFunctionName = "_onLoad";
 
 public:
     bool IsCompiled() const { return m_compiled; }

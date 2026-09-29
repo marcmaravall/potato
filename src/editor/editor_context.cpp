@@ -11,7 +11,9 @@ namespace PotatoEngine::Editor {
 
 using namespace Core;
 
-void EditorContext::OpenScene(EngineContext& engineContext, const SceneMeta& sceneMeta) {
+void EditorContext::OpenScene(EngineContext& engineContext,
+                              const SceneMeta& sceneMeta) {
+    engineContext.Registry.Clear();
     for (const EntityMeta& eMeta : sceneMeta.Entities) {
         ECS::EntityID id = eMeta.ID;
         engineContext.Registry.CreateEntityWithID(id);
@@ -32,7 +34,7 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
     auto dialog = pfd::open_file("Choose project to open", pfd::path::home(),
                                  {"JSON Files", "*.json", "All Files", "*"},
                                  pfd::opt::multiselect);
-    
+
     auto files = dialog.result();
 
     if (!files.empty()) {

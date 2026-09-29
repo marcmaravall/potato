@@ -14,7 +14,7 @@ bool EditorPlugin::Compile(sol::state& lua) {
                                          m_compiled, m_pluginAssetID);
 }
 
-void EditorPlugin::Update() {
+void EditorPlugin::Call(const std::string_view name) {
     Core::LuaScriptAsset* script = dynamic_cast<Core::LuaScriptAsset*>(
         m_engineContext->_AssetManager.TryGetAsset(m_pluginAssetID));
     if (!script) {
@@ -22,8 +22,12 @@ void EditorPlugin::Update() {
         return;
     }
 
-    ScriptingUtils::CallLuaFunction(m_env, "_update", m_compiled,
+    ScriptingUtils::CallLuaFunction(m_env, name.data(), m_compiled,
                                     m_pluginAssetID);
 }
+
+void EditorPlugin::OnLoad() { Call(kOnLoadFunctionName); }
+
+void EditorPlugin::Update() { Call(kUpdateFunctionName); }
 
 }  // namespace PotatoEngine::Editor

@@ -1,20 +1,26 @@
 #include "plugin_manager.hpp"
 
+#include <scripting/scripting_api.hpp>
+
 #include "assets_manager/asset.h"
 #include "editor/utils/imgui_utils.hpp"
 #include "imgui.h"
 
 namespace PotatoEngine::Editor {
 
+using namespace Core;
+using namespace Core::Scripting;
+
 PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Plugin Manager", ctx, ectx) {
     m_luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
                               sol::lib::string, sol::lib::table);
     sol_ImGui::Init(m_luaState);
+    ScriptingAPI::InitCore(m_luaState, ctx);
 }
 
-void PluginManager::AddPlugin(const EditorPlugin& plugin) {
-    m_editorPlugins.push_back(plugin);
+void PluginManager::AddPlugin(EditorPlugin plugin) {
+    m_editorPlugins.push_back(std::move(plugin));
 }
 
 void PluginManager::OnBegin() {}
@@ -28,9 +34,11 @@ void PluginManager::OnRender() {
     ImGui::TextDisabled("%zu plugin(s)", m_editorPlugins.size());
 
     if (ImGui::Button("Add plugin")) {
-        if (m_selectedAsset)
-            AddPlugin(EditorPlugin(m_editorContext, m_engineContext,
-                                   m_selectedAsset));
+        if (m_selectedAsset) {
+            auto plugin =
+                EditorPlugin(m_editorContext, m_engineContext, m_selectedAsset);
+            AddPlugin(plugin);
+        }
     }
     ImGui::SameLine();
     Utils::ImGuiUtils::RenderFileInput("Select asset", m_selectedAsset,
@@ -68,6 +76,7 @@ void PluginManager::OnRender() {
 
         if (ImGui::Button("Compile")) {
             plugin.Compile(m_luaState);
+            plugin.OnLoad();
         }
 
         ImGui::SameLine();

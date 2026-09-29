@@ -24,7 +24,7 @@ private:
 public:
     sol::state_view GetLuaState() { return m_luaState; }
 
-    void AddPlugin(const EditorPlugin&);
+    void AddPlugin(EditorPlugin);
 
 public:
     PluginManager(Core::EngineContext& ctx, EditorContext& ectx);
