@@ -57,31 +57,39 @@ void PluginManager::OnRender() {
 
         ImGui::PushID(static_cast<int>(i));
 
-        ImGui::Text("%zu", i);
-        ImGui::SameLine(60.0f);
+        ImGui::TextDisabled("%zu", i);
+        ImGui::SameLine(40.0f);
 
-        if (plugin.IsCompiled()) {
-            PluginMeta meta = plugin.GetMeta();
+        ImGui::BeginGroup();
+        if (compiled) {
+            const PluginMeta& meta = plugin.GetMeta();
             ImGui::Text("%s", meta.Name.c_str());
             ImGui::SameLine();
-
+            ImGui::TextDisabled("v%s", meta.Version.c_str());
             ImGui::TextColored(ImVec4(0.30f, 0.85f, 0.40f, 1.0f), "Compiled");
+            if (!meta.Description.empty()) {
+                ImGui::SameLine();
+                ImGui::TextDisabled("- %s", meta.Description.c_str());
+            }
         } else {
+            ImGui::TextDisabled("Unnamed plugin");
             ImGui::TextColored(ImVec4(0.95f, 0.65f, 0.25f, 1.0f),
                                "Not compiled");
         }
+        ImGui::EndGroup();
 
         const float removeWidth = ImGui::CalcTextSize("Remove").x +
                                   ImGui::GetStyle().FramePadding.x * 2.0f;
-        const float compileWidth = ImGui::CalcTextSize("Compile").x +
-                                   ImGui::GetStyle().FramePadding.x * 2.0f;
 
+        const char* compileLabel = compiled ? "Remcompile" : "Compile";
+        const float compileWidth = ImGui::CalcTextSize(compileLabel).x +
+                                   ImGui::GetStyle().FramePadding.x * 2.0f;
         const float buttonsWidth =
             compileWidth + removeWidth + ImGui::GetStyle().ItemSpacing.x;
 
-        ImGui::SameLine(ImGui::GetWindowWidth() - buttonsWidth - 10.0f);
+        ImGui::SameLine(ImGui::GetContentRegionMax().x - buttonsWidth);
 
-        if (ImGui::Button("Compile")) {
+        if (ImGui::Button(compileLabel)) {
             plugin.Compile(m_luaState);
             plugin.OnLoad();
         }
@@ -93,8 +101,7 @@ void PluginManager::OnRender() {
         }
 
         ImGui::PopID();
-
-        if (i + 1 < m_editorPlugins.size()) ImGui::Separator();
+        ImGui::Separator();
     }
 
     if (toRemove >= 0) {
