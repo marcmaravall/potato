@@ -26,6 +26,26 @@ void EditorPlugin::Call(const std::string_view name) {
                                     m_pluginAssetID);
 }
 
+PluginMeta EditorPlugin::GetMeta() {
+    try {
+        sol::protected_function func = m_env[kGetMetaFunctionName];
+        if (!func) return PluginMeta();
+
+        sol::protected_function_result res = func();
+        if (!res.valid()) {
+            sol::error err = res;
+            // MEB_LOG_ERRORF("Lua runtime error (%s): %s",
+            // kGetMetaFunctionName, err.what());
+            return PluginMeta();
+        }
+        return res;
+
+    } catch (const std::exception& ex) {
+        // MEB_LOG_ERRORF("Exception getting plugin meta: %s", ex.what());
+    }
+    return PluginMeta();
+}
+
 void EditorPlugin::OnLoad() { Call(kOnLoadFunctionName); }
 
 void EditorPlugin::Update() { Call(kUpdateFunctionName); }

@@ -9,6 +9,20 @@
 
 namespace PotatoEngine::Editor {
 
+// This is returned from _getMeta
+struct PluginMeta {
+    std::string Name = "[NO PLUGIN]";
+    std::string Description = "Invalid plugin";
+    std::string Version = "1.0.0";
+
+    PluginMeta() = default;
+    ~PluginMeta() = default;
+
+    PluginMeta(const std::string& name, const std::string& desc,
+               const std::string& vers)
+        : Name(name), Description(desc), Version(vers) {}
+};
+
 class EditorPlugin {
 private:
     sol::environment m_env;
@@ -33,10 +47,13 @@ public:
     bool Compile(sol::state& lua);
     void OnLoad();
     void Update();
+    PluginMeta GetMeta();
 
 public:
-    static constexpr const char* kUpdateFunctionName = "_update";
-    constexpr static const char* kOnLoadFunctionName = "_onLoad";
+    constexpr static const char *kUpdateFunctionName = "_update",
+                                *kOnLoadFunctionName = "_onLoad",
+                                *kGetMetaFunctionName = "_getMeta",
+                                *kOnExitFunctionName = "_onExit";
 
 public:
     bool IsCompiled() const { return m_compiled; }

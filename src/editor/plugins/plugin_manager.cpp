@@ -1,5 +1,6 @@
 #include "plugin_manager.hpp"
 
+#include <editor/scripting/editor_api.hpp>
 #include <scripting/scripting_api.hpp>
 
 #include "assets_manager/asset.h"
@@ -17,6 +18,7 @@ PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
                               sol::lib::string, sol::lib::table);
     sol_ImGui::Init(m_luaState);
     ScriptingAPI::InitCore(m_luaState, ctx);
+    Scripting::InitEditor(m_luaState);
 }
 
 void PluginManager::AddPlugin(EditorPlugin plugin) {
@@ -51,6 +53,7 @@ void PluginManager::OnRender() {
     int toRemove = -1;
     for (size_t i = 0; i < m_editorPlugins.size(); ++i) {
         auto& plugin = m_editorPlugins[i];
+        const bool compiled = plugin.IsCompiled();
 
         ImGui::PushID(static_cast<int>(i));
 
@@ -58,6 +61,10 @@ void PluginManager::OnRender() {
         ImGui::SameLine(60.0f);
 
         if (plugin.IsCompiled()) {
+            PluginMeta meta = plugin.GetMeta();
+            ImGui::Text("%s", meta.Name.c_str());
+            ImGui::SameLine();
+
             ImGui::TextColored(ImVec4(0.30f, 0.85f, 0.40f, 1.0f), "Compiled");
         } else {
             ImGui::TextColored(ImVec4(0.95f, 0.65f, 0.25f, 1.0f),
@@ -94,6 +101,7 @@ void PluginManager::OnRender() {
         m_editorPlugins.erase(m_editorPlugins.begin() + toRemove);
     }
 }
+
 void PluginManager::OnEnd() {
     for (auto& plugin : m_editorPlugins) {
         if (plugin.IsCompiled()) plugin.Update();

@@ -1,5 +1,5 @@
-function _getName()
-	return "Test Plugin"
+function _getMeta()
+	return EditorAPI.PluginMeta.new("Test Plugin", "A simple plugin to see if the plugin system works", "1.0.0")
 end
 
 function _onLoad()
@@ -15,4 +15,3 @@ function _update()
 
 	ImGui.End()
 end
-
