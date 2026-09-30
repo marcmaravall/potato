@@ -16,6 +16,9 @@ protected:
     virtual void OnBegin() {}
     virtual void OnEnd() {}
 
+public:
+    virtual void OnExitEditor() {}
+
 protected:
     std::string m_title;
     bool m_isOpen;
@@ -42,4 +45,3 @@ public:
     const std::string& GetTitle() const { return m_title; }
 };
 }  // namespace PotatoEngine::Editor
-

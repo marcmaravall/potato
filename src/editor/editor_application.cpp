@@ -103,7 +103,11 @@ void EditorApplication::OnUpdate() {
     m_menuBar.ExecEvents();
 }
 
-void EditorApplication::OnDestroy() {}
+void EditorApplication::OnDestroy() {
+    for (auto& panel : m_panels) {
+        panel->OnExitEditor();
+    }
+}
 
 bool EditorApplication::ShouldClose() const { return !m_running; }
 

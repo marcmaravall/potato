@@ -30,6 +30,8 @@ public:
     PluginManager(Core::EngineContext& ctx, EditorContext& ectx);
     ~PluginManager() = default;
 
+    void OnExitEditor() override;
+
 protected:
     void OnBegin() override;
     void OnRender() override;

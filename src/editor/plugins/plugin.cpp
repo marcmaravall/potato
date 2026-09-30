@@ -48,6 +48,8 @@ PluginMeta EditorPlugin::GetMeta() {
 
 void EditorPlugin::OnLoad() { Call(kOnLoadFunctionName); }
 
+void EditorPlugin::Exit() { Call(kOnExitFunctionName); }
+
 void EditorPlugin::Update() { Call(kUpdateFunctionName); }
 
 }  // namespace PotatoEngine::Editor

@@ -15,3 +15,7 @@ function _update()
 
 	ImGui.End()
 end
+
+function _onExit()
+	print("plugin system works fine :)")
+end

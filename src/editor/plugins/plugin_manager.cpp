@@ -105,6 +105,7 @@ void PluginManager::OnRender() {
     }
 
     if (toRemove >= 0) {
+        m_editorPlugins[toRemove].Exit();
         m_editorPlugins.erase(m_editorPlugins.begin() + toRemove);
     }
 }
@@ -112,6 +113,12 @@ void PluginManager::OnRender() {
 void PluginManager::OnEnd() {
     for (auto& plugin : m_editorPlugins) {
         if (plugin.IsCompiled()) plugin.Update();
+    }
+}
+
+void PluginManager::OnExitEditor() {
+    for (auto& plugin : m_editorPlugins) {
+        plugin.Exit();
     }
 }
 

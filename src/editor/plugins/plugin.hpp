@@ -44,9 +44,11 @@ public:
 
     ~EditorPlugin() = default;
 
+public:
     bool Compile(sol::state& lua);
     void OnLoad();
     void Update();
+    void Exit();
     PluginMeta GetMeta();
 
 public:
