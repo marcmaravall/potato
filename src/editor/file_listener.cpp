@@ -38,13 +38,15 @@ bool FileListener::IsTempFile(const std::filesystem::path& path) {
         std::regex(R"(^\..*\.tmp$)"),
     };
     for (const auto& pattern : tempPatterns) {
-        if (std::regex_match(filename, pattern))
-            return true;
+        if (std::regex_match(filename, pattern)) return true;
     }
     return false;
 }
 
 void FileListener::on_event(const mfsw::event& event) {
+    // TEMPORAL SOLUTION
+    return;
+
     AssetManager& assetManager = m_engineContext._AssetManager;
 
     MEB_LOG_INFOF("Event received with type %s", ActionToString(event.type));
@@ -97,7 +99,7 @@ void FileListener::on_event(const mfsw::event& event) {
                 AssetID id = it->second.ID;
                 auto time = it->second.Time;
                 m_pendingRemovals.erase(it);
-                if (std::chrono::steady_clock::now() <= time+kRemoveDelay) {
+                if (std::chrono::steady_clock::now() <= time + kRemoveDelay) {
                     MEB_LOG_INFO("Atomic save detected, reusing old asset ID");
                     AssetType type = assetManager.GetAssetType(fullPath);
                     std::unique_ptr<Asset> asset =
@@ -125,10 +127,7 @@ void FileListener::on_event(const mfsw::event& event) {
         AssetID id = assetManager.GetAssetByPath(metaPath);
         assetManager.RemoveAsset(id);
         std::filesystem::remove(metaPath);
-        m_pendingRemovals[fullPath] = {
-            id,
-            std::chrono::steady_clock::now()
-        };
+        m_pendingRemovals[fullPath] = {id, std::chrono::steady_clock::now()};
         MEB_LOG_INFOF("Delete asset with path %s", metaPath.string().c_str());
     }
 

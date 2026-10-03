@@ -22,6 +22,8 @@ private:
     static void InitDebug(sol::state& lua, EngineContext& ctx);
     static void InitECS(sol::state& lua, EngineContext& ctx);
 
+    static void InitSerializeAPI(sol::state& lua);
+
 public:
     static void InitCore(sol::state& lua, EngineContext& ctx);
 };

@@ -4,6 +4,7 @@
 #include <input/input_state.h>
 
 #include <glm/glm.hpp>
+#include <nlohmann/json.hpp>
 
 namespace PotatoEngine::Core::Scripting {
 
@@ -41,6 +42,8 @@ void ScriptingAPI::InitDebug(sol::state& lua, EngineContext& ctx) {
 
     debug.set_function(
         "log", [&ctx](const std::string& message) { ctx.Debug.Log(message); });
+
+    debug.set_function("clear", [&ctx]() { ctx.Debug.Clear(); });
 }
 
 void ScriptingAPI::InitInput(sol::state& lua, EngineContext& ctx) {
@@ -237,6 +240,97 @@ void ScriptingAPI::InitGLM(sol::state& lua) {
         });
 }
 
+// TODO: put this in a better place
+nlohmann::ordered_json tableToJson(const sol::table& table) {
+    nlohmann::ordered_json json = nlohmann::ordered_json::object();
+
+    table.for_each([&json](const sol::object& key, const sol::object& value) {
+        if (!key.is<std::string>()) {
+            return;
+        }
+        const std::string keyStr = key.as<std::string>();
+        if (value.is<sol::table>()) {
+            json[keyStr] = tableToJson(value.as<sol::table>());
+        } else if (value.is<std::string>()) {
+            json[keyStr] = value.as<std::string>();
+        } else if (value.is<bool>()) {
+            json[keyStr] = value.as<bool>();
+        } else if (value.is<int>()) {
+            json[keyStr] = value.as<int>();
+        } else if (value.is<double>()) {
+            json[keyStr] = value.as<double>();
+        } else {
+            json[keyStr] = nullptr;
+        }
+    });
+
+    return json;
+}
+
+sol::table jsonToTable(sol::state& lua, const nlohmann::ordered_json& json) {
+    sol::table table = lua.create_table();
+    if (json.is_object()) {
+        for (auto it = json.begin(); it != json.end(); ++it) {
+            const auto& key = it.key();
+            const auto& value = it.value();
+            if (value.is_object()) {
+                table[key] = jsonToTable(lua, value);
+            } else if (value.is_array()) {
+                table[key] = jsonToTable(lua, value);
+            } else if (value.is_string()) {
+                table[key] = value.get<std::string>();
+            } else if (value.is_boolean()) {
+                table[key] = value.get<bool>();
+            } else if (value.is_number_integer()) {
+                table[key] = value.get<std::int64_t>();
+            } else if (value.is_number_float()) {
+                table[key] = value.get<double>();
+            } else if (value.is_null()) {
+                table[key] = sol::nil;
+            }
+        }
+    } else if (json.is_array()) {
+        int index = 1;
+
+        for (const auto& value : json) {
+            if (value.is_object() || value.is_array()) {
+                table[index++] = jsonToTable(lua, value);
+            } else if (value.is_string()) {
+                table[index++] = value.get<std::string>();
+            } else if (value.is_boolean()) {
+                table[index++] = value.get<bool>();
+            } else if (value.is_number_integer()) {
+                table[index++] = value.get<std::int64_t>();
+            } else if (value.is_number_float()) {
+                table[index++] = value.get<double>();
+            } else if (value.is_null()) {
+                table[index++] = sol::nil;
+            }
+        }
+    }
+    return table;
+}
+
+// ----------------------------
+
+void ScriptingAPI::InitSerializeAPI(sol::state& lua) {
+    sol::table jsonTable = lua.create_named_table("Json");
+    jsonTable.set_function("encode", [](const sol::table& obj) -> std::string {
+        return tableToJson(obj).dump(4);
+    });
+    jsonTable.set_function(
+        "encodeWithIdent",
+        [](const sol::table& obj, int indent) -> std::string {
+            return tableToJson(obj).dump(indent);
+        });
+
+    jsonTable.set_function(
+        "decode", [&lua](const std::string& rawSource) -> sol::table {
+            auto json = nlohmann::ordered_json::parse(rawSource);
+            return jsonToTable(lua, json);
+        });
+}
+
 void ScriptingAPI::InitCore(sol::state& lua, EngineContext& ctx) {
     InitTime(lua, ctx);
     InitInput(lua, ctx);
@@ -244,6 +338,7 @@ void ScriptingAPI::InitCore(sol::state& lua, EngineContext& ctx) {
     InitComponents(lua);
     InitECS(lua, ctx);
     InitDebug(lua, ctx);
+    InitSerializeAPI(lua);
 }
 
 }  // namespace PotatoEngine::Core::Scripting
