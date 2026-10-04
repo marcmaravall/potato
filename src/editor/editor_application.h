@@ -48,7 +48,6 @@ private:
 
     EditorContext m_editorContext;
     Core::EngineContext m_engineContext;
-    std::vector<std::unique_ptr<EditorPanel>> m_panels;
 
 private:
     MenuBar m_menuBar;
@@ -73,7 +72,7 @@ public:
 
         auto panel = std::make_unique<T>(std::forward<Args>(args)...);
         T* ptr = panel.get();
-        m_panels.push_back(std::move(panel));
+        m_editorContext.Panels.push_back(std::move(panel));
         return ptr;
     }
 };

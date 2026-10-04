@@ -1,7 +1,12 @@
 {
-  "ProjectSettings": {
-    "EngineVersion": "0.0.1",
-    "ProjectName": "test_project",
-    "ProjectVersion": "1.0.0"
-  }
+    "PluginsData": {
+        "Plugins": [
+            4495786475224572961
+        ]
+    },
+    "ProjectSettings": {
+        "EngineVersion": "0.0.1",
+        "ProjectName": "test_project",
+        "ProjectVersion": "1.0.0"
+    }
 }

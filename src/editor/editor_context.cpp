@@ -3,8 +3,8 @@
 #include <core/engine_context.h>
 #include <portable-file-dialogs/portable-file-dialogs.h>
 
-#include "ecs/entity.h"
 #include "file_listener.hpp"
+#include "panel.h"
 #include "serialize/serializer.hpp"
 
 namespace PotatoEngine::Editor {
@@ -50,6 +50,11 @@ void EditorContext::UserOpenProject(EngineContext& ctx) {
 
         CurrentProject = Project::Load(p.string().c_str());
         LoadFromProject(ctx);
+
+        for (auto& panel : Panels) {
+            panel->OnLoadProject();
+        }
+
         MEB_LOG_INFO("Loaded project successfully!");
     }
 }
@@ -60,6 +65,9 @@ void EditorContext::UserSaveProject(Core::EngineContext& ctx) {
     auto file = dialog.result();
 
     if (!file.empty()) {
+        for (auto& panel : Panels) {
+            panel->OnSaveProject();
+        }
         CurrentProject->SaveToFile(file.c_str(), ctx);
     }
 }

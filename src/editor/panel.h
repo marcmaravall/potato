@@ -7,6 +7,7 @@
 #include <string>
 
 #include "editor_context.h"
+#include "project.hpp"
 
 namespace PotatoEngine::Editor {
 
@@ -18,6 +19,9 @@ protected:
 
 public:
     virtual void OnExitEditor() {}
+
+    virtual void OnSaveProject() {}
+    virtual void OnLoadProject() {}
 
 protected:
     std::string m_title;

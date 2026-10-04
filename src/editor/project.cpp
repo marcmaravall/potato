@@ -31,6 +31,7 @@ bool Project::LoadFromFile(const std::string& path) {
     file.close();
 
     _ProjectSettings = parse["ProjectSettings"];
+    _PluginsData = parse["PluginsData"];
 
     MEB_LOG_INFOF("Loaded project %s\nProject Version: %s\nEngine Version: %s",
                   _ProjectSettings.ProjectName.c_str(),
@@ -43,6 +44,7 @@ bool Project::LoadFromFile(const std::string& path) {
 bool Project::SaveToFile(const std::string& path, Core::EngineContext& ctx) {
     json save;
     save.emplace("ProjectSettings", _ProjectSettings);
+    save.emplace("PluginsData", _PluginsData);
     std::ofstream stream(path);
     if (!stream.is_open()) return false;
     stream << save.dump(4);

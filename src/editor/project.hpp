@@ -32,10 +32,16 @@ public:
                                    EngineVersion)
 };
 
+struct PluginsData {
+    std::vector<Core::AssetID> Plugins;
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(PluginsData, Plugins)
+};
+
 class Project {
 public:
     std::filesystem::path ProjectPath;
     ProjectSettings _ProjectSettings;
+    PluginsData _PluginsData;
 
 public:
     Project() = default;

@@ -21,6 +21,37 @@ PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
     Scripting::InitEditor(m_luaState);
 }
 
+void PluginManager::OnLoadProject() {
+    for (auto& plugin : m_editorPlugins) {
+        plugin.Exit();
+    }
+    m_editorPlugins.clear();
+    auto* project = m_editorContext.CurrentProject.get();
+    MEB_ASSERT(project);
+    for (auto id : project->_PluginsData.Plugins) {
+        AddPlugin(EditorPlugin(m_editorContext, m_engineContext, id));
+    }
+    RecompileAll();
+}
+
+void PluginManager::OnSaveProject() {
+    auto* project = m_editorContext.CurrentProject.get();
+    MEB_ASSERT(project);
+    auto& plugins = project->_PluginsData.Plugins;
+    plugins.resize(m_editorPlugins.size());
+    int i = 0;
+    for (auto& plugin : m_editorPlugins) {
+        plugins[i++] = plugin.GetAssetID();
+    }
+}
+
+void PluginManager::RecompileAll() {
+    for (auto& plugin : m_editorPlugins) {
+        plugin.Compile(m_luaState);
+        plugin.OnLoad();
+    }
+}
+
 void PluginManager::AddPlugin(EditorPlugin plugin) {
     m_editorPlugins.push_back(std::move(plugin));
 }
@@ -29,7 +60,7 @@ void PluginManager::OnBegin() {}
 
 void PluginManager::OnRender() {
     if (ImGui::Button("Recompile All")) {
-        for (auto& plugin : m_editorPlugins) plugin.Compile(m_luaState);
+        RecompileAll();
     }
 
     ImGui::SameLine();

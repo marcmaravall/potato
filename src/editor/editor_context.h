@@ -4,15 +4,17 @@
 #include <core/ecs/entity_id.h>
 #include <core/logging/debug.h>
 
+#include <core/serialize/meta.hpp>
+#include <memory>
 #include <mfsw/mfsw.hpp>
 
 #include "assets_manager/asset.h"
 #include "commands/command_manager.h"
 #include "project.hpp"
 
-#include <core/serialize/meta.hpp>
-
 namespace PotatoEngine::Editor {
+
+class EditorPanel;
 
 class EditorContext {
 private:
@@ -24,6 +26,9 @@ private:
 public:
     EditorContext() = default;
     ~EditorContext() = default;
+
+public:
+    std::vector<std::unique_ptr<EditorPanel>> Panels;
 
 public:
     Core::ECS::EntityID SelectedEntity;

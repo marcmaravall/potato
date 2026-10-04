@@ -21,6 +21,9 @@ private:
 private:
     Core::AssetID m_selectedAsset = 0;
 
+private:
+    void RecompileAll();
+
 public:
     sol::state_view GetLuaState() { return m_luaState; }
 
@@ -31,6 +34,9 @@ public:
     ~PluginManager() = default;
 
     void OnExitEditor() override;
+
+    void OnLoadProject() override;
+    void OnSaveProject() override;
 
 protected:
     void OnBegin() override;

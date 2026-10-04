@@ -92,7 +92,7 @@ void EditorApplication::OnUpdate() {
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
-    for (auto& panel : m_panels) panel->Render();
+    for (auto& panel : m_editorContext.Panels) panel->Render();
 
     ImGui::Render();
 
@@ -104,7 +104,7 @@ void EditorApplication::OnUpdate() {
 }
 
 void EditorApplication::OnDestroy() {
-    for (auto& panel : m_panels) {
+    for (auto& panel : m_editorContext.Panels) {
         panel->OnExitEditor();
     }
 }

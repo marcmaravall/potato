@@ -1,6 +1,7 @@
 #include "project_window.h"
 
 #include "assets_manager/assets_manager.h"
+#include "editor_context.h"
 #include "imgui.h"
 
 namespace PotatoEngine::Editor {
@@ -9,7 +10,8 @@ void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
 
 void ProjectWindow::ClearAssetTree(AssetNode& node) { node.Nodes.clear(); }
 
-AssetNode* ProjectWindow::FindNode(AssetNode& node, const std::filesystem::path& path) {
+AssetNode* ProjectWindow::FindNode(AssetNode& node,
+                                   const std::filesystem::path& path) {
     if (node.Path == path.string()) return &node;
     for (auto& child : node.Nodes) {
         if (AssetNode* found = FindNode(child, path)) return found;
@@ -171,7 +173,6 @@ void ProjectWindow::OnRender() {
 
 void ProjectWindow::OnEnd() {}
 
-
 // AssetFileListener:
 
 // FIXME: don't generate the whole tree, just update the changed node
@@ -179,9 +180,11 @@ void AssetFileListener::on_event(const mfsw::event& event) {
     if (event.type != mfsw::action::MODIFY) {
         MEB_LOG_INFO("AssetFileListener received event");
         m_projectWindow.ClearAssetTree();
-        std::filesystem::path p = m_projectWindow.m_engineContext._AssetManager.Path(
-            m_projectWindow.m_engineContext._AssetManager.GetRoot());
-        m_projectWindow.GenerateAssetTree(p.parent_path(), m_projectWindow.m_root);
+        std::filesystem::path p =
+            m_projectWindow.m_engineContext._AssetManager.Path(
+                m_projectWindow.m_engineContext._AssetManager.GetRoot());
+        m_projectWindow.GenerateAssetTree(p.parent_path(),
+                                          m_projectWindow.m_root);
     }
 }
 

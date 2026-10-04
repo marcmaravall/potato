@@ -51,6 +51,8 @@ public:
     void Exit();
     PluginMeta GetMeta();
 
+    Core::AssetID GetAssetID() { return m_pluginAssetID; }
+
 public:
     constexpr static const char *kUpdateFunctionName = "_update",
                                 *kOnLoadFunctionName = "_onLoad",
