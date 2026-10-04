@@ -2,6 +2,7 @@
 
 #include <editor/scripting/editor_api.hpp>
 #include <scripting/scripting_api.hpp>
+#include <scripting/scripting_utils.hpp>
 
 #include "assets_manager/asset.h"
 #include "editor/utils/imgui_utils.hpp"
@@ -14,8 +15,7 @@ using namespace Core::Scripting;
 
 PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Plugin Manager", ctx, ectx) {
-    m_luaState.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
-                              sol::lib::string, sol::lib::table);
+    ScriptingUtils::OpenLuaLibs(m_luaState);
     sol_ImGui::Init(m_luaState);
     ScriptingAPI::InitCore(m_luaState, ctx);
     Scripting::InitEditor(m_luaState);

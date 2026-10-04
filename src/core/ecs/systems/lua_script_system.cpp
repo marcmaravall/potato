@@ -3,14 +3,13 @@
 #include <engine_context.h>
 
 #include "scripting/scripting_api.hpp"
+#include "scripting/scripting_utils.hpp"
 
 namespace PotatoEngine::Core::ECS::Systems {
 using namespace ECS::Components;
 
 LuaScriptSystem::LuaScriptSystem(EngineContext& ctx) : ECS::System(ctx) {
-    m_lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
-                         sol::lib::string, sol::lib::table);
-
+    Scripting::ScriptingUtils::OpenLuaLibs(m_lua);
     Scripting::ScriptingAPI::InitCore(m_lua, ctx);
 }
 

@@ -5,6 +5,11 @@
 
 namespace PotatoEngine::Core::Scripting {
 
+void ScriptingUtils::OpenLuaLibs(sol::state& lua) {
+    lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::math,
+                       sol::lib::string, sol::lib::table, sol::lib::io);
+}
+
 bool ScriptingUtils::CompileScript(sol::state& lua, sol::environment& env,
                                    AssetManager& am, bool& compiled,
                                    AssetID assetID) {

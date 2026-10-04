@@ -13,6 +13,8 @@ public:
 
     static bool CallLuaFunction(sol::environment&, const char* name,
                                 bool& compiled, AssetID asset);
+
+    static void OpenLuaLibs(sol::state& lua);
 };
 
 }  // namespace PotatoEngine::Core::Scripting

@@ -3,6 +3,7 @@
 #include <ecs/components/all_components.h>
 #include <input/input_state.h>
 
+#include <fstream>
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 
@@ -315,8 +316,11 @@ sol::table jsonToTable(sol::state& lua, const nlohmann::ordered_json& json) {
 
 void ScriptingAPI::InitSerializeAPI(sol::state& lua) {
     sol::table jsonTable = lua.create_named_table("Json");
+
+    constexpr int DEFAULT_INDENT = 4;
+
     jsonTable.set_function("encode", [](const sol::table& obj) -> std::string {
-        return tableToJson(obj).dump(4);
+        return tableToJson(obj).dump(DEFAULT_INDENT);
     });
     jsonTable.set_function(
         "encodeWithIdent",
@@ -329,6 +333,35 @@ void ScriptingAPI::InitSerializeAPI(sol::state& lua) {
             auto json = nlohmann::ordered_json::parse(rawSource);
             return jsonToTable(lua, json);
         });
+
+    jsonTable.set_function(
+        "encodeToFile",
+        [](const sol::table& obj, const std::string& path) -> int {
+            auto json = tableToJson(obj).dump(DEFAULT_INDENT);
+            std::ofstream stream(path);
+            if (!stream.is_open()) {
+                throw std::runtime_error("Could not open JSON file: " + path);
+            }
+            stream << json;
+            return 0;
+        });
+
+    jsonTable.set_function("decodeFromFile", [&lua](const std::string& path) {
+        std::ifstream stream(path);
+        if (!stream) {
+            throw std::runtime_error("Could not open JSON file: " + path);
+        }
+        std::string rawSource((std::istreambuf_iterator<char>(stream)),
+                              std::istreambuf_iterator<char>());
+        auto json = nlohmann::ordered_json::parse(rawSource);
+
+        return jsonToTable(lua, json);
+    });
+}
+
+void ScriptingAPI::InitAssetManagement(sol::state& lua, EngineContext& ctx) {
+    sol::table io = lua.create_named_table("AssetManager");
+    io.set_function("getRoot", [&]() { return ctx._AssetManager.GetRoot(); });
 }
 
 void ScriptingAPI::InitCore(sol::state& lua, EngineContext& ctx) {
@@ -338,6 +371,7 @@ void ScriptingAPI::InitCore(sol::state& lua, EngineContext& ctx) {
     InitComponents(lua);
     InitECS(lua, ctx);
     InitDebug(lua, ctx);
+    InitAssetManagement(lua, ctx);
     InitSerializeAPI(lua);
 }
 
