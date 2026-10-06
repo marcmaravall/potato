@@ -246,6 +246,9 @@ public:
     ~Registry() = default;
 
 public:
+    void BuildSceneMeta(SceneMeta& scene);
+
+public:
     // This is very expensive
     std::vector<std::pair<EntityID, Entity*>> GetEntities();
 };

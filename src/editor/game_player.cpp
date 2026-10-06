@@ -1,13 +1,17 @@
 #include "game_player.h"
 
+#include "serialize/meta.hpp"
+
 namespace PotatoEngine::Editor {
 
 void GamePlayer::OnBegin() {}
 
-// TODO: save start state and load it when stop
 void GamePlayer::OnRender() {
     if (ImGui::Button("Play") && !m_engineContext.IsRunning) {
         ImGui::SetWindowFocus("Viewport");
+
+        m_lastSceneLoaded.Entities.clear();
+        m_engineContext.Registry.BuildSceneMeta(m_lastSceneLoaded);
 
         m_engineContext.IsRunning = true;
         m_engineContext.Debug.Log("Game started");
@@ -29,6 +33,8 @@ void GamePlayer::OnRender() {
     if (ImGui::Button("Stop") && m_engineContext.IsRunning) {
         m_engineContext.IsRunning = false;
         m_engineContext.Debug.Log("Game finished");
+        // FIXME: this doesn't work if an scene is opened
+        m_editorContext.OpenScene(m_engineContext, m_lastSceneLoaded);
     }
 
     ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);

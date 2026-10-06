@@ -12,6 +12,7 @@ namespace PotatoEngine::Editor {
 class GamePlayer : public EditorPanel {
 private:
     Core::Application* m_application;
+    Core::SceneMeta m_lastSceneLoaded;
 
 public:
     GamePlayer(Core::EngineContext& ctx, EditorContext& ectx)

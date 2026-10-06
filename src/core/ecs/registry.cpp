@@ -5,6 +5,8 @@
 #include <memory>
 
 #include "ecs/entity_id.h"
+#include "serialize/meta.hpp"
+#include "serialize/serializer.hpp"
 
 namespace PotatoEngine::Core::ECS {
 
@@ -34,7 +36,7 @@ std::unique_ptr<Component> Registry::DeserializeComponent(
 EntityID Registry::GenerateAssetID() {
     static std::mt19937_64 rng{std::random_device{}()};
     static std::uniform_int_distribution<EntityID> dist(1, ENTITY_MAX);
-    
+
     EntityID id;
     do {
         id = dist(rng);
@@ -43,9 +45,7 @@ EntityID Registry::GenerateAssetID() {
     return id;
 }
 
-void Registry::Clear() {
-    m_entities.clear();
-}
+void Registry::Clear() { m_entities.clear(); }
 
 std::vector<std::pair<EntityID, Entity*>> Registry::GetEntities() {
     std::vector<std::pair<EntityID, Entity*>> vec;
@@ -129,4 +129,19 @@ void Registry::Destroy() {
         system->OnDestroy();
     }
 }
+
+void Registry::BuildSceneMeta(SceneMeta& scene) {
+    for (auto& [id, e] : m_entities) {
+        EntityMeta entity{.ID = id};
+        for (auto& component : e->GetComponents()) {
+            if (!component) {
+                continue;
+            }
+            entity.Components.push_back(
+                Serializer::ComponentToMeta(component, *this));
+        }
+        scene.Entities.push_back(entity);
+    }
+}
+
 }  // namespace PotatoEngine::Core::ECS
