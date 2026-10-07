@@ -21,6 +21,9 @@ private:
 public:
     Viewport(Core::EngineContext& ctx, EditorContext& ectx);
 
+public:
+    void OnLoadProject() override;
+
 protected:
     void OnBegin() override;
     void OnRender() override;

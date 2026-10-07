@@ -11,9 +11,6 @@ function _onLoad()
 	Debug.log("path: " .. path)
 
 	local obj = Json.decodeFromFile(path)
-	obj.a = obj.a + 5.0
-	obj.b = obj.b .. " Hi"
-	obj.c = true
 
 	Json.encodeToFile(obj, path)
 end

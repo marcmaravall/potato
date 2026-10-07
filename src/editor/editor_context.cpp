@@ -78,7 +78,7 @@ void EditorContext::LoadFromProject(EngineContext& engineContext) {
         return;
     }
 
-    engineContext.Registry.Clear();
+    // engineContext.Registry.Clear();
 }
 
 void EditorContext::SaveFromProject(const EngineContext& engineContext) {}

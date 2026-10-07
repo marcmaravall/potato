@@ -1,5 +1,7 @@
 #include "viewport.h"
 
+#include "ecs/systems/camera.h"
+
 using namespace PotatoEngine::Core::Rendering;
 
 namespace PotatoEngine::Editor {
@@ -8,6 +10,8 @@ Viewport::Viewport(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Viewport", ctx, ectx) {
     ctx.Renderer.Init();
 }
+
+void Viewport::OnLoadProject() {}
 
 void Viewport::OnBegin() {}
 
@@ -22,11 +26,15 @@ void Viewport::OnRender() {
         m_engineContext.Renderer.Resize(m_width, m_height);
     }
 
-    // TODO: render to viewport in a cleaner way:
-    if (!m_engineContext.IsRunning)
+    if (!m_engineContext.IsRunning) {
+        m_engineContext.Registry.GetSystem<Core::ECS::Systems::CameraSystem>()
+            .OnUpdate();
+
         m_engineContext.Registry
             .GetSystem<Core::ECS::Systems::SpriteRendererSystem>()
             .OnUpdate();
+    }
+
     m_engineContext.Renderer.BeginScene();
     m_engineContext.Renderer.EndScene();
 

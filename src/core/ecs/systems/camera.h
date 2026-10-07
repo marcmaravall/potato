@@ -11,7 +11,7 @@ public:
     CameraSystem(EngineContext& ctx) : System(ctx) {}
     ~CameraSystem() = default;
 
-protected:
+public:
     void OnStart() override;
     void OnUpdate() override;
     void OnDestroy() override;
