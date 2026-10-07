@@ -27,8 +27,8 @@ namespace PotatoEngine::Core::Rendering {
 
 // TODO: abstract command buffer if this scales
 struct SpriteRendererCommandBuffer {
-    const ECS::Components::Transform& T;
-    const ECS::Components::SpriteRenderer& S;
+    ECS::Components::Transform T;
+    ECS::Components::SpriteRenderer S;
 
     SpriteRendererCommandBuffer(const ECS::Components::Transform& t,
                                 const ECS::Components::SpriteRenderer& s)

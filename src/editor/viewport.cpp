@@ -27,7 +27,6 @@ void Viewport::OnRender() {
         m_engineContext.Registry
             .GetSystem<Core::ECS::Systems::SpriteRendererSystem>()
             .OnUpdate();
-
     m_engineContext.Renderer.BeginScene();
     m_engineContext.Renderer.EndScene();
 

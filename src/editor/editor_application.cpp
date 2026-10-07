@@ -92,7 +92,9 @@ void EditorApplication::OnUpdate() {
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
 
-    for (auto& panel : m_editorContext.Panels) panel->Render();
+    for (auto& panel : m_editorContext.Panels) {
+        panel->Render();
+    }
 
     ImGui::Render();
 

@@ -144,7 +144,6 @@ void Renderer2D::BeginScene() {
         }
         m_shaderProgram->Unuse();
     } catch (std::exception& ex) {
-        // FIXME: "string too long" exception
         MEB_LOG_ERRORF("Renderer2D::BeginScene failed: %s", ex.what());
     }
 }
