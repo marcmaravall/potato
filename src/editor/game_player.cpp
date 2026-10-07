@@ -33,7 +33,7 @@ void GamePlayer::OnRender() {
     if (ImGui::Button("Stop") && m_engineContext.IsRunning) {
         m_engineContext.IsRunning = false;
         m_engineContext.Debug.Log("Game finished");
-        // FIXME: this doesn't work if an scene is opened
+
         m_editorContext.OpenScene(m_engineContext, m_lastSceneLoaded);
     }
 

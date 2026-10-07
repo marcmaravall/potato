@@ -113,34 +113,40 @@ void Renderer2D::Init() {
 }
 
 void Renderer2D::BeginScene() {
-    m_framebuffer->Bind();
-    m_rendererAPI->SetViewport(0, 0, m_width, m_height);
-    m_rendererAPI->Clear();
+    try {
+        m_framebuffer->Bind();
+        m_rendererAPI->SetViewport(0, 0, m_width, m_height);
+        m_rendererAPI->Clear();
 
-    std::sort(m_srCommandBuffers.begin(), m_srCommandBuffers.end(),
-              [](auto* a, auto* b) { return a->S.Layer < b->S.Layer; });
+        std::sort(m_srCommandBuffers.begin(), m_srCommandBuffers.end(),
+                  [](auto* a, auto* b) { return a->S.Layer < b->S.Layer; });
 
-    m_shaderProgram->Use();
-    m_shaderProgram->UniformMatrix4fv(
-        "u_ViewProjection", m_engineContext.GetViewProjectionMatrix());
+        m_shaderProgram->Use();
+        m_shaderProgram->UniformMatrix4fv(
+            "u_ViewProjection", m_engineContext.GetViewProjectionMatrix());
 
-    for (auto* command : m_srCommandBuffers) {
-        m_shaderProgram->UniformMatrix4fv("u_Model", command->T.GetMatrix());
-        m_shaderProgram->Uniform4f("u_Color", command->S.Color);
+        for (auto* command : m_srCommandBuffers) {
+            m_shaderProgram->UniformMatrix4fv("u_Model",
+                                              command->T.GetMatrix());
+            m_shaderProgram->Uniform4f("u_Color", command->S.Color);
 
-        m_shaderProgram->Uniform1i("u_Texture", 0);
+            m_shaderProgram->Uniform1i("u_Texture", 0);
 
-        auto sr = command->S;
-        auto* texture = sr.GetTexture(m_engineContext._AssetManager);
-        if (texture) {
-            texture->Bind(0);
+            auto sr = command->S;
+            auto* texture = sr.GetTexture(m_engineContext._AssetManager);
+            if (texture) {
+                texture->Bind(0);
+            }
+
+            m_vao->Bind();
+            m_rendererAPI->DrawIndexed(m_vao->GetIndexBuffer()->GetCount());
+            m_vao->Unbind();
         }
-
-        m_vao->Bind();
-        m_rendererAPI->DrawIndexed(m_vao->GetIndexBuffer()->GetCount());
-        m_vao->Unbind();
+        m_shaderProgram->Unuse();
+    } catch (std::exception& ex) {
+        // FIXME: "string too long" exception
+        MEB_LOG_ERRORF("Renderer2D::BeginScene failed: %s", ex.what());
     }
-    m_shaderProgram->Unuse();
 }
 
 void Renderer2D::EndScene() {
