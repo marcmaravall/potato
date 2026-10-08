@@ -36,7 +36,9 @@ void PluginManager::OnLoadProject() {
 
 void PluginManager::OnSaveProject() {
     auto* project = m_editorContext.CurrentProject.get();
-    MEB_ASSERT(project);
+    if (!project) {
+        return;
+    }
     auto& plugins = project->_PluginsData.Plugins;
     plugins.resize(m_editorPlugins.size());
     int i = 0;

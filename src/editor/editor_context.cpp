@@ -72,6 +72,45 @@ void EditorContext::UserSaveProject(Core::EngineContext& ctx) {
     }
 }
 
+void EditorContext::UserNewProject(Core::EngineContext& ctx) {
+    auto dialog = pfd::save_file("Create new project", pfd::path::home(),
+                   {"JSON Files", "*.json", "All Files", "*"});
+    const std::filesystem::path& p = dialog.result();
+
+    // Currently hardcoded but this should be changed
+    static constexpr const char* kDefaultSettings = R"({
+    "PluginsData": {
+        "Plugins": [
+        ]
+    },
+    "ProjectSettings": {
+        "EngineVersion": "0.0.1",
+        "ProjectName": "my_project",
+        "ProjectVersion": "1.0.0"
+    }
+})";
+
+    std::ofstream os(p.string());
+    os << kDefaultSettings;
+    os.close();
+
+    ctx._AssetManager.SetRoot(p.parent_path());
+    ctx._AssetManager.ScanAssets();
+
+    m_fileWatcher.stop();
+    m_fileWatcher.add_listener(p.parent_path(), new FileListener(ctx));
+    m_fileWatcher.watch();
+
+    CurrentProject = Project::Load(p.string().c_str());
+    LoadFromProject(ctx);
+
+    for (auto& panel : Panels) {
+        panel->OnLoadProject();
+    }
+
+    MEB_LOG_INFO("Created project successfully!");
+}
+
 void EditorContext::LoadFromProject(EngineContext& engineContext) {
     if (!CurrentProject) {
         MEB_LOG_ERROR("CurrentProject is nullptr!");

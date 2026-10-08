@@ -44,6 +44,7 @@ public:
     // Utils:
     void UserOpenProject(Core::EngineContext& ctx);
     void UserSaveProject(Core::EngineContext& ctx);
+    void UserNewProject(Core::EngineContext& ctx);
 
     void OpenScene(Core::EngineContext& engineContext,
                    const Core::SceneMeta& sceneMeta);

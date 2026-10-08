@@ -15,9 +15,9 @@ void CameraSystem::OnUpdate() {
         camerasFound++;
     });
     if (camerasFound > 1) {
-        MEB_LOG_WARNINGF("Found %d cameras, expected 1", camerasFound);
+        // MEB_LOG_WARNINGF("Found %d cameras, expected 1", camerasFound);
     } else if (camerasFound == 0) {
-        MEB_LOG_WARNING("Found 0 cameras, setting default color to white");
+        // MEB_LOG_WARNING("Found 0 cameras, setting default color to white");
     }
     m_context.Renderer.SetClearColor(color);
 }

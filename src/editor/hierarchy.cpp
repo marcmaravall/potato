@@ -74,6 +74,7 @@ void HierarchyPanel::OnRender() {
         m_editorContext.IsEntitySelected = false;
         m_engineContext.Registry.RemoveAllEntities();
     }
+    ImGui::Separator();
 
     EntityID toDelete = NULL_ENTITY;
     m_engineContext.Registry.Each_Not<Core::ECS::Components::Parent>(

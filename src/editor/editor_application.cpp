@@ -80,6 +80,10 @@ void EditorApplication::OnUpdate() {
         m_editorContext.UserOpenProject(m_engineContext);
     }
 
+    if (ImGui::IsKeyPressed(ImGuiKey_N) && io.KeyCtrl) {
+        m_editorContext.UserNewProject(m_engineContext);
+    }
+
     if (ImGui::IsKeyPressed(ImGuiKey_Z) && io.KeyCtrl) {
         MEB_LOG_INFO("UNDO");
         m_editorContext.CManager.Undo();  // UNDO

@@ -12,6 +12,12 @@ void MenuBar::ExecEvents() {
 }
 
 void MenuBar::File() {
+    if (ImGui::Button("New")) {
+        m_events.push([&]() {
+            m_editorContext.UserNewProject(m_engineContext); 
+            
+            });
+    }
     if (ImGui::Button("Open")) {
         m_events.push(
             [&]() { m_editorContext.UserOpenProject(m_engineContext); });
