@@ -8,7 +8,12 @@ namespace PotatoEngine::Editor {
 
 void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
 
-void ProjectWindow::ClearAssetTree(AssetNode& node) { node.Nodes.clear(); }
+void ProjectWindow::ClearAssetTree(AssetNode& node) { 
+    for (auto& n : node.Nodes) {
+        ClearAssetTree(n);
+    }
+    node.Nodes.clear(); 
+}
 
 AssetNode* ProjectWindow::FindNode(AssetNode& node,
                                    const std::filesystem::path& path) {
@@ -20,22 +25,40 @@ AssetNode* ProjectWindow::FindNode(AssetNode& node,
 }
 
 void ProjectWindow::DrawTree(AssetNode& node) {
-    for (auto& child : node.Nodes) {
-        if (!child.Directory) continue;
+    const std::string& name = node.Name;
+    if (name.empty()) return;
+    
+    ImGuiTreeNodeFlags flags =
+        ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
-        ImGuiTreeNodeFlags flags =
-            ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+    if (node.Path == m_selectedPath) {
+        flags |= ImGuiTreeNodeFlags_Selected;
+    }
 
-        if (child.Path == m_selectedPath) flags |= ImGuiTreeNodeFlags_Selected;
+    if (!node.Directory) {
+        flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
-        bool open = ImGui::TreeNodeEx(child.Name.c_str(), flags);
+        ImGui::TreeNodeEx(name.c_str(), flags);
 
-        if (ImGui::IsItemClicked()) m_selectedPath = child.Path;
-
-        if (open) {
-            DrawTree(child);
-            ImGui::TreePop();
+        if (ImGui::IsItemClicked()) {
+            OpenAsset(node);
         }
+
+        return;
+    }
+
+    bool open = ImGui::TreeNodeEx(name.c_str(), flags);
+
+    if (ImGui::IsItemClicked()) {
+        m_selectedPath = node.Path;
+    }
+
+    if (open) {
+        for (auto& child : node.Nodes) {
+            DrawTree(child);
+        }
+
+        ImGui::TreePop();
     }
 }
 
@@ -139,16 +162,21 @@ void ProjectWindow::OnBegin() {
         m_engineContext._AssetManager.GetRoot());
 
     if (!s_init || path != s_lastPath) {
-        ClearAssetTree();
-        GenerateAssetTree(path.parent_path(), m_root);
+        ClearAssetTree(m_root);
+        m_root.Name = path.filename().string();
+        m_root.Path = path.string();
+        m_root.Directory = true;
+        GenerateAssetTree(path, m_root);
 
         s_lastPath = path;
         s_init = true;
+
         if (!path.empty()) {
-            m_fileWatcher.add_listener(path.parent_path().string(),
+            m_fileWatcher.add_listener(path.string(),
                                        new AssetFileListener(*this), true);
             m_fileWatcher.watch();
         }
+
         MEB_LOG_INFOF("Generated asset tree in path %s", path.string().c_str());
     }
 }
@@ -183,8 +211,7 @@ void AssetFileListener::on_event(const mfsw::event& event) {
         std::filesystem::path p =
             m_projectWindow.m_engineContext._AssetManager.Path(
                 m_projectWindow.m_engineContext._AssetManager.GetRoot());
-        m_projectWindow.GenerateAssetTree(p.parent_path(),
-                                          m_projectWindow.m_root);
+        m_projectWindow.GenerateAssetTree(p, m_projectWindow.m_root);
     }
 }
 

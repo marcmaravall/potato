@@ -76,6 +76,7 @@ void EditorContext::UserNewProject(Core::EngineContext& ctx) {
     auto dialog = pfd::save_file("Create new project", pfd::path::home(),
                    {"JSON Files", "*.json", "All Files", "*"});
     const std::filesystem::path& p = dialog.result();
+    if (p.empty()) return;
 
     // Currently hardcoded but this should be changed
     static constexpr const char* kDefaultSettings = R"({

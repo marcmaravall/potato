@@ -22,6 +22,10 @@ struct AssetNode {
 
 public:
     AssetNode() = default;
+    AssetNode(const std::string& name, const std::filesystem::path& path,
+              bool dir)
+        : Name(name), Path(path), Directory(dir) {}
+
     ~AssetNode() = default;
 };
 
