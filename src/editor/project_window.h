@@ -35,6 +35,10 @@ private:
     std::filesystem::path m_selectedPath = "";
 
 private:
+    std::filesystem::path m_lastPath;
+    bool m_init = false;
+
+private:
     float m_thumbnailSize = 64.0f;
     float m_padding = 16.0f;
 
