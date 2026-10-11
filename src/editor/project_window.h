@@ -33,6 +33,7 @@ class ProjectWindow : public EditorPanel {
 private:
     AssetNode m_root;
     std::filesystem::path m_selectedPath = "";
+    Core::AssetID m_toDelete = 0;
 
 private:
     std::filesystem::path m_lastPath;
@@ -52,6 +53,9 @@ private:
     void ClearAssetTree(AssetNode& node);
     void GenerateAssetTree(const std::filesystem::path& path, AssetNode& node);
     void OpenAsset(const AssetNode& node);
+
+private:
+    void UserCreateAsset();
 
 private:
     void DrawTree(AssetNode& node);

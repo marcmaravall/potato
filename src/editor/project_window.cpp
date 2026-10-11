@@ -120,7 +120,24 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
         bool hovered = ImGui::IsItemHovered();
         bool clicked = ImGui::IsItemClicked();
 
-        if (hovered && ImGui::IsMouseDoubleClicked(0)) {
+        bool open = false;
+
+        if (ImGui::BeginPopupContextItem()) {
+            if (ImGui::MenuItem("New")) {
+                UserCreateAsset();
+            }
+            if (ImGui::MenuItem("Open")) {
+                open = true;
+            }
+            if (ImGui::MenuItem("Delete")) {
+                m_toDelete = m_engineContext._AssetManager.GetAssetByPath(child.Path);
+            }
+
+            ImGui::EndPopup();
+        }
+
+        open |= hovered && ImGui::IsMouseDoubleClicked(0);
+        if (open) {
             if (child.Directory)
                 m_selectedPath = child.Path;
             else {
@@ -196,7 +213,38 @@ void ProjectWindow::OnRender() {
     ImGui::EndChild();
 }
 
-void ProjectWindow::OnEnd() {}
+void ProjectWindow::OnEnd() {
+    if (m_toDelete) {
+        const std::filesystem::path& path =
+            m_engineContext._AssetManager.GetAsset(m_toDelete)
+                .GetAbsolutePath();
+
+        const std::string& metaPath = path.string() + ".meta";
+
+        std::error_code ec;
+        std::filesystem::remove(path, ec);
+        if (ec) {
+            MEB_LOG_ERRORF("Cannot remove path: %s, error: %s",
+                           path.string().c_str(), ec.message().c_str());
+            return;
+        }
+        std::filesystem::remove(metaPath, ec);
+        if (ec) {
+            MEB_LOG_ERRORF("Cannot remove path: %s, error: %s",
+                           path.string().c_str(), ec.message().c_str());
+            return;
+        }
+
+        m_engineContext._AssetManager.RemoveAsset(m_toDelete);
+        if (m_editorContext.SelectedAsset == m_toDelete)
+            m_editorContext.IsAssetSelected = false;
+        m_toDelete = 0;
+    }
+}
+
+void ProjectWindow::UserCreateAsset() {
+    // TODO: implement
+}
 
 // AssetFileListener:
 
