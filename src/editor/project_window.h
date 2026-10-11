@@ -36,6 +36,17 @@ private:
     Core::AssetID m_toDelete = 0;
 
 private:
+    // Things related to creating new assets
+    struct CreateAssetInput {
+        bool ShowPopup = false;
+        std::filesystem::path Path;
+        std::string Name = "";
+    };
+    struct CreateAssetInput m_createAssetInput;
+    
+    void CreateAssetPopup();
+
+private:
     std::filesystem::path m_lastPath;
     bool m_init = false;
 
@@ -55,15 +66,11 @@ private:
     void OpenAsset(const AssetNode& node);
 
 private:
-    void UserCreateAsset();
-
-private:
     void DrawTree(AssetNode& node);
     void DrawAssetViewer(AssetNode& node);
 
 public:
-    ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
-        : EditorPanel("Project", ctx, ectx) {}
+    ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx);
     ~ProjectWindow() = default;
 
 public:

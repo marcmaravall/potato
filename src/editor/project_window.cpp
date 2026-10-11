@@ -2,9 +2,16 @@
 
 #include "assets_manager/assets_manager.h"
 #include "editor_context.h"
-#include "imgui.h"
+#include <imgui/imgui.h>
+
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 namespace PotatoEngine::Editor {
+
+ProjectWindow::ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
+    : EditorPanel("Project", ctx, ectx) {
+    m_createAssetInput = {false, std::filesystem::path(), ""};
+}
 
 void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
 
@@ -124,7 +131,8 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 
         if (ImGui::BeginPopupContextItem()) {
             if (ImGui::MenuItem("New")) {
-                UserCreateAsset();
+                m_createAssetInput.ShowPopup = true;
+                m_createAssetInput.Path = child.Path.parent_path();
             }
             if (ImGui::MenuItem("Open")) {
                 open = true;
@@ -211,6 +219,8 @@ void ProjectWindow::OnRender() {
         if (selectedNode) DrawAssetViewer(*selectedNode);
     }
     ImGui::EndChild();
+
+    CreateAssetPopup();
 }
 
 void ProjectWindow::OnEnd() {
@@ -242,8 +252,32 @@ void ProjectWindow::OnEnd() {
     }
 }
 
-void ProjectWindow::UserCreateAsset() {
-    // TODO: implement
+void ProjectWindow::CreateAssetPopup() {
+    if (m_createAssetInput.ShowPopup) {
+        ImGui::OpenPopup("Create Asset");
+        m_createAssetInput.ShowPopup = false;
+    }
+    
+    if (ImGui::BeginPopupModal("Create Asset", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("Enter asset name: ");
+
+        ImGui::InputText("##asset_name", &m_createAssetInput.Name);
+
+        if (ImGui::Button("Confirm")) {
+            std::filesystem::path file = m_createAssetInput.Path / m_createAssetInput.Name;
+            std::ofstream os(file);
+            os << "";  // create empty file
+            m_engineContext._AssetManager.LoadOrCreateAsset(
+                file, file.string() + m_engineContext._AssetManager.kMetaExtension);
+
+            ImGui::CloseCurrentPopup();
+        }
+
+        if (ImGui::Button("Cancel")) {
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
 }
 
 // AssetFileListener:
