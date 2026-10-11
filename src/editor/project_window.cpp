@@ -103,8 +103,6 @@ void ProjectWindow::OpenAsset(const AssetNode& node) {
 }
 
 void ProjectWindow::DrawAssetViewer(AssetNode& node) {
-    ImGui::Separator();
-
     float panelWidth = ImGui::GetContentRegionAvail().x;
     float cellSize = m_thumbnailSize + m_padding;
     int columns = static_cast<int>(panelWidth / cellSize);
@@ -179,6 +177,29 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     ImGui::EndTable();
 }
 
+void ProjectWindow::DrawSearch() {
+    // TODO: This should show the found assets in a list
+    ImGui::InputText("##search_buffer", &m_searchBuffer);
+    ImGui::SameLine();
+    if (ImGui::Button("Search")) {
+        m_found = 0;
+        ForEachNode(m_root, [&](const AssetNode& node) {
+            if (strcmp(m_searchBuffer.c_str(), node.Name.c_str()) == 0) {
+                m_found++;
+            }
+        });
+    }
+    ImGui::SameLine();
+    ImGui::Text("found %d", m_found);
+}
+
+void ProjectWindow::ForEachNode(const AssetNode& node, std::function<void(const AssetNode&)> iterator) {
+    iterator(node);
+    for (auto& child : node.Nodes) {
+        ForEachNode(child, iterator);
+    }
+}
+
 void ProjectWindow::OnBegin() {
     const std::filesystem::path& path = m_engineContext._AssetManager.Path(
         m_engineContext._AssetManager.GetRoot());
@@ -207,18 +228,25 @@ void ProjectWindow::OnRender() {
     ImGui::BeginChild("FolderTree", ImVec2(200, 0), true);
     DrawTree(m_root);
     ImGui::EndChild();
-
     ImGui::SameLine();
-    auto avail = ImGui::GetContentRegionAvail();
 
-    ImGui::BeginChild("AssetViewer", ImVec2(avail.x, 0), true);
+    ImGui::BeginGroup();
+    const float searchHeight = 40.0f;
+    ImGui::BeginChild("DrawSearch", ImVec2(0, searchHeight), true);
+    DrawSearch();
+    ImGui::EndChild();
+
+    ImGui::Spacing();
+    ImGui::BeginChild("AssetViewer", ImVec2(0, 0), true);
     if (m_selectedPath.empty()) {
         DrawAssetViewer(m_root);
     } else {
         AssetNode* selectedNode = FindNode(m_root, m_selectedPath);
         if (selectedNode) DrawAssetViewer(*selectedNode);
     }
+
     ImGui::EndChild();
+    ImGui::EndGroup();
 
     CreateAssetPopup();
 }
