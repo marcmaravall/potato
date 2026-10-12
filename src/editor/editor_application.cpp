@@ -1,8 +1,12 @@
 #include "editor_application.h"
 
+#include "profiler.hpp"
+
 #include "assets_manager/asset.h"
-#include "imgui.h"
 #include "portable-file-dialogs.h"
+
+#include <imgui/imgui.h>
+#include <implot/implot.h>
 
 namespace PotatoEngine::Editor {
 using namespace PotatoEngine::Core::Rendering;
@@ -33,6 +37,7 @@ void EditorApplication::OnStart() {
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
 
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -49,6 +54,7 @@ void EditorApplication::OnStart() {
     AddPanel<GamePlayer>(m_engineContext, m_editorContext);
     AddPanel<ProjectWindow>(m_engineContext, m_editorContext);
     AddPanel<PluginManager>(m_engineContext, m_editorContext);
+    AddPanel<Profiler>(m_engineContext, m_editorContext);
 
     m_engineContext.Start();
 
@@ -113,6 +119,11 @@ void EditorApplication::OnDestroy() {
     for (auto& panel : m_editorContext.Panels) {
         panel->OnExitEditor();
     }
+
+    ImPlot::DestroyContext();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui::DestroyContext();
 }
 
 bool EditorApplication::ShouldClose() const { return !m_running; }

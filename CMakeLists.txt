@@ -57,6 +57,20 @@ target_link_libraries(imgui PUBLIC
 
 add_library(imgui::imgui ALIAS imgui)
 
+add_library(implot STATIC
+    thirdparty/implot/implot.cpp
+    thirdparty/implot/implot_items.cpp
+    thirdparty/implot/implot_demo.cpp
+)
+
+target_include_directories(implot PUBLIC
+    thirdparty/implot
+)
+
+target_link_libraries(implot PUBLIC
+    imgui::imgui
+)
+
 add_subdirectory(thirdparty/lua)
 
 add_library(sol2 INTERFACE)
@@ -95,7 +109,7 @@ target_link_libraries(potato_core PUBLIC
     glad
     glm::glm
     stb_image
-    imgui::imgui
+    implot
     sol2::sol2
     sol2_ImGui_Bindings::sol2_ImGui_Bindings
 )

@@ -40,3 +40,6 @@
 [submodule "thirdparty/mfsw"]
 	path = thirdparty/mfsw
 	url = https://github.com/marcmaravall/mfsw
+[submodule "thirdparty/implot"]
+	path = thirdparty/implot
+	url = https://github.com/epezent/implot.git

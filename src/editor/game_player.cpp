@@ -2,6 +2,8 @@
 
 #include "serialize/meta.hpp"
 
+#include <implot/implot.h>
+
 namespace PotatoEngine::Editor {
 
 void GamePlayer::OnBegin() {}
@@ -36,8 +38,6 @@ void GamePlayer::OnRender() {
 
         m_editorContext.OpenScene(m_engineContext, m_lastSceneLoaded);
     }
-
-    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 }
 
 void GamePlayer::OnEnd() {}
