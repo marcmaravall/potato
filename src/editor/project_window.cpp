@@ -177,20 +177,56 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     ImGui::EndTable();
 }
 
+// TODO: implement partial search
+void ProjectWindow::Search(const std::string& query) {
+    m_searchResults.clear();
+    if (m_root.Name.empty()) {
+        // show message or something
+        return;
+    }
+    ForEachNode(m_root, [&](const AssetNode& node) {
+        if (strcmp(query.c_str(), node.Name.c_str()) == 0) {
+            m_searchResults.push_back(node);
+        }
+    });
+    m_showSearchResults = true;
+}
+
 void ProjectWindow::DrawSearch() {
-    // TODO: This should show the found assets in a list
     ImGui::InputText("##search_buffer", &m_searchBuffer);
     ImGui::SameLine();
     if (ImGui::Button("Search")) {
-        m_found = 0;
-        ForEachNode(m_root, [&](const AssetNode& node) {
-            if (strcmp(m_searchBuffer.c_str(), node.Name.c_str()) == 0) {
-                m_found++;
-            }
-        });
+        Search(m_searchBuffer);
     }
     ImGui::SameLine();
-    ImGui::Text("found %d", m_found);
+    if (m_showSearchResults) {
+        DrawSearchResultsWindow();
+    }
+}
+
+void ProjectWindow::DrawSearchResultsWindow() {
+    const float windowWidth = 400.0f;
+    const float windowHeight = 200.0f;
+
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_FirstUseEver);
+
+    if (ImGui::Begin("Search Results", &m_showSearchResults)) {
+        ImGui::Text("Found %d results", (int)m_searchResults.size());
+        ImGui::Separator();
+        ImGui::BeginChild("##results_scroll");
+        for (const auto& result : m_searchResults) {
+            if (ImGui::Selectable(result.Path.string().c_str())) {
+                if (result.Directory) {
+                    m_selectedPath = result.Path;
+                } else {
+                    m_selectedPath = result.Path.parent_path();
+                    OpenAsset(result);
+                }
+            }
+        }
+        ImGui::EndChild();
+    }
+    ImGui::End();
 }
 
 void ProjectWindow::ForEachNode(const AssetNode& node, std::function<void(const AssetNode&)> iterator) {

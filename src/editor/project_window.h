@@ -47,10 +47,6 @@ private:
     void CreateAssetPopup();
 
 private:
-    // search stuff
-    std::string m_searchBuffer = "";
-
-private:
     std::filesystem::path m_lastPath;
     bool m_init = false;
 
@@ -72,12 +68,24 @@ private:
 private:
     void DrawTree(AssetNode& node);
     void DrawAssetViewer(AssetNode& node);
+
+    // search stuff
+private:
+    bool m_showSearchResults = false;
+    std::string m_searchBuffer = "";
+    std::vector<AssetNode> m_searchResults{};
+
+    void Search(const std::string& query);
+
+private:
+    void DrawSearchResultsWindow();
     void DrawSearch();
+    // ----------------
 
 public:
-    int m_found = 0;
-    // dfs search
+    // dfs
     void ForEachNode(const AssetNode& node, std::function<void(const AssetNode&)> iterator);
+
 
 public:
     ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx);
