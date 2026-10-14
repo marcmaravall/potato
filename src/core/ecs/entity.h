@@ -1,10 +1,10 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <type_traits>
-#include <unordered_map>
 
 #include "component.h"
 #include "entity_id.h"
@@ -13,7 +13,7 @@ namespace PotatoEngine::Core::ECS {
 
 class Entity {
 private:
-    std::unordered_map<ComponentType, std::unique_ptr<Component>> m_components;
+    std::map<ComponentType, std::unique_ptr<Component>> m_components;
 
 public:
     Entity() = default;

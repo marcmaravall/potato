@@ -3,12 +3,12 @@
 #include <exception>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <queue>
 #include <serialize/meta.hpp>
 #include <sol/sol.hpp>
-#include <unordered_map>
 #include <vector>
 
 #include "component.h"
@@ -32,7 +32,7 @@ using LuaComponentBinder =
 
 class Registry {
 private:
-    std::unordered_map<EntityID, std::unique_ptr<Entity>> m_entities;
+    std::map<EntityID, std::unique_ptr<Entity>> m_entities;
 
     std::vector<std::unique_ptr<System>> m_systems;
 
