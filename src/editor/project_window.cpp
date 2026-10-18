@@ -1,10 +1,10 @@
 #include "project_window.h"
 
+#include <imgui/imgui.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
+
 #include "assets_manager/assets_manager.h"
 #include "editor_context.h"
-#include <imgui/imgui.h>
-
-#include <imgui/misc/cpp/imgui_stdlib.h>
 
 namespace PotatoEngine::Editor {
 
@@ -15,11 +15,11 @@ ProjectWindow::ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
 
 void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
 
-void ProjectWindow::ClearAssetTree(AssetNode& node) { 
+void ProjectWindow::ClearAssetTree(AssetNode& node) {
     for (auto& n : node.Nodes) {
         ClearAssetTree(n);
     }
-    node.Nodes.clear(); 
+    node.Nodes.clear();
 }
 
 AssetNode* ProjectWindow::FindNode(AssetNode& node,
@@ -34,7 +34,7 @@ AssetNode* ProjectWindow::FindNode(AssetNode& node,
 void ProjectWindow::DrawTree(AssetNode& node) {
     const std::string& name = node.Name;
     if (name.empty()) return;
-    
+
     ImGuiTreeNodeFlags flags =
         ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 
@@ -136,7 +136,8 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
                 open = true;
             }
             if (ImGui::MenuItem("Delete")) {
-                m_toDelete = m_engineContext._AssetManager.GetAssetByPath(child.Path);
+                m_toDelete =
+                    m_engineContext._AssetManager.GetAssetByPath(child.Path);
             }
 
             ImGui::EndPopup();
@@ -177,7 +178,28 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     ImGui::EndTable();
 }
 
-// TODO: implement partial search
+bool ProjectWindow::Match(const std::string& query, const std::string& value,
+                          uint16_t flags) {
+    bool exact = flags & (uint16_t)SearchFlags::EXACT_MATCH;
+    bool sensitive = flags & (uint16_t)SearchFlags::CASE_SENSITIVE;
+
+    std::string q = std::move(query), v = std::move(value);
+    if (!sensitive) {
+        for (char& c : q) {
+            c = std::tolower(c);
+        }
+        for (char& c : v) {
+            c = std::tolower(c);
+        }
+    }
+
+    if (exact) {
+        return q == v;
+    }
+
+    return v.find(q) != std::string::npos;
+}
+
 void ProjectWindow::Search(const std::string& query) {
     m_searchResults.clear();
     if (m_root.Name.empty()) {
@@ -185,7 +207,7 @@ void ProjectWindow::Search(const std::string& query) {
         return;
     }
     ForEachNode(m_root, [&](const AssetNode& node) {
-        if (strcmp(query.c_str(), node.Name.c_str()) == 0) {
+        if (Match(query, node.Name, m_flags)) {
             m_searchResults.push_back(node);
         }
     });
@@ -199,6 +221,14 @@ void ProjectWindow::DrawSearch() {
         Search(m_searchBuffer);
     }
     ImGui::SameLine();
+    ImGui::CheckboxFlags("exact match", &m_flags,
+                         (uint16_t)SearchFlags::EXACT_MATCH);
+
+    ImGui::SameLine();
+    ImGui::CheckboxFlags("case sensitive", &m_flags,
+                         (uint16_t)SearchFlags::CASE_SENSITIVE);
+
+    ImGui::SameLine();
     if (m_showSearchResults) {
         DrawSearchResultsWindow();
     }
@@ -208,7 +238,8 @@ void ProjectWindow::DrawSearchResultsWindow() {
     const float windowWidth = 400.0f;
     const float windowHeight = 200.0f;
 
-    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight),
+                             ImGuiCond_FirstUseEver);
 
     if (ImGui::Begin("Search Results", &m_showSearchResults)) {
         ImGui::Text("Found %d results", (int)m_searchResults.size());
@@ -229,7 +260,8 @@ void ProjectWindow::DrawSearchResultsWindow() {
     ImGui::End();
 }
 
-void ProjectWindow::ForEachNode(const AssetNode& node, std::function<void(const AssetNode&)> iterator) {
+void ProjectWindow::ForEachNode(
+    const AssetNode& node, std::function<void(const AssetNode&)> iterator) {
     iterator(node);
     for (auto& child : node.Nodes) {
         ForEachNode(child, iterator);
@@ -321,18 +353,21 @@ void ProjectWindow::CreateAssetPopup() {
         ImGui::OpenPopup("Create Asset");
         m_createAssetInput.ShowPopup = false;
     }
-    
-    if (ImGui::BeginPopupModal("Create Asset", nullptr, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+    if (ImGui::BeginPopupModal("Create Asset", nullptr,
+                               ImGuiWindowFlags_AlwaysAutoResize)) {
         ImGui::Text("Enter asset name: ");
 
         ImGui::InputText("##asset_name", &m_createAssetInput.Name);
 
         if (ImGui::Button("Confirm")) {
-            std::filesystem::path file = m_createAssetInput.Path / m_createAssetInput.Name;
+            std::filesystem::path file =
+                m_createAssetInput.Path / m_createAssetInput.Name;
             std::ofstream os(file);
             os << "";  // create empty file
             m_engineContext._AssetManager.LoadOrCreateAsset(
-                file, file.string() + m_engineContext._AssetManager.kMetaExtension);
+                file,
+                file.string() + m_engineContext._AssetManager.kMetaExtension);
 
             ImGui::CloseCurrentPopup();
         }

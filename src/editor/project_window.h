@@ -5,9 +5,8 @@
 
 #include <filesystem>
 #include <functional>
-#include <string>
-
 #include <mfsw/mfsw.hpp>
+#include <string>
 
 #include "panel.h"
 #include "serialize/serializer.hpp"
@@ -43,7 +42,7 @@ private:
         std::string Name = "";
     };
     struct CreateAssetInput m_createAssetInput;
-    
+
     void CreateAssetPopup();
 
 private:
@@ -75,6 +74,16 @@ private:
     std::string m_searchBuffer = "";
     std::vector<AssetNode> m_searchResults{};
 
+    enum class SearchFlags : uint16_t {
+        EMPTY = 0,
+        CASE_SENSITIVE = 1 << 1,
+        EXACT_MATCH = 1 << 2,
+    };
+
+    uint16_t m_searchFlags = 0;
+
+    bool Match(const std::string& query, const std::string& value,
+               uint16_t flags = 0);
     void Search(const std::string& query);
 
 private:
@@ -84,8 +93,8 @@ private:
 
 public:
     // dfs
-    void ForEachNode(const AssetNode& node, std::function<void(const AssetNode&)> iterator);
-
+    void ForEachNode(const AssetNode& node,
+                     std::function<void(const AssetNode&)> iterator);
 
 public:
     ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx);
@@ -106,8 +115,7 @@ private:
 public:
     void on_event(const mfsw::event& event) override;
 
-    AssetFileListener(ProjectWindow& window)
-        : m_projectWindow(window) {}
+    AssetFileListener(ProjectWindow& window) : m_projectWindow(window) {}
     ~AssetFileListener() = default;
 };
 
