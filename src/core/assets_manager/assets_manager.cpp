@@ -6,10 +6,11 @@
 #include <random>
 
 #include "assets/lua_script_asset.h"
+#include "assets/scene_asset.hpp"
 #include "assets/texture_asset.h"
 #include "assets/unhandled_asset.h"
 #include "assets_manager/asset.h"
-#include "assets/scene_asset.hpp"
+#include "assets_manager/assets/json_asset.hpp"
 
 namespace PotatoEngine::Core {
 
@@ -87,6 +88,10 @@ AssetType AssetManager::GetAssetType(const std::filesystem::path& path) {
     if (ext == ".png" || ext == ".jpg" || ext == ".gif")
         return AssetType::TEXTURE;
 
+    if (ext == ".json") {
+        return AssetType::JSON;
+    }
+
     if (ext == ".glsl") return AssetType::SHADER;
 
     if (ext == ".obj" || ext == ".fbx") return AssetType::MODEL;
@@ -113,6 +118,8 @@ std::unique_ptr<Asset> AssetManager::CreateAssetInstance(
             break;
         case AssetType::TEXT:
             break;
+        case AssetType::JSON:
+            return std::make_unique<JSON_Asset>(path.string());
         case AssetType::LUA_SCRIPT:
             return std::make_unique<LuaScriptAsset>(path.string());
         case AssetType::SCENE:

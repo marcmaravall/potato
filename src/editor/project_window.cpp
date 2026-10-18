@@ -90,6 +90,16 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
 
         node.Nodes.push_back(std::move(child));
     }
+
+    // first directories first, if equal in alphabetical order
+    std::sort(node.Nodes.begin(), node.Nodes.end(),
+              [](const AssetNode& a, const AssetNode& b) {
+                  int dirs = a.Directory + b.Directory;
+                  if (dirs % 2 == 0) {
+                      return a.Name < b.Name;
+                  }
+                  return a.Directory;
+              });
 }
 
 void ProjectWindow::OpenAsset(const AssetNode& node) {

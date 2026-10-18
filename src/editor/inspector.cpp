@@ -3,13 +3,14 @@
 #include <assets_manager/asset.h>
 #include <assets_manager/assets/lua_script_asset.h>
 #include <assets_manager/assets/texture_asset.h>
-#include <assets_manager/assets/scene_asset.hpp>
 #include <assets_manager/assets_manager.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
+#include <assets_manager/assets/scene_asset.hpp>
 #include <ecs/components/isometric_grid.hpp>
 #include <glm/glm.hpp>
 
+#include "assets_manager/assets/json_asset.hpp"
 #include "ecs/components/circle_collider_2d.hpp"
 #include "ecs/components/rigidbody2d.hpp"
 #include "imgui.h"
@@ -20,6 +21,42 @@ namespace PotatoEngine::Editor {
 
 using namespace Utils;
 using namespace PotatoEngine::Core::ECS;
+
+static void RenderJSON(nlohmann::ordered_json& j, const char* key) {
+    ImGui::PushID(key);
+    if (j.is_object() || j.is_array()) {
+        if (ImGui::TreeNode(key)) {
+            if (j.is_object()) {
+                for (auto& [k, v] : j.items()) {
+                    RenderJSON(v, k.c_str());
+                }
+            } else {
+                const size_t size = j.size();
+                for (size_t i = 0; i < size; i++) {
+                    RenderJSON(j[i], std::to_string(i).c_str());
+                }
+            }
+            ImGui::TreePop();
+        }
+    } else if (j.is_boolean()) {
+        bool v = j;
+        if (ImGui::Checkbox(key, &v)) j = v;
+    } else if (j.is_number_unsigned()) {
+        uint64_t v = j.get<uint64_t>();
+        if (ImGui::InputScalar(key, ImGuiDataType_U64, &v)) j = v;
+    } else if (j.is_number_integer()) {
+        int64_t v = j.get<int64_t>();
+        if (ImGui::InputScalar(key, ImGuiDataType_S64, &v)) j = v;
+    } else if (j.is_number_float()) {
+        double v = j;
+        if (ImGui::InputDouble(key, &v)) j = v;
+    } else if (j.is_string()) {
+        ImGui::InputText(key, &j.get_ref<std::string&>());
+    } else {
+        ImGui::Text("%s: null", key);
+    }
+    ImGui::PopID();
+}
 
 Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Inspector", ctx, ectx) {
@@ -220,7 +257,8 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         try {
             std::ifstream file(scene.GetAbsolutePath());
             if (!file.is_open()) {
-                throw std::runtime_error("Cannot open scene file: " + scene.GetAbsolutePath().string());
+                throw std::runtime_error("Cannot open scene file: " +
+                                         scene.GetAbsolutePath().string());
             }
             nlohmann::json serializer;
             file >> serializer;
@@ -231,6 +269,14 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
             m_editorContext.IsAssetSelected = false;
         } catch (const std::exception& e) {
             MEB_LOG_ERRORF("Cannot load scene: exception %s", e.what());
+        }
+    });
+
+    Registry.Add<Core::JSON_Asset>([&](Core::JSON_Asset& asset) {
+        RenderJSON(asset.Value, "[root]##json_editor");
+        ImGui::Separator();
+        if (ImGui::Button("Apply")) {
+            asset.Save();
         }
     });
 }

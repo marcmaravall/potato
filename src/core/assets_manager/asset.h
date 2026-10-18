@@ -20,6 +20,7 @@ enum class AssetType {
     TEXT,
     LUA_SCRIPT,
     SCENE,
+    JSON,
     OTHER
 };
 
