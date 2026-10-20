@@ -2,8 +2,8 @@
 
 namespace PotatoEngine::Editor {
 
-void CommandManager::Execute(Command cmd) {
-    cmd.Execute();
+void CommandManager::Execute(ICommand* cmd) {
+    cmd->Execute();
     m_undoStack.push(cmd);
     while (!m_redoStack.empty()) m_redoStack.pop();
 }
@@ -13,7 +13,7 @@ void CommandManager::Undo() {
 
     auto cmd = m_undoStack.top();
     m_undoStack.pop();
-    cmd.Undo();
+    cmd->Undo();
 
     m_redoStack.push(cmd);
 }
@@ -23,8 +23,20 @@ void CommandManager::Redo() {
 
     auto cmd = m_redoStack.top();
     m_redoStack.pop();
-    cmd.Execute();
+    cmd->Execute();
 
     m_undoStack.push(cmd);
 }
+
+CommandManager::~CommandManager() {
+    while (!m_undoStack.empty()) {
+        delete m_undoStack.top();
+        m_undoStack.pop();
+    }
+    while (!m_redoStack.empty()) {
+        delete m_redoStack.top();
+        m_redoStack.pop();
+    }
+}
+
 }  // namespace PotatoEngine::Editor

@@ -18,7 +18,7 @@ PluginManager::PluginManager(Core::EngineContext& ctx, EditorContext& ectx)
     ScriptingUtils::OpenLuaLibs(m_luaState);
     sol_ImGui::Init(m_luaState);
     ScriptingAPI::InitCore(m_luaState, ctx);
-    Scripting::InitEditor(m_luaState);
+    Scripting::InitEditor(m_luaState, ectx);
 }
 
 void PluginManager::OnLoadProject() {

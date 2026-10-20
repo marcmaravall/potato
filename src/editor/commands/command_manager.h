@@ -9,16 +9,16 @@ namespace PotatoEngine::Editor {
 
 class CommandManager final {
 private:
-    std::stack<Command> m_undoStack;
-    std::stack<Command> m_redoStack;
+    std::stack<ICommand*> m_undoStack;
+    std::stack<ICommand*> m_redoStack;
 
 public:
-    void Execute(Command cmd);
+    void Execute(ICommand* cmd);
     void Undo();
     void Redo();
 
 public:
     CommandManager() = default;
-    ~CommandManager() = default;
+    ~CommandManager();
 };
 }  // namespace PotatoEngine::Editor

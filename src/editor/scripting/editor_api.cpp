@@ -5,10 +5,13 @@
 #include <editor/plugins/plugin.hpp>
 #include <string>
 
+#include "editor/commands/command.h"
+#include "editor/editor_context.h"
+#include "sol/raii.hpp"
+
 namespace PotatoEngine::Editor::Scripting {
 
-void InitEditor(sol::state& state) {
-    // TODO: init api
+void InitEditor(sol::state& state, EditorContext& ctx) {
     sol::table table = state.create_named_table("EditorAPI");
     table.new_usertype<PluginMeta>(
         "PluginMeta",
@@ -16,6 +19,8 @@ void InitEditor(sol::state& state) {
                                      const std::string&)>(),
         "Name", &PluginMeta::Name, "Description", &PluginMeta::Description,
         "Version", &PluginMeta::Version);
+
+    // table.new_usertype<ICommand>("Command", sol::constructors<ICommand()>());
 }
 
 }  // namespace PotatoEngine::Editor::Scripting
