@@ -400,6 +400,9 @@ void AssetFileListener::on_event(const mfsw::event& event) {
             m_projectWindow.m_engineContext._AssetManager.Path(
                 m_projectWindow.m_engineContext._AssetManager.GetRoot());
         m_projectWindow.GenerateAssetTree(p, m_projectWindow.m_root);
+
+        // Update the AssetManager's assets
+        m_projectWindow.m_engineContext._AssetManager.ScanAssets();
     }
 }
 
