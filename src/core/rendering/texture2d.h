@@ -57,6 +57,9 @@ public:
     virtual int GetHeight() const = 0;
     virtual int GetChannels() const = 0;
 
+    typedef uint64_t TextureID;
+    virtual TextureID GetID() const = 0;
+
 public:
     static Scope<Texture2D> Create(uint32_t width, uint32_t height);
     static Scope<Texture2D> Create(

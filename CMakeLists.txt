@@ -157,3 +157,10 @@ target_link_libraries(potato PRIVATE
     potato_core
     potato_editor
 )
+
+add_custom_command(TARGET potato POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:potato>/assets
+    COMMENT "Copying assets..."
+)

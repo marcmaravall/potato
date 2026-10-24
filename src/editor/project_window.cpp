@@ -11,6 +11,9 @@ namespace PotatoEngine::Editor {
 ProjectWindow::ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Project", ctx, ectx) {
     m_createAssetInput = {false, std::filesystem::path(), ""};
+    
+    const std::filesystem::path iconsDir = ctx._AssetManager.GetEngineRoot() / std::filesystem::path{"assets/editor/icons"};
+    m_assetIcons.Load(iconsDir);
 }
 
 void ProjectWindow::ClearAssetTree() { ClearAssetTree(m_root); }
@@ -127,7 +130,7 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 
         ImVec2 cursorStart = ImGui::GetCursorPos();
 
-        if (ImGui::Button("##cell",
+        if (ImGui::InvisibleButton("##cell",
                           ImVec2(m_thumbnailSize, m_thumbnailSize + 20.0f))) {
         }
 
@@ -172,6 +175,22 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
         else if (hovered)
             drawList->AddRectFilled(rectMin, rectMax,
                                     IM_COL32(255, 255, 255, 25), 4.0f);
+
+        // Draw icon
+        {
+            const float iconPadding = 8.0f;
+            const float iconSize = m_thumbnailSize - iconPadding * 2.0f;
+
+            AssetIconType type =
+                AssetIcons::GetTypeFromPath(child.Path, child.Directory);
+            ImTextureID tex = m_assetIcons.Get(type);
+            if (tex) {
+                ImVec2 iconMin(rectMin.x + iconPadding,
+                               rectMin.y + iconPadding);
+                ImVec2 iconMax(iconMin.x + iconSize, iconMin.y + iconSize);
+                drawList->AddImage(tex, iconMin, iconMax);
+            }
+        }
 
         float textWidth = ImGui::CalcTextSize(child.Name.c_str()).x;
         float offsetX = (m_thumbnailSize - textWidth) * 0.5f;

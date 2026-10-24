@@ -2,6 +2,8 @@
 
 #include "asset_icons.hpp"
 
+#include <core/rendering/texture2d.h>
+
 namespace PotatoEngine::Editor {
 
 AssetIconType AssetIcons::GetTypeFromPath(const std::filesystem::path& path,
@@ -34,8 +36,35 @@ ImTextureID AssetIcons::Get(AssetIconType type) const {
 }
 
 bool AssetIcons::Load(const std::filesystem::path& iconsDir) {
-    // Load icons from dir
-    return false;
+    struct Entry {
+        AssetIconType type;
+        std::string filename;
+    };
+
+    const std::vector<Entry> entries = {
+        {AssetIconType::FOLDER, "folder.png"},
+        // TODO: add more icons
+    };
+
+    for (const auto& entry : entries) {
+        std::filesystem::path filePath = iconsDir / entry.filename;
+        if (!std::filesystem::exists(filePath)) {
+            MEB_LOG_WARNINGF("Icon file not found: %s", filePath.string().c_str());
+            continue;
+        }
+        auto texture = Core::Rendering::Texture2D::Create(filePath.string());
+        m_icons[(ImTextureID)entry.type] = texture->GetID();
+    }
+
+    MEB_LOG_INFOF("Loading asset icons from %s", iconsDir.string().c_str());
+    return true;
+}
+
+void AssetIcons::Unload() {
+    // TODO: implement unloading
+    for (size_t i = 0; i < static_cast<size_t>(AssetIconType::COUNT); i++) {
+        m_icons[i] = 0;
+    }
 }
 
 }  // namespace PotatoEngine::Editor

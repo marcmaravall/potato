@@ -32,6 +32,8 @@ public:
         glActiveTexture(GL_TEXTURE0);
     }
 
+    TextureID GetID() const override { return m_id; }
+
     int GetWidth() const override { return m_width; }
     int GetHeight() const override { return m_height; }
     int GetChannels() const override { return m_channels; }

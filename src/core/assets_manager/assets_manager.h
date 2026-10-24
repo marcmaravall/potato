@@ -46,7 +46,11 @@ public:
 
     void ScanAssets();
 
+    // Returns the PROJECT root path
     const std::string& GetRoot() const { return m_root; }
+    
+    // Returns the ENGINE root path (the path where the engine is running from)
+    static const std::filesystem::path& GetEngineRoot();
 
     static std::string Path(const std::string& str);
 

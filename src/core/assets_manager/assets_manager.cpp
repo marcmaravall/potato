@@ -284,6 +284,11 @@ const std::vector<std::pair<AssetID, Asset*>> AssetManager::GetAssets() {
     return res;
 }
 
+const std::filesystem::path& AssetManager::GetEngineRoot() {
+    static std::filesystem::path engineRoot = std::filesystem::current_path();
+    return engineRoot;
+}
+
 std::string AssetManager::Path(const std::string& str) {
     std::string out = str;
 #ifdef _WIN32

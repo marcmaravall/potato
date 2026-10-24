@@ -11,6 +11,8 @@
 #include "panel.h"
 #include "serialize/serializer.hpp"
 
+#include "icons/asset_icons.hpp"
+
 namespace PotatoEngine::Editor {
 
 struct AssetNode {
@@ -95,6 +97,10 @@ public:
     // dfs
     void ForEachNode(const AssetNode& node,
                      std::function<void(const AssetNode&)> iterator);
+
+private:
+    // icons stuff
+    AssetIcons m_assetIcons;
 
 public:
     ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx);
