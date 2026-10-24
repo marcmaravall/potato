@@ -184,6 +184,17 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
             AssetIconType type =
                 AssetIcons::GetTypeFromPath(child.Path, child.Directory);
             ImTextureID tex = m_assetIcons.Get(type);
+            if (type == AssetIconType::TEXTURE) {
+                Core::AssetID id =
+                    m_engineContext._AssetManager.GetAssetByPath(child.Path);
+                auto* textureAsset = m_engineContext._AssetManager.TryGetAsset(id);
+                if (textureAsset) {
+                    const Core::TextureAsset* texture = dynamic_cast<Core::TextureAsset*>(textureAsset);
+                    if (texture && texture->GetTexture()) {
+                        tex = texture->GetTexture()->GetID();
+                    }
+                }
+            }
             if (tex) {
                 ImVec2 iconMin(rectMin.x + iconPadding,
                                rectMin.y + iconPadding);

@@ -1,0 +1,1 @@
+## These icons are placeholders and can be replaced in the future.

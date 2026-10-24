@@ -43,7 +43,12 @@ bool AssetIcons::Load(const std::filesystem::path& iconsDir) {
 
     const std::vector<Entry> entries = {
         {AssetIconType::FOLDER, "folder.png"},
-        // TODO: add more icons
+        {AssetIconType::TEXT, "text.png"},
+        {AssetIconType::LUA, "lua.png"},
+        {AssetIconType::TEXTURE, "image.png"},
+        {AssetIconType::AUDIO, "audio.png"},
+        {AssetIconType::UNKNOWN, "text.png"},
+        // This can be extended
     };
 
     for (const auto& entry : entries) {
