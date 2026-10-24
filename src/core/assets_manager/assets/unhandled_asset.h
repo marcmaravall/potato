@@ -10,7 +10,7 @@ namespace PotatoEngine::Core {
 
 class UnhandledAsset : public Asset {
 public:
-    UnhandledAsset(const std::string& path) {}
+    UnhandledAsset(const std::string& path);
     ~UnhandledAsset() override = default;
 
     nlohmann::json Serialize() const override;

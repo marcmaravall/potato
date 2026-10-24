@@ -1,8 +1,8 @@
 {
     "data": {
-        "Filter": "POINT",
+        "Filter": "BILINEAR",
         "WrapS": "REPEAT",
         "WrapT": "REPEAT"
     },
-    "id": 967455835331713350
+    "id": 950934853824370626
 }

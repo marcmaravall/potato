@@ -2,6 +2,8 @@
 
 namespace PotatoEngine::Core {
 
+UnhandledAsset::UnhandledAsset(const std::string& path) : Asset(path, AssetType::OTHER) {}
+
 nlohmann::json UnhandledAsset::Serialize() const { return {}; }
 
 void UnhandledAsset::Deserialize(const nlohmann::json& j) {}

@@ -37,6 +37,13 @@ private:
     Core::AssetID m_toDelete = 0;
 
 private:
+    struct PendingMove {
+        std::filesystem::path Source{};
+        std::filesystem::path Destination{};
+    };
+    PendingMove m_pendingMove;
+
+private:
     // Things related to creating new assets
     struct CreateAssetInput {
         bool ShowPopup = false;

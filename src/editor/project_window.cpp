@@ -58,6 +58,15 @@ void ProjectWindow::DrawTree(AssetNode& node) {
     }
 
     bool open = ImGui::TreeNodeEx(name.c_str(), flags);
+    if (ImGui::BeginDragDropTarget()) {
+        if (const ImGuiPayload* payload =
+                ImGui::AcceptDragDropPayload("ASSET_PATH")) {
+            std::filesystem::path src = std::filesystem::u8path(
+                static_cast<const char*>(payload->Data));
+            m_pendingMove = {src, node.Path / src.filename()};
+        }
+        ImGui::EndDragDropTarget();
+    }
 
     if (ImGui::IsItemClicked()) {
         m_selectedPath = node.Path;
@@ -94,7 +103,7 @@ void ProjectWindow::GenerateAssetTree(const std::filesystem::path& path,
         node.Nodes.push_back(std::move(child));
     }
 
-    // first directories first, if equal in alphabetical order
+    // directories first, if equal type then in alphabetical order
     std::sort(node.Nodes.begin(), node.Nodes.end(),
               [](const AssetNode& a, const AssetNode& b) {
                   int dirs = a.Directory + b.Directory;
@@ -132,6 +141,25 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 
         if (ImGui::InvisibleButton("##cell",
                           ImVec2(m_thumbnailSize, m_thumbnailSize + 20.0f))) {
+        }
+
+        {
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+                const auto& src = child.Path.u8string();
+                ImGui::SetDragDropPayload("ASSET_PATH", src.c_str(), src.size()+1);
+
+                ImGui::TextUnformatted(child.Name.c_str());
+                ImGui::EndDragDropSource();
+            }
+
+            if (child.Directory && ImGui::BeginDragDropTarget()) {
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_PATH")) {
+                    std::filesystem::path src = std::filesystem::u8path(
+                        static_cast<const char*>(payload->Data));
+                    m_pendingMove = {src, child.Path / src.filename()};
+                }
+                ImGui::EndDragDropTarget();
+            }
         }
 
         bool isSelected = (child.Path == m_selectedPath);
@@ -361,30 +389,61 @@ void ProjectWindow::OnRender() {
 
 void ProjectWindow::OnEnd() {
     if (m_toDelete) {
-        const std::filesystem::path& path =
-            m_engineContext._AssetManager.GetAsset(m_toDelete)
-                .GetAbsolutePath();
-
-        const std::string& metaPath = path.string() + ".meta";
+        auto* asset = m_engineContext._AssetManager.TryGetAsset(m_toDelete);
+        if (!asset) {
+            MEB_LOG_WARNINGF(
+                "Cannot delete asset with ID %llu, asset not found",
+                m_toDelete);
+            return;
+        }
+        const std::string path = asset->GetAbsolutePath().string();
+        const std::string metaPath = path + ".meta";
 
         std::error_code ec;
         std::filesystem::remove(path, ec);
         if (ec) {
             MEB_LOG_ERRORF("Cannot remove path: %s, error: %s",
-                           path.string().c_str(), ec.message().c_str());
+                           path.c_str(), ec.message().c_str());
             return;
         }
         std::filesystem::remove(metaPath, ec);
         if (ec) {
             MEB_LOG_ERRORF("Cannot remove path: %s, error: %s",
-                           path.string().c_str(), ec.message().c_str());
+                           metaPath.c_str(), ec.message().c_str());
             return;
         }
 
+        MEB_LOG_INFOF("Deleted asset with ID %llu, path: %s", m_toDelete,
+                      path.c_str());
         m_engineContext._AssetManager.RemoveAsset(m_toDelete);
         if (m_editorContext.SelectedAsset == m_toDelete)
             m_editorContext.IsAssetSelected = false;
         m_toDelete = 0;
+    }
+
+    if (m_pendingMove.Source != m_pendingMove.Destination) {
+        // move asset
+        const std::filesystem::path& src = m_pendingMove.Source;
+        const std::filesystem::path& dst = m_pendingMove.Destination;
+        const std::string& metaSrc = src.string() + ".meta";
+        const std::string& metaDst = dst.string() + ".meta";
+
+        m_engineContext._AssetManager.UpdateAssetPath(m_engineContext._AssetManager.GetAssetByPath(src), dst);
+
+        std::error_code ec;
+        std::filesystem::rename(src, dst, ec);
+        if (ec) {
+            MEB_LOG_ERRORF("Cannot rename path: %s to %s, error: %s",
+                           src.string().c_str(), dst.string().c_str(), ec.message().c_str());
+        }
+        std::filesystem::rename(metaSrc, metaDst, ec);
+        if (ec) {
+            MEB_LOG_ERRORF("Cannot rename meta path: %s to %s, error: %s",
+                           metaSrc.c_str(), metaDst.c_str(), ec.message().c_str());
+        }
+        MEB_LOG_INFOF("Moving asset from %s to %s", src.string().c_str(),
+                      dst.string().c_str());
+        m_pendingMove = {};
     }
 }
 
@@ -432,7 +491,8 @@ void AssetFileListener::on_event(const mfsw::event& event) {
         m_projectWindow.GenerateAssetTree(p, m_projectWindow.m_root);
 
         // Update the AssetManager's assets
-        m_projectWindow.m_engineContext._AssetManager.ScanAssets();
+        // Commented because has many issues...
+        // m_projectWindow.m_engineContext._AssetManager.ScanAssets();
     }
 }
 

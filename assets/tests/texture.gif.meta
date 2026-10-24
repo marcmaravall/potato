@@ -1,3 +1,8 @@
 {
-    "id": 18312498171287112523
+    "data": {
+        "Filter": "BILINEAR",
+        "WrapS": "REPEAT",
+        "WrapT": "REPEAT"
+    },
+    "id": 12327968675404773240
 }
