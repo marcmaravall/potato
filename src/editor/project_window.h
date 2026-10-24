@@ -74,6 +74,12 @@ private:
     void OpenAsset(const AssetNode& node);
 
 private:
+    // TODO: change the m_pendingMove, m_toDelete and more to m_deferredActions
+    std::queue<std::function<void()>> m_deferredActions{};
+
+    void DeleteDirectory(const std::filesystem::path& path);
+
+private:
     void DrawTree(AssetNode& node);
     void DrawAssetViewer(AssetNode& node);
 

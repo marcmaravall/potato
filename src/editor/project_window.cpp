@@ -124,6 +124,25 @@ void ProjectWindow::OpenAsset(const AssetNode& node) {
     m_editorContext.SelectedAsset = id;
 }
 
+void ProjectWindow::DeleteDirectory(const std::filesystem::path& path) {
+    for (const auto& entry : std::filesystem::directory_iterator(path)) {
+        if (entry.is_directory()) {
+            DeleteDirectory(entry.path());
+            continue;
+        }
+        else if (entry.path().extension() ==
+            Core::AssetManager::kMetaExtension) {
+            Core::AssetID id =
+                m_engineContext._AssetManager.GetAssetByPath(entry.path());
+            if (id != 0) {
+                m_engineContext._AssetManager.RemoveAsset(id);
+            }
+            std::filesystem::remove(entry.path());
+        }
+    }
+    std::filesystem::remove_all(path);
+}
+
 void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     float panelWidth = ImGui::GetContentRegionAvail().x;
     float cellSize = m_thumbnailSize + m_padding;
@@ -177,8 +196,14 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
                 open = true;
             }
             if (ImGui::MenuItem("Delete")) {
-                m_toDelete =
-                    m_engineContext._AssetManager.GetAssetByPath(child.Path);
+                if (child.Directory) {
+                    m_deferredActions.push([=]() {
+                        DeleteDirectory(child.Path);
+                    });
+                } else {
+                    m_toDelete =
+                        m_engineContext._AssetManager.GetAssetByPath(child.Path);
+                }
             }
 
             ImGui::EndPopup();
@@ -445,6 +470,11 @@ void ProjectWindow::OnEnd() {
                       dst.string().c_str());
         m_pendingMove = {};
     }
+
+    while (!m_deferredActions.empty()) {
+        m_deferredActions.front()();
+        m_deferredActions.pop();
+    }
 }
 
 void ProjectWindow::CreateAssetPopup() {
@@ -460,13 +490,24 @@ void ProjectWindow::CreateAssetPopup() {
         ImGui::InputText("##asset_name", &m_createAssetInput.Name);
 
         if (ImGui::Button("Confirm")) {
-            std::filesystem::path file =
-                m_createAssetInput.Path / m_createAssetInput.Name;
-            std::ofstream os(file);
-            os << "";  // create empty file
-            m_engineContext._AssetManager.LoadOrCreateAsset(
-                file,
-                file.string() + m_engineContext._AssetManager.kMetaExtension);
+            if (m_createAssetInput.Name.empty()) {
+                MEB_LOG_WARNING("Asset name cannot be empty");
+                return;
+            }
+
+            char last = m_createAssetInput.Name.back();
+            if (last == '/' || last == '\\') {
+                // create directory
+                std::filesystem::create_directories(m_createAssetInput.Path / m_createAssetInput.Name);
+            } else {
+                std::filesystem::path file =
+                    m_createAssetInput.Path / m_createAssetInput.Name;
+                std::ofstream os(file);
+                os << "";  // create empty file
+                m_engineContext._AssetManager.LoadOrCreateAsset(
+                    file, file.string() +
+                              m_engineContext._AssetManager.kMetaExtension);
+            }
 
             ImGui::CloseCurrentPopup();
         }
