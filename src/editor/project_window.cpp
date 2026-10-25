@@ -160,8 +160,26 @@ void ProjectWindow::DeleteDirectory(const std::filesystem::path& path) {
     std::filesystem::remove_all(path);
 }
 
+static bool IsSubdirectory(const std::filesystem::path& parent,
+                           const std::filesystem::path& child) {
+    const auto normalizedParent =
+        std::filesystem::absolute(parent).lexically_normal();
+    const auto normalizedChild =
+        std::filesystem::absolute(child).lexically_normal();
+
+    auto [p, c] =
+        std::mismatch(normalizedParent.begin(), normalizedParent.end(),
+                      normalizedChild.begin(), normalizedChild.end());
+
+    return p == normalizedParent.end() && c != normalizedChild.end();
+}
+
 void ProjectWindow::MoveDirectory(const std::filesystem::path& source,
                                   const std::filesystem::path& destination) {
+    if (IsSubdirectory(source, destination)) {
+        MEB_LOG_WARNINGF("Cannot move directory to a one of its subdirectories. source: %s, destination: %s", source.string().c_str(), destination.string().c_str());
+        return;
+    }
     std::filesystem::create_directories(destination);
     for (const auto& entry : std::filesystem::directory_iterator(source)) {
         const auto target = destination / entry.path().filename();

@@ -21,6 +21,7 @@ AssetIconType AssetIcons::GetTypeFromPath(const std::filesystem::path& path,
         {".jpg", AssetIconType::TEXTURE},
         {".ogg", AssetIconType::AUDIO},
         {".mp3", AssetIconType::AUDIO},
+        {".pscene", AssetIconType::SCENE},
     };
 
     std::string ext = path.extension().string();
@@ -48,6 +49,7 @@ bool AssetIcons::Load(const std::filesystem::path& iconsDir) {
         {AssetIconType::TEXTURE, "image.png"},
         {AssetIconType::AUDIO, "audio.png"},
         {AssetIconType::UNKNOWN, "text.png"},
+        {AssetIconType::SCENE, "potato.png"}
         // This can be extended
     };
 
