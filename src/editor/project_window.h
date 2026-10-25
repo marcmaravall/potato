@@ -7,6 +7,7 @@
 #include <functional>
 #include <mfsw/mfsw.hpp>
 #include <string>
+#include <cstdint>
 
 #include "panel.h"
 #include "serialize/serializer.hpp"

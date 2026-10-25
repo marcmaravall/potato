@@ -46,6 +46,9 @@ void ProjectWindow::DrawTree(AssetNode& node) {
     }
 
     auto dragDropSource = [&]() {
+        if (node.Path == m_root.Path) {
+            return;
+        }
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
             const auto& src = node.Path.u8string();
             ImGui::SetDragDropPayload("ASSET_PATH", src.c_str(),
@@ -304,6 +307,21 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     }
 
     ImGui::EndTable();
+
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) &&
+            ImGui::IsWindowHovered() &&
+            // This checks if the popup from above is open
+            !ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId)) {
+        ImGui::OpenPopup("AssetViewerContextMenu");
+    }
+
+    if (ImGui::BeginPopup("AssetViewerContextMenu")) {
+        if (ImGui::Button("New")) {
+            m_createAssetInput.ShowPopup = true;
+            m_createAssetInput.Path = node.Path;
+        }
+        ImGui::EndPopup();
+    }
 }
 
 bool ProjectWindow::Match(const std::string& query, const std::string& value,
@@ -311,7 +329,7 @@ bool ProjectWindow::Match(const std::string& query, const std::string& value,
     bool exact = flags & (uint16_t)SearchFlags::EXACT_MATCH;
     bool sensitive = flags & (uint16_t)SearchFlags::CASE_SENSITIVE;
 
-    std::string q = std::move(query), v = std::move(value);
+    std::string q = query, v = value;
     if (!sensitive) {
         for (char& c : q) {
             c = std::tolower(c);
