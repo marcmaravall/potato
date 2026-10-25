@@ -45,10 +45,22 @@ void ProjectWindow::DrawTree(AssetNode& node) {
         flags |= ImGuiTreeNodeFlags_Selected;
     }
 
+    auto dragDropSource = [&]() {
+        if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+            const auto& src = node.Path.u8string();
+            ImGui::SetDragDropPayload("ASSET_PATH", src.c_str(),
+                                      src.size() + 1);
+
+            ImGui::TextUnformatted(node.Name.c_str());
+            ImGui::EndDragDropSource();
+        }
+    };
+
     if (!node.Directory) {
         flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
 
         ImGui::TreeNodeEx(name.c_str(), flags);
+        dragDropSource();
 
         if (ImGui::IsItemClicked()) {
             OpenAsset(node);
@@ -58,6 +70,8 @@ void ProjectWindow::DrawTree(AssetNode& node) {
     }
 
     bool open = ImGui::TreeNodeEx(name.c_str(), flags);
+    dragDropSource();
+    
     if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload* payload =
                 ImGui::AcceptDragDropPayload("ASSET_PATH")) {
@@ -141,6 +155,27 @@ void ProjectWindow::DeleteDirectory(const std::filesystem::path& path) {
         }
     }
     std::filesystem::remove_all(path);
+}
+
+void ProjectWindow::MoveDirectory(const std::filesystem::path& source,
+                                  const std::filesystem::path& destination) {
+    std::filesystem::create_directories(destination);
+    for (const auto& entry : std::filesystem::directory_iterator(source)) {
+        const auto target = destination / entry.path().filename();
+        if (entry.is_directory()) {
+            MoveDirectory(entry.path(), target);
+            continue;
+        }
+        const Core::AssetID id =
+            entry.path().extension() != Core::AssetManager::kMetaExtension
+                ? m_engineContext._AssetManager.GetAssetByPath(entry.path())
+                : 0;
+        std::filesystem::rename(entry.path(), target);
+        if (id) {
+            m_engineContext._AssetManager.UpdateAssetPath(id, target);
+        }
+    }
+    std::filesystem::remove(source);
 }
 
 void ProjectWindow::DrawAssetViewer(AssetNode& node) {
@@ -447,27 +482,31 @@ void ProjectWindow::OnEnd() {
     }
 
     if (m_pendingMove.Source != m_pendingMove.Destination) {
-        // move asset
-        const std::filesystem::path& src = m_pendingMove.Source;
-        const std::filesystem::path& dst = m_pendingMove.Destination;
-        const std::string& metaSrc = src.string() + ".meta";
-        const std::string& metaDst = dst.string() + ".meta";
+        if (std::filesystem::is_directory(m_pendingMove.Source)) {
+            MoveDirectory(m_pendingMove.Source, m_pendingMove.Destination);
+        } else {
+            // move asset
+            const std::filesystem::path& src = m_pendingMove.Source;
+            const std::filesystem::path& dst = m_pendingMove.Destination;
+            const std::string& metaSrc = src.string() + ".meta";
+            const std::string& metaDst = dst.string() + ".meta";
 
-        m_engineContext._AssetManager.UpdateAssetPath(m_engineContext._AssetManager.GetAssetByPath(src), dst);
+            m_engineContext._AssetManager.UpdateAssetPath(m_engineContext._AssetManager.GetAssetByPath(src), dst);
 
-        std::error_code ec;
-        std::filesystem::rename(src, dst, ec);
-        if (ec) {
-            MEB_LOG_ERRORF("Cannot rename path: %s to %s, error: %s",
-                           src.string().c_str(), dst.string().c_str(), ec.message().c_str());
+            std::error_code ec;
+            std::filesystem::rename(src, dst, ec);
+            if (ec) {
+                MEB_LOG_ERRORF("Cannot rename path: %s to %s, error: %s",
+                               src.string().c_str(), dst.string().c_str(), ec.message().c_str());
+            }
+            std::filesystem::rename(metaSrc, metaDst, ec);
+            if (ec) {
+                MEB_LOG_ERRORF("Cannot rename meta path: %s to %s, error: %s",
+                               metaSrc.c_str(), metaDst.c_str(), ec.message().c_str());
+            }
+            MEB_LOG_INFOF("Moving asset from %s to %s", src.string().c_str(),
+                          dst.string().c_str());
         }
-        std::filesystem::rename(metaSrc, metaDst, ec);
-        if (ec) {
-            MEB_LOG_ERRORF("Cannot rename meta path: %s to %s, error: %s",
-                           metaSrc.c_str(), metaDst.c_str(), ec.message().c_str());
-        }
-        MEB_LOG_INFOF("Moving asset from %s to %s", src.string().c_str(),
-                      dst.string().c_str());
         m_pendingMove = {};
     }
 

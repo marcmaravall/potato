@@ -78,6 +78,8 @@ private:
     std::queue<std::function<void()>> m_deferredActions{};
 
     void DeleteDirectory(const std::filesystem::path& path);
+    void MoveDirectory(const std::filesystem::path& source,
+                       const std::filesystem::path& destination);
 
 private:
     void DrawTree(AssetNode& node);
