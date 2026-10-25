@@ -190,6 +190,8 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     if (!ImGui::BeginTable("AssetViewer", columns, ImGuiTableFlags_None))
         return;
 
+    bool rightClickedAsset = false;
+
     for (auto& child : node.Nodes) {
         ImGui::TableNextColumn();
         ImGui::PushID(child.Path.c_str());
@@ -224,6 +226,9 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
         bool clicked = ImGui::IsItemClicked();
 
         bool open = false;
+
+        if (hovered && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+            rightClickedAsset = true;
 
         if (ImGui::BeginPopupContextItem()) {
             if (ImGui::MenuItem("New")) {
@@ -310,8 +315,7 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) &&
             ImGui::IsWindowHovered() &&
-            // This checks if the popup from above is open
-            !ImGui::IsPopupOpen("", ImGuiPopupFlags_AnyPopupId)) {
+            !rightClickedAsset) {
         ImGui::OpenPopup("AssetViewerContextMenu");
     }
 
