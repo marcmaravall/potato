@@ -19,6 +19,7 @@
 
 #include "panel.h"
 
+// TODO: organize structure better (add better used function support like onOpen
 namespace PotatoEngine::Editor {
 
 using AddComponent = std::function<std::unique_ptr<Core::ECS::Component>()>;
@@ -26,11 +27,22 @@ using AddComponent = std::function<std::unique_ptr<Core::ECS::Component>()>;
 class ComponentInspectorRegistry {
 private:
     std::unordered_map<std::type_index, std::function<void(void*)>> m_renderers;
+    
+    // TODO: check for bugs in onClose
+    std::unordered_map<std::type_index, std::function<void(void*)>> m_onClose;
 
 public:
     template <typename ComponentType>
     void Add(std::function<void(ComponentType&)> inspectorFunction) {
         m_renderers[typeid(ComponentType)] =
+            [inspectorFunction](void* component) {
+                inspectorFunction(*static_cast<ComponentType*>(component));
+            };
+    }
+
+    template <typename ComponentType>
+    void AddOnClose(std::function<void(ComponentType&)> inspectorFunction) {
+        m_onClose[typeid(ComponentType)] =
             [inspectorFunction](void* component) {
                 inspectorFunction(*static_cast<ComponentType*>(component));
             };
@@ -53,6 +65,21 @@ public:
             ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
     }
 
+    void OnClose(void* v, std::type_index type) {
+        auto it = m_onClose.find(type);
+        if (it != m_onClose.end()) {
+            it->second(v);
+        }
+    }
+
+    void OnClose(Core::ECS::Component* c) {
+        auto it = m_onClose.find(typeid(*c));
+        if (it != m_onClose.end())
+            it->second(c);
+        else
+            ImGui::TextDisabled("No inspector for: %s", typeid(*c).name());
+    }
+
     ComponentInspectorRegistry() { m_renderers.reserve(10); }
 
     ~ComponentInspectorRegistry() = default;
@@ -65,6 +92,8 @@ private:
 
 private:
     bool m_dontShowAgain = false;
+    Core::AssetID m_lastAsset = 0;
+    Core::ECS::EntityID m_lastEntity = 0;
 
 private:
     void RenderEntity();

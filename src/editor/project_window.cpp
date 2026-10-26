@@ -3,6 +3,8 @@
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
+#include "assets_manager/assets/scene_asset.hpp"
+
 #include "assets_manager/assets_manager.h"
 #include "editor_context.h"
 
@@ -581,7 +583,16 @@ void ProjectWindow::CreateAssetPopup() {
             } else {
                 std::filesystem::path file =
                     m_createAssetInput.Path / m_createAssetInput.Name;
+                
                 std::ofstream os(file);
+                // Default file for different types of assets
+                // TODO: don't hardcode
+                if (file.extension() == Core::kSceneExtension) {
+                    os << R"({
+    "Entities" : []
+})";
+                }
+                
                 os << "";  // create empty file
                 m_engineContext._AssetManager.LoadOrCreateAsset(
                     file, file.string() +

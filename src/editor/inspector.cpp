@@ -255,21 +255,42 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
 
     Registry.Add<Core::SceneAsset>([&](Core::SceneAsset& scene) {
         try {
-            std::ifstream file(scene.GetAbsolutePath());
+            const auto path = scene.GetAbsolutePath();
+
+            if (ImGui::Button("Save")) {
+                std::ofstream file(path);
+                Core::SceneMeta meta{};
+                m_engineContext.Registry.BuildSceneMeta(meta);
+
+                nlohmann::json json(meta);
+                file << json.dump(4);
+
+                MEB_LOG_INFOF("Saved scene to %s", path.string().c_str());
+            }
+
+            if (scene.IsOpen) {
+                return;
+            }
+
+            std::ifstream file(path);
             if (!file.is_open()) {
-                throw std::runtime_error("Cannot open scene file: " +
-                                         scene.GetAbsolutePath().string());
+                MEB_LOG_ERRORF("Cannot open scene file: %s",
+                               path.string().c_str());
+                return;
             }
             nlohmann::json serializer;
             file >> serializer;
             Core::SceneMeta meta = serializer.get<Core::SceneMeta>();
             m_editorContext.OpenScene(m_engineContext, meta);
-            // Don't reload the scene per frame
-            m_editorContext.IsEntitySelected = false;
-            m_editorContext.IsAssetSelected = false;
+
+            scene.IsOpen = true;
+            MEB_LOG_INFOF("Open scene %s", path.string().c_str());
         } catch (const std::exception& e) {
             MEB_LOG_ERRORF("Cannot load scene: exception %s", e.what());
         }
+    });
+
+    Registry.AddOnClose<Core::SceneAsset>([&](Core::SceneAsset& scene) { scene.IsOpen = false;
     });
 
     Registry.Add<Core::JSON_Asset>([&](Core::JSON_Asset& asset) {
@@ -296,6 +317,9 @@ void Inspector::RenderAsset() {
     ImGui::TextColored(ImVec4(0.35f, 0.75f, 1.0f, 1.0f), " Asset");
     ImGui::Separator();
     Registry.Render(asset, typeid(*asset));
+    if (m_lastAsset && m_lastAsset != m_editorContext.SelectedAsset) {
+        Registry.OnClose(asset, typeid(*asset));
+    }
 }
 
 void Inspector::RenderEntity() {
@@ -315,6 +339,10 @@ void Inspector::RenderEntity() {
                 ImGui::Indent(8.0f);
 
                 Registry.Render(component);
+                if (m_lastEntity &&
+                    m_lastEntity != m_editorContext.SelectedEntity) {
+                    Registry.OnClose(component);
+                }
 
                 ImGui::Unindent(8.0f);
                 ImGui::Spacing();
@@ -399,6 +427,8 @@ void Inspector::OnRender() {
         RenderEntity();
     else
         RenderAsset();
+    m_lastAsset = m_editorContext.SelectedAsset;
+    m_lastEntity = m_editorContext.SelectedEntity;
 }
 
 void Inspector::OnEnd() {}

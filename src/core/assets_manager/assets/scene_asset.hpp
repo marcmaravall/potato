@@ -7,6 +7,8 @@ namespace PotatoEngine::Core {
 
 static constexpr const char* kSceneExtension = (const char*)".pscene";
 class SceneAsset : public Asset {
+public:
+    bool IsOpen = false;
 
 public:
     SceneAsset(const std::string& path) : Asset(path, AssetType::SCENE) {}

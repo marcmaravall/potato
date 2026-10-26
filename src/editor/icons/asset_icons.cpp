@@ -3,6 +3,7 @@
 #include "asset_icons.hpp"
 
 #include <core/rendering/texture2d.h>
+#include <assets_manager/assets/scene_asset.hpp>
 
 namespace PotatoEngine::Editor {
 
@@ -21,7 +22,7 @@ AssetIconType AssetIcons::GetTypeFromPath(const std::filesystem::path& path,
         {".jpg", AssetIconType::TEXTURE},
         {".ogg", AssetIconType::AUDIO},
         {".mp3", AssetIconType::AUDIO},
-        {".pscene", AssetIconType::SCENE},
+        {Core::kSceneExtension, AssetIconType::SCENE},
     };
 
     std::string ext = path.extension().string();
