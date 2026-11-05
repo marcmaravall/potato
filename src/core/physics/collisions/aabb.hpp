@@ -13,6 +13,12 @@ struct AABB_Collision2D {
     AABB_Collision2D() = default;
 };
 
-bool AABB(const AABB_Collision2D& collision);
+struct AABB_CollisionResult {
+    bool Collided = false;
+    glm::vec2 Normal{};
+    glm::vec2 Penetration{};
+};
+
+AABB_CollisionResult AABB(const AABB_Collision2D& collision);
 
 }  // namespace PotatoEngine::Core::Physics::Collisions

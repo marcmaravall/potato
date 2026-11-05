@@ -241,6 +241,17 @@ public:
         }
     }
 
+    template <typename... Components, typename Func>
+    void EachWithID(Func&& fn) {
+        for (auto& [id, entityPtr] : m_entities) {
+            if (!entityPtr) continue;
+
+            if ((entityPtr->template Has<Components>() && ...)) {
+                fn(id, entityPtr->template Get<Components>()...);
+            }
+        }
+    }
+
 public:
     Registry() = default;
     ~Registry() = default;
