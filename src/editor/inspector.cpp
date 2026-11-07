@@ -290,8 +290,8 @@ Inspector::Inspector(Core::EngineContext& ctx, EditorContext& ectx)
         }
     });
 
-    Registry.AddOnClose<Core::SceneAsset>([&](Core::SceneAsset& scene) { scene.IsOpen = false;
-    });
+    Registry.AddOnClose<Core::SceneAsset>(
+        [&](Core::SceneAsset& scene) { scene.IsOpen = false; });
 
     Registry.Add<Core::JSON_Asset>([&](Core::JSON_Asset& asset) {
         RenderJSON(asset.Value, "[root]##json_editor");

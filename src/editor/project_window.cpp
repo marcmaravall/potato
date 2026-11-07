@@ -4,7 +4,6 @@
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include "assets_manager/assets/scene_asset.hpp"
-
 #include "assets_manager/assets_manager.h"
 #include "editor_context.h"
 
@@ -13,8 +12,10 @@ namespace PotatoEngine::Editor {
 ProjectWindow::ProjectWindow(Core::EngineContext& ctx, EditorContext& ectx)
     : EditorPanel("Project", ctx, ectx) {
     m_createAssetInput = {false, std::filesystem::path(), ""};
-    
-    const std::filesystem::path iconsDir = ctx._AssetManager.GetEngineRoot() / std::filesystem::path{"assets/editor/icons"};
+
+    const std::filesystem::path iconsDir =
+        ctx._AssetManager.GetEngineRoot() /
+        std::filesystem::path{"assets/editor/icons"};
     m_assetIcons.Load(iconsDir);
 }
 
@@ -76,7 +77,7 @@ void ProjectWindow::DrawTree(AssetNode& node) {
 
     bool open = ImGui::TreeNodeEx(name.c_str(), flags);
     dragDropSource();
-    
+
     if (ImGui::BeginDragDropTarget()) {
         if (const ImGuiPayload* payload =
                 ImGui::AcceptDragDropPayload("ASSET_PATH")) {
@@ -148,9 +149,8 @@ void ProjectWindow::DeleteDirectory(const std::filesystem::path& path) {
         if (entry.is_directory()) {
             DeleteDirectory(entry.path());
             continue;
-        }
-        else if (entry.path().extension() ==
-            Core::AssetManager::kMetaExtension) {
+        } else if (entry.path().extension() ==
+                   Core::AssetManager::kMetaExtension) {
             Core::AssetID id =
                 m_engineContext._AssetManager.GetAssetByPath(entry.path());
             if (id != 0) {
@@ -179,7 +179,10 @@ static bool IsSubdirectory(const std::filesystem::path& parent,
 void ProjectWindow::MoveDirectory(const std::filesystem::path& source,
                                   const std::filesystem::path& destination) {
     if (IsSubdirectory(source, destination)) {
-        MEB_LOG_WARNINGF("Cannot move directory to a one of its subdirectories. source: %s, destination: %s", source.string().c_str(), destination.string().c_str());
+        MEB_LOG_WARNINGF(
+            "Cannot move directory to a one of its subdirectories. source: %s, "
+            "destination: %s",
+            source.string().c_str(), destination.string().c_str());
         return;
     }
     std::filesystem::create_directories(destination);
@@ -218,21 +221,24 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
 
         ImVec2 cursorStart = ImGui::GetCursorPos();
 
-        if (ImGui::InvisibleButton("##cell",
-                          ImVec2(m_thumbnailSize, m_thumbnailSize + 20.0f))) {
+        if (ImGui::InvisibleButton(
+                "##cell", ImVec2(m_thumbnailSize, m_thumbnailSize + 20.0f))) {
         }
 
         {
-            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
+            if (ImGui::BeginDragDropSource(
+                    ImGuiDragDropFlags_SourceAllowNullID)) {
                 const auto& src = child.Path.u8string();
-                ImGui::SetDragDropPayload("ASSET_PATH", src.c_str(), src.size()+1);
+                ImGui::SetDragDropPayload("ASSET_PATH", src.c_str(),
+                                          src.size() + 1);
 
                 ImGui::TextUnformatted(child.Name.c_str());
                 ImGui::EndDragDropSource();
             }
 
             if (child.Directory && ImGui::BeginDragDropTarget()) {
-                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("ASSET_PATH")) {
+                if (const ImGuiPayload* payload =
+                        ImGui::AcceptDragDropPayload("ASSET_PATH")) {
                     std::filesystem::path src = std::filesystem::u8path(
                         static_cast<const char*>(payload->Data));
                     m_pendingMove = {src, child.Path / src.filename()};
@@ -260,12 +266,11 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
             }
             if (ImGui::MenuItem("Delete")) {
                 if (child.Directory) {
-                    m_deferredActions.push([=]() {
-                        DeleteDirectory(child.Path);
-                    });
+                    m_deferredActions.push(
+                        [&]() { DeleteDirectory(child.Path); });
                 } else {
-                    m_toDelete =
-                        m_engineContext._AssetManager.GetAssetByPath(child.Path);
+                    m_toDelete = m_engineContext._AssetManager.GetAssetByPath(
+                        child.Path);
                 }
             }
 
@@ -303,9 +308,11 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
             if (type == AssetIconType::TEXTURE) {
                 Core::AssetID id =
                     m_engineContext._AssetManager.GetAssetByPath(child.Path);
-                auto* textureAsset = m_engineContext._AssetManager.TryGetAsset(id);
+                auto* textureAsset =
+                    m_engineContext._AssetManager.TryGetAsset(id);
                 if (textureAsset) {
-                    const Core::TextureAsset* texture = dynamic_cast<Core::TextureAsset*>(textureAsset);
+                    const Core::TextureAsset* texture =
+                        dynamic_cast<Core::TextureAsset*>(textureAsset);
                     if (texture && texture->GetTexture()) {
                         tex = texture->GetTexture()->GetID();
                     }
@@ -334,8 +341,7 @@ void ProjectWindow::DrawAssetViewer(AssetNode& node) {
     ImGui::EndTable();
 
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Right) &&
-            ImGui::IsWindowHovered() &&
-            !rightClickedAsset) {
+        ImGui::IsWindowHovered() && !rightClickedAsset) {
         ImGui::OpenPopup("AssetViewerContextMenu");
     }
 
@@ -495,7 +501,7 @@ void ProjectWindow::OnEnd() {
         if (!asset) {
             MEB_LOG_WARNINGF(
                 "Cannot delete asset with ID %llu, asset not found",
-                m_toDelete);
+                static_cast<unsigned long long>(m_toDelete));
             return;
         }
         const std::string path = asset->GetAbsolutePath().string();
@@ -504,8 +510,8 @@ void ProjectWindow::OnEnd() {
         std::error_code ec;
         std::filesystem::remove(path, ec);
         if (ec) {
-            MEB_LOG_ERRORF("Cannot remove path: %s, error: %s",
-                           path.c_str(), ec.message().c_str());
+            MEB_LOG_ERRORF("Cannot remove path: %s, error: %s", path.c_str(),
+                           ec.message().c_str());
             return;
         }
         std::filesystem::remove(metaPath, ec);
@@ -515,7 +521,8 @@ void ProjectWindow::OnEnd() {
             return;
         }
 
-        MEB_LOG_INFOF("Deleted asset with ID %llu, path: %s", m_toDelete,
+        MEB_LOG_INFOF("Deleted asset with ID %llu, path: %s",
+                      static_cast<unsigned long long>(m_toDelete),
                       path.c_str());
         m_engineContext._AssetManager.RemoveAsset(m_toDelete);
         if (m_editorContext.SelectedAsset == m_toDelete)
@@ -533,18 +540,21 @@ void ProjectWindow::OnEnd() {
             const std::string& metaSrc = src.string() + ".meta";
             const std::string& metaDst = dst.string() + ".meta";
 
-            m_engineContext._AssetManager.UpdateAssetPath(m_engineContext._AssetManager.GetAssetByPath(src), dst);
+            m_engineContext._AssetManager.UpdateAssetPath(
+                m_engineContext._AssetManager.GetAssetByPath(src), dst);
 
             std::error_code ec;
             std::filesystem::rename(src, dst, ec);
             if (ec) {
                 MEB_LOG_ERRORF("Cannot rename path: %s to %s, error: %s",
-                               src.string().c_str(), dst.string().c_str(), ec.message().c_str());
+                               src.string().c_str(), dst.string().c_str(),
+                               ec.message().c_str());
             }
             std::filesystem::rename(metaSrc, metaDst, ec);
             if (ec) {
                 MEB_LOG_ERRORF("Cannot rename meta path: %s to %s, error: %s",
-                               metaSrc.c_str(), metaDst.c_str(), ec.message().c_str());
+                               metaSrc.c_str(), metaDst.c_str(),
+                               ec.message().c_str());
             }
             MEB_LOG_INFOF("Moving asset from %s to %s", src.string().c_str(),
                           dst.string().c_str());
@@ -579,11 +589,12 @@ void ProjectWindow::CreateAssetPopup() {
             char last = m_createAssetInput.Name.back();
             if (last == '/' || last == '\\') {
                 // create directory
-                std::filesystem::create_directories(m_createAssetInput.Path / m_createAssetInput.Name);
+                std::filesystem::create_directories(m_createAssetInput.Path /
+                                                    m_createAssetInput.Name);
             } else {
                 std::filesystem::path file =
                     m_createAssetInput.Path / m_createAssetInput.Name;
-                
+
                 std::ofstream os(file);
                 // Default file for different types of assets
                 // TODO: don't hardcode
@@ -592,7 +603,7 @@ void ProjectWindow::CreateAssetPopup() {
     "Entities" : []
 })";
                 }
-                
+
                 os << "";  // create empty file
                 m_engineContext._AssetManager.LoadOrCreateAsset(
                     file, file.string() +
